@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const hashedPassword = require("../helpers/authN-authZ");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Username required",
           },
-          notEmpty: {
+          notNull: {
             msg: "Username required",
           },
         },
@@ -33,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Email required",
           },
-          notEmpty: {
+          notNull: {
             msg: "Email required",
           },
           isEmail: {
@@ -48,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Password required",
           },
-          notEmpty: {
+          notNull: {
             msg: "Password required",
           },
         },
@@ -60,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Description required",
           },
-          notEmpty: {
+          notNull: {
             msg: "Description required",
           },
         },
@@ -72,34 +73,16 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Address required",
           },
-          notEmpty: {
+          notNull: {
             msg: "Address required",
           },
         },
       },
       latitude: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Latitude required",
-          },
-          notEmpty: {
-            msg: "Latitude required",
-          },
-        },
       },
       longitude: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Longitude required",
-          },
-          notEmpty: {
-            msg: "Longitude required",
-          },
-        },
       },
       balance: {
         type: DataTypes.INTEGER,
@@ -109,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "balance required",
           },
-          notEmpty: {
+          notNull: {
             msg: "balance required",
           },
         },
@@ -125,5 +108,8 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
     }
   );
+  User.beforeCreate((instance, options) => {
+    instance.password = hashedPassword(instance.password);
+  });
   return User;
 };

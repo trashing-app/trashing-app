@@ -1,0 +1,42 @@
+{
+  "categories": [
+    {
+      "name": "Plastik",
+      "basePrice": 10000
+    },
+    {
+      "name": "Sampah basah",
+      "basePrice": 5000
+    },
+    {
+      "name": "Sampah kering",
+      "basePrice": 7000
+    }
+  ],
+
+  "users": [
+    {
+      "email": "test@mail.com",
+      "password": "12345",
+      "phoneNumber": "08122233444",
+      "address": "Kuningan",
+      "username": "test",
+      "latitude": null,
+      "longitude": null,
+      "balance": 50000,
+      "role": "user"
+    }
+  ],
+
+  "collectors": [
+    {
+      "email": "collector@mail.com",
+      "password": "12345",
+      "phoneNumber": "08122233444",
+      "address": "Senopati",
+      "username": "collector",
+      "latitude": null,
+      "longitude": null
+    }
+  ]
+}
