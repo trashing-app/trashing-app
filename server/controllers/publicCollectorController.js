@@ -1,5 +1,5 @@
 const { Collector } = require("../models");
-const { checkPassword, encode } = require("../helpers/authN-authZ");
+const { checkPassword, encode } = require("../helpers/jwt-bcrypt");
 
 class PublicCollectorController {
   static async login(req, res, next) {

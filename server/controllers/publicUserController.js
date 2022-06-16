@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { checkPassword, encode } = require("../helpers/authN-authZ");
+const { checkPassword, encode } = require("../helpers/jwt-bcrypt");
 
 class PublicUserController {
   static async login(req, res, next) {
@@ -17,7 +17,10 @@ class PublicUserController {
       if (!validPassword) {
         throw new Error("invalid password");
       }
-      const payload = foundUser.id;
+      const payload = {
+        id: foundUser.id,
+        username: foundUser.username,
+      };
       const access_token = encode(payload);
       res.status(200).json(access_token);
     } catch (error) {

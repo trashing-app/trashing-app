@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const { hashedPassword } = require("../helpers/authN-authZ");
+const { hashedPassword } = require("../helpers/jwt-bcrypt");
 module.exports = (sequelize, DataTypes) => {
   class Collector extends Model {
     /**
