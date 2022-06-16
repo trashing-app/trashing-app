@@ -17,7 +17,7 @@
   "users": [
     {
       "email": "test@mail.com",
-      "password": "12345",
+      "password": "$2a$08$CAjgJoWUYYJOOvPCvoQIMujgdMobrLG2kgJcr9ewN9WQiIXrSTWXm",
       "phoneNumber": "08122233444",
       "address": "Kuningan",
       "username": "test",
@@ -31,7 +31,7 @@
   "collectors": [
     {
       "email": "collector@mail.com",
-      "password": "12345",
+      "password": "$2a$08$CAjgJoWUYYJOOvPCvoQIMujgdMobrLG2kgJcr9ewN9WQiIXrSTWXm",
       "phoneNumber": "08122233444",
       "address": "Senopati",
       "username": "collector",
