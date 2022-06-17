@@ -50,6 +50,26 @@ class UserController {
     }
   }
 
+  static async topupBalance(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { balance } = req.body;
+      const topup = await User.update(
+        {
+          balance,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      res.status(201).json(topup);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async deleteUser(req, res, next) {
     try {
       const { id } = req.params;

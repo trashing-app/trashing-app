@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       basePrice: {
         type: DataTypes.INTEGER,
       },
+      description: {
+        type: DataTypes.TEXT,
+      },
     },
     {
       sequelize,
