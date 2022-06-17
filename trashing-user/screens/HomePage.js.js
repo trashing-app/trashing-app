@@ -7,13 +7,13 @@ export default function HomePage() {
     <View>
       <Text>Home</Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate("register")}
+        onPress={() => navigation.navigate("RegisterPage")}
         style={{ backgroundColor: "blue" }}
       >
         <Text style={{ fontSize: 20, color: "#fff" }}>Register</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("register")}
+        onPress={() => navigation.navigate("LoginPage")}
         style={{ backgroundColor: "blue" }}
       >
         <Text style={{ fontSize: 20, color: "#fff" }}>Login</Text>
