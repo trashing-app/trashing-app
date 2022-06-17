@@ -5,7 +5,7 @@ class CollectorController {
     try {
       const collectors = await Collector.findAll();
       res.status(200).json(collectors);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -21,7 +21,7 @@ class CollectorController {
         address,
       });
       res.status(201).json(newCollector);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -45,7 +45,7 @@ class CollectorController {
         }
       );
       res.status(201).json(updated);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -59,7 +59,7 @@ class CollectorController {
         },
       });
       res.status(201).json(deleted);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }

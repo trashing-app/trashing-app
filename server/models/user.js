@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const hashedPassword = require("../helpers/jwt-bcrypt");
+const { hashedPassword } = require("../helpers/jwt-bcrypt");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**

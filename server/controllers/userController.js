@@ -5,7 +5,7 @@ class UserController {
     try {
       const users = await User.findAll();
       res.status(200).json(users);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -21,7 +21,7 @@ class UserController {
         address,
       });
       res.status(201).json(newUser);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -32,20 +32,20 @@ class UserController {
       const { username, email, password, phoneNumber, address } = req.body;
       const updated = await User.update(
         {
-          where: {
-            id,
-          },
-        },
-        {
           username,
           email,
           password,
           phoneNumber,
           address,
+        },
+        {
+          where: {
+            id,
+          },
         }
       );
       res.status(201).json(updated);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -59,7 +59,7 @@ class UserController {
         },
       });
       res.status(201).json(deleted);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }

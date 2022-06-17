@@ -17,10 +17,13 @@ class PublicCollectorController {
       if (!validPassword) {
         throw new Error("invalid password");
       }
-      const payload = foundUser.id;
+      const payload = {
+        id: foundCollector.id,
+        username: foundCollector.username,
+      };
       const access_token = encode(payload);
       res.status(200).json(access_token);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -36,7 +39,7 @@ class PublicCollectorController {
         address,
       });
       res.status(201).json(newCollector);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }

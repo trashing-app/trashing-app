@@ -19,7 +19,7 @@ async function isLoggedIn(req, res, next) {
       username,
     };
     next();
-  } catch (error) {
+  } catch (err) {
     next(err);
   }
 }

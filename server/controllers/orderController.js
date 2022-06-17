@@ -5,7 +5,7 @@ class OrderController {
     try {
       const orders = await Order.findAll();
       res.status(200).json(orders);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -14,12 +14,10 @@ class OrderController {
     try {
       const { weight, categoryId, description, price } = req.body;
       const userId = req.pass.id;
-      const { collectorId, pickupDate } = req.body;
+
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
-        pickupDate,
-        collectorId,
       });
 
       const newOrderItem = await OrderItem.create({
@@ -31,7 +29,7 @@ class OrderController {
       });
 
       res.status(201).json(newOrder);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -50,7 +48,7 @@ class OrderController {
         }
       );
       res.status(201).json(completed);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -58,18 +56,22 @@ class OrderController {
   static async approveOrder(req, res, next) {
     try {
       const { id } = req.params;
+      const { pickupDate } = req.body;
+      const collectorId = req.pass.id;
       const approved = await Order.update(
+        {
+          approvalStatus: "Approved",
+          pickupDate,
+          collectorId,
+        },
         {
           where: {
             id,
           },
-        },
-        {
-          approvalStatus: "Approved",
         }
       );
       res.status(201).json(approved);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -88,7 +90,7 @@ class OrderController {
         }
       );
       res.status(201).json(paid);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -102,7 +104,7 @@ class OrderController {
         },
       });
       res.status(200).json(deleted);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
