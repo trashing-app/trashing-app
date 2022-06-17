@@ -28,8 +28,8 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      latitudeLongitude: {
-        type: Sequelize.STRING,
+      location: {
+        type: Sequelize.GEOMETRY("POINT"),
       },
 
       balance: {
