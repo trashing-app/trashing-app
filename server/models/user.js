@@ -1,16 +1,10 @@
-"use strict";
-const { Model } = require("sequelize");
-const { hashedPassword } = require("../helpers/jwt-bcrypt");
+'use strict';
+const { Model } = require('sequelize');
+const { hashedPassword } = require('../helpers/jwt-bcrypt');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-      User.hasMany(models.Order, { foreignKey: "userId" });
+      User.hasMany(models.Order, { foreignKey: 'userId' });
     }
   }
   User.init(
@@ -20,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Username required",
+            msg: 'Username required',
           },
           notNull: {
-            msg: "Username required",
+            msg: 'Username required',
           },
         },
       },
@@ -32,13 +26,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Email required",
+            msg: 'Email required',
           },
           notNull: {
-            msg: "Email required",
+            msg: 'Email required',
           },
           isEmail: {
-            msg: "Invalid email format",
+            msg: 'Invalid email format',
           },
         },
       },
@@ -47,10 +41,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Password required",
+            msg: 'Password required',
           },
           notNull: {
-            msg: "Password required",
+            msg: 'Password required',
           },
         },
       },
@@ -59,10 +53,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Description required",
+            msg: 'Description required',
           },
           notNull: {
-            msg: "Description required",
+            msg: 'Description required',
           },
         },
       },
@@ -71,38 +65,38 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Address required",
+            msg: 'Address required',
           },
           notNull: {
-            msg: "Address required",
+            msg: 'Address required',
           },
         },
       },
-      location: {
-        type: DataTypes.GEOMETRY("POINT"),
-      },
+      // location: {
+      //   type: DataTypes.GEOMETRY('POINT'),
+      // },
       balance: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
         validate: {
           notEmpty: {
-            msg: "balance required",
+            msg: 'balance required',
           },
           notNull: {
-            msg: "balance required",
+            msg: 'balance required',
           },
         },
       },
       role: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "user",
+        defaultValue: 'user',
       },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
     }
   );
   User.beforeCreate((instance, options) => {

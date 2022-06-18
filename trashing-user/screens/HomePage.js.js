@@ -1,23 +1,23 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HomePage() {
   const navigation = useNavigation();
   return (
     <View>
       <Text>Home</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("RegisterPage")}
-        style={{ backgroundColor: "blue" }}
+      {/* <TouchableOpacity
+        onPress={() => navigation.navigate('HomePage')}
+        style={{ backgroundColor: 'blue' }}
       >
-        <Text style={{ fontSize: 20, color: "#fff" }}>Register</Text>
+        <Text style={{ fontSize: 20, color: '#fff' }}>Home Page</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("LoginPage")}
-        style={{ backgroundColor: "blue" }}
+        onPress={() => navigation.navigate('OrderPage')}
+        style={{ backgroundColor: 'blue' }}
       >
-        <Text style={{ fontSize: 20, color: "#fff" }}>Login</Text>
-      </TouchableOpacity>
+        <Text style={{ fontSize: 20, color: '#fff' }}>Order Page</Text>
+      </TouchableOpacity> */}
     </View>
   );
 }

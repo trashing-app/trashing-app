@@ -1,54 +1,36 @@
-"use strict";
+'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Orders", {
+    await queryInterface.createTable('Collectors', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      orderDate: {
+      username: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      pickupDate: {
+      email: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      collectorId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Collectors",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      orderStatus: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: "Not Completed",
       },
-      approvalStatus: {
+      address: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: "Not Approved",
       },
-      paymentStatus: {
+      phoneNumber: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: "Not Paid",
       },
+      // location: {
+      //   type: Sequelize.GEOMETRY('POINT'),
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -60,6 +42,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Orders");
+    await queryInterface.dropTable('Collectors');
   },
 };

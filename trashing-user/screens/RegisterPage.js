@@ -8,97 +8,120 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  Image,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function LoginPage() {
-  const [email, onChangeEmail] = useState('');
+export default function RegisterPage({ navigation }) {
+  const [input, setInput] = useState({
+    username: '',
+    email: '',
+    password: '',
+    address: '',
+    phoneNumber: '',
+  });
+
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAddress] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+
+  // const doRegister = (e) => {
+  //   e.preventDefault();
+  //   fetch('https://ffc6-36-71-139-195.ap.ngrok.io/pub/users/register', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(input),
+  //   })
+  //     .then(navigation.navigate('LoginPage'))
+  //     .catch((err) => console.log(err));
+  // };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView>
           <ScrollView>
+            <Image
+              style={{
+                height: 70,
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+              source={require('../assets/images/TRASHING.png')}
+            />
             <View style={styles.inputContainer}>
               <TextInput
-                name="email"
                 style={styles.inputField}
-                value={email}
-                onChangeText={onChangeEmail}
-                placeholder="Email"
-                keyboardType="email-address"
+                onChangeText={(username) => setInput({ ...input, username })}
+                placeholder="Username"
+                keyboardType="default"
+                placeholderTextColor="#ffffff"
               />
             </View>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.inputField}
-                name="password"
+                onChangeText={(email) => setInput({ ...input, email })}
+                placeholder="Email"
+                keyboardType="email-address"
+                placeholderTextColor="#ffffff"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.inputField}
+                onChangeText={(password) => setInput({ ...input, password })}
                 placeholder="Password"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textContentType="newPassword"
                 secureTextEntry={passwordVisibility}
-                value={password}
                 enablesReturnKeyAutomatically
-                onChangeText={(text) => setPassword(text)}
+                placeholderTextColor="#ffffff"
               />
               <Pressable onPress={handlePasswordVisibility}>
-                <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                <MaterialCommunityIcons name={rightIcon} size={22} color="#caf0f8" />
               </Pressable>
             </View>
             <View style={styles.inputContainer}>
               <TextInput
+                placeholderTextColor="#ffffff"
                 style={styles.inputField}
-                name="confirmPassword"
-                placeholder="Confirm password"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="newPassword"
-                secureTextEntry={passwordVisibility}
-                value={confirmPassword}
-                enablesReturnKeyAutomatically
-                onChangeText={(text) => setConfirmPassword(text)}
-              />
-              <Pressable onPress={handlePasswordVisibility}>
-                <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
-              </Pressable>
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.inputField}
-                value={address}
-                onChangeText={setAddress}
-                name="address"
+                onChangeText={(address) => setInput({ ...input, address })}
                 placeholder="Address"
                 keyboardType="default"
               />
             </View>
             <View style={styles.inputContainer}>
               <TextInput
+                placeholderTextColor="#ffffff"
+                name="phoneNumber"
                 style={styles.inputField}
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                placeholder="Phone number"
+                value={input.phoneNumber}
+                onChangeText={(phoneNumber) => setInput({ ...input, phoneNumber })}
+                placeholder="Phone Number"
                 keyboardType="name-phone-pad"
               />
             </View>
             <TouchableOpacity
               style={{
-                width: 100,
-                height: 40,
-                backgroundColor: 'cyan',
+                width: 130,
+                height: 50,
+                backgroundColor: '#00b4d8',
                 justifyContent: 'center',
-                marginTop: 15,
+                marginVertical: 15,
+                borderRadius: 15,
+                marginHorizontal: '34%',
+                borderColor: '#caf0f8',
+                borderWidth: 3,
               }}
+              onPress={doRegister}
             >
-              <Text style={{ textAlign: 'center' }}>Register</Text>
+              <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Register</Text>
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -110,24 +133,27 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5EEDC',
+    backgroundColor: '#00b4d8',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 1,
   },
   inputContainer: {
-    backgroundColor: 'white',
-    width: '80%',
-    margin: 10,
+    backgroundColor: '#00b4d8',
+    width: '90%',
+    height: 62,
+    marginHorizontal: '5%',
+    marginVertical: 10,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 4,
-    borderColor: '#d7d7d7',
+    borderColor: '#caf0f8',
   },
   inputField: {
     padding: 14,
-    fontSize: 22,
+    fontSize: 20,
     width: '87%',
+    color: 'white',
   },
 });
