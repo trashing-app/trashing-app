@@ -31,7 +31,6 @@ module.exports = {
       location: {
         type: Sequelize.GEOMETRY("POINT"),
       },
-
       balance: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
