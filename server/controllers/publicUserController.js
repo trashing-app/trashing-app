@@ -1,5 +1,5 @@
-const { User } = require("../models");
-const { checkPassword, encode } = require("../helpers/jwt-bcrypt");
+const { User } = require('../models');
+const { checkPassword, encode } = require('../helpers/jwt-bcrypt');
 
 class PublicUserController {
   static async login(req, res, next) {
@@ -11,11 +11,11 @@ class PublicUserController {
         },
       });
       if (!foundUser) {
-        throw new Error("invalid email");
+        throw new Error('invalid email');
       }
       const validPassword = checkPassword(password, foundUser.password);
       if (!validPassword) {
-        throw new Error("invalid password");
+        throw new Error('invalid password');
       }
       const payload = {
         id: foundUser.id,
@@ -23,7 +23,7 @@ class PublicUserController {
       };
       const access_token = encode(payload);
       res.status(200).json(access_token);
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }
@@ -39,7 +39,8 @@ class PublicUserController {
         address,
       });
       res.status(201).json(newUser);
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
       next(err);
     }
   }

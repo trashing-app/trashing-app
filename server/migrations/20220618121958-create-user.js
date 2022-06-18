@@ -1,16 +1,11 @@
-"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Collectors", {
+    await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-      },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
@@ -20,18 +15,29 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       phoneNumber: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      location: {
-        type: Sequelize.GEOMETRY("POINT"),
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      location: {
+        type: Sequelize.GEOMETRY('POINT'),
+      },
+      balance: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'user',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -43,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Collectors");
+    await queryInterface.dropTable('Users');
   },
 };
