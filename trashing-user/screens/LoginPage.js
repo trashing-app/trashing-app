@@ -8,12 +8,17 @@ export default function LoginPage() {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
   const [password, setPassword] = useState('');
 
+  const doLogin = () => {
+    // the fetching goes here
+    console.log('logging in');
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <Text>Login to Trashing</Text>
         <View style={styles.inputContainer}>
           <TextInput
+            placeholderTextColor="#ffffff"
             style={styles.inputField}
             value={email}
             onChangeText={onChangeEmail}
@@ -23,6 +28,7 @@ export default function LoginPage() {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
+            placeholderTextColor="#ffffff"
             style={styles.inputField}
             name="password"
             placeholder="Enter password"
@@ -35,13 +41,24 @@ export default function LoginPage() {
             onChangeText={(text) => setPassword(text)}
           />
           <Pressable onPress={handlePasswordVisibility}>
-            <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+            <MaterialCommunityIcons name={rightIcon} size={22} color="#ffffff" />
           </Pressable>
         </View>
         <TouchableOpacity
-          style={{ width: 100, height: 40, backgroundColor: 'cyan', justifyContent: 'center' }}
+          style={{
+            width: 130,
+            height: 50,
+            backgroundColor: '#00b4d8',
+            justifyContent: 'center',
+            marginVertical: 15,
+            borderRadius: 15,
+            marginHorizontal: '34%',
+            borderColor: '#d7d7d7',
+            borderWidth: 3,
+          }}
+          onPress={doLogin}
         >
-          <Text style={{ textAlign: 'center' }}>Login</Text>
+          <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Login</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -51,15 +68,16 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5EEDC',
+    backgroundColor: '#00b4d8',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 1,
   },
   inputContainer: {
-    backgroundColor: 'white',
-    width: '80%',
-    margin: 10,
+    backgroundColor: '#00b4d8',
+    width: '90%',
+    marginHorizontal: '5%',
+    marginVertical: 10,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',

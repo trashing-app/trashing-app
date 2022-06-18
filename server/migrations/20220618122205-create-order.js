@@ -1,44 +1,53 @@
-"use strict";
+'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Users", {
+    await queryInterface.createTable('Orders', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      phoneNumber: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.GEOMETRY("POINT"),
-      },
-
-      balance: {
+      userId: {
         type: Sequelize.INTEGER,
-        defaultValue: 0,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      role: {
+      orderDate: {
         type: Sequelize.STRING,
-        defaultValue: "user",
+        allowNull: false,
+      },
+      pickupDate: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      collectorId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Collectors',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      orderStatus: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'Not Completed',
+      },
+      approvalStatus: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'Not Approved',
+      },
+      paymentStatus: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'Not Paid',
       },
       createdAt: {
         allowNull: false,
@@ -51,6 +60,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable('Orders');
   },
 };

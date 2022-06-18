@@ -1,16 +1,10 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class OrderItem extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-      OrderItem.belongsTo(models.Category, { foreignKey: "categoryId" });
-      OrderItem.belongsTo(models.Order, { foreignKey: "orderId" });
+      OrderItem.belongsTo(models.Category, { foreignKey: 'categoryId' });
+      OrderItem.belongsTo(models.Order, { foreignKey: 'orderId' });
     }
   }
   OrderItem.init(
@@ -20,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Weight required",
+            msg: 'Weight required',
           },
           notEmpty: {
-            msg: "Weight required",
+            msg: 'Weight required',
           },
         },
       },
@@ -35,10 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Description required",
+            msg: 'Description required',
           },
           notEmpty: {
-            msg: "Description required",
+            msg: 'Description required',
           },
         },
       },
@@ -50,17 +44,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Price required",
+            msg: 'Price required',
           },
           notEmpty: {
-            msg: "Price required",
+            msg: 'Price required',
           },
         },
       },
     },
     {
       sequelize,
-      modelName: "OrderItem",
+      modelName: 'OrderItem',
     }
   );
   return OrderItem;

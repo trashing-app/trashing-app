@@ -17,12 +17,11 @@
   "users": [
     {
       "email": "test@mail.com",
-      "password": "$2a$08$CAjgJoWUYYJOOvPCvoQIMujgdMobrLG2kgJcr9ewN9WQiIXrSTWXm",
+      "password": "qwerty",
       "phoneNumber": "08122233444",
       "address": "Kuningan",
       "username": "test",
-      "latitude": null,
-      "longitude": null,
+      "location": null,
       "balance": 50000,
       "role": "user"
     }
@@ -31,12 +30,11 @@
   "collectors": [
     {
       "email": "collector@mail.com",
-      "password": "$2a$08$CAjgJoWUYYJOOvPCvoQIMujgdMobrLG2kgJcr9ewN9WQiIXrSTWXm",
+      "password": "qwerty",
       "phoneNumber": "08122233444",
       "address": "Senopati",
       "username": "collector",
-      "latitude": null,
-      "longitude": null
+      "location": null
     }
   ]
 }
