@@ -25,19 +25,19 @@ export default function RegisterPage({ navigation }) {
 
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
-  // const doRegister = (e) => {
-  //   e.preventDefault();
-  //   fetch('https://ffc6-36-71-139-195.ap.ngrok.io/pub/users/register', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(input),
-  //   })
-  //     .then(navigation.navigate('LoginPage'))
-  //     .catch((err) => console.log(err));
-  // };
+  const doRegister = (e) => {
+    e.preventDefault();
+    fetch('https://d8e2-36-71-139-195.ap.ngrok.io/pub/users/register', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
+    })
+      .then(navigation.navigate('LoginPage'))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>

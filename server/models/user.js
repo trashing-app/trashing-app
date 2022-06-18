@@ -72,9 +72,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      // location: {
-      //   type: DataTypes.GEOMETRY('POINT'),
-      // },
+      location: {
+        type: DataTypes.GEOMETRY('POINT'),
+      },
       balance: {
         type: DataTypes.INTEGER,
         allowNull: false,

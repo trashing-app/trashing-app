@@ -21,8 +21,7 @@
       "phoneNumber": "08122233444",
       "address": "Kuningan",
       "username": "test",
-      "latitude": null,
-      "longitude": null,
+      "location": null,
       "balance": 50000,
       "role": "user"
     }
@@ -35,8 +34,7 @@
       "phoneNumber": "08122233444",
       "address": "Senopati",
       "username": "collector",
-      "latitude": null,
-      "longitude": null
+      "location": null
     }
   ]
 }

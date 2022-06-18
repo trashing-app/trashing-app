@@ -28,9 +28,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      // location: {
-      //   type: Sequelize.GEOMETRY('POINT'),
-      // },
+      location: {
+        type: Sequelize.GEOMETRY('POINT'),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
