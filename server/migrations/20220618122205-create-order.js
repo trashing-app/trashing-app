@@ -18,12 +18,11 @@ module.exports = {
         onDelete: "CASCADE",
       },
       orderDate: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       pickupDate: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.DATE,
       },
       collectorId: {
         type: Sequelize.INTEGER,

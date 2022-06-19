@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Collector } = require("../models");
 const { decode } = require("../helpers/jwt-bcrypt");
 
 async function isLoggedIn(req, res, next) {
@@ -11,7 +11,13 @@ async function isLoggedIn(req, res, next) {
         username,
       },
     });
-    if (!foundUser) {
+    const foundCollector = await Collector.findOne({
+      where: {
+        username,
+      },
+    });
+
+    if (!foundUser && !foundCollector) {
       throw new Error("invalid token");
     }
     req.pass = {
