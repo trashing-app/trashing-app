@@ -1,4 +1,4 @@
-const { Order, OrderItem, sequelize } = require("../models");
+const { Order, OrderItem, sequelize, User } = require("../models");
 const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
@@ -14,18 +14,18 @@ class OrderController {
     try {
       //Masih belum bisa digunakan
       // distance on meter unit
-      const distance = 1000;
-      const long = "104.1793021";
-      const lat = "-4.1404221";
+      const distance = req.query.distance || 1000;
+      const long = req.query.long || "-6.9439994342171225";
+      const lat = req.query.lat || "107.5904275402039";
 
       const result = await sequelize.query(
         `select
         id,
-        orderLocation
+        location
       from
         "Orders"
       where
-        ST_DWithin(orderLocation,
+        ST_DWithin(location,
         ST_MakePoint(:lat,
         :long),
         :distance,
@@ -56,7 +56,7 @@ class OrderController {
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
-        userChatId: userId + `${Date.now()}`
+        userChatId: userId + `${Date.now()}`,
       });
 
       await OrderItem.create({
@@ -85,7 +85,7 @@ class OrderController {
           where: {
             id,
           },
-        },
+        }
       );
       res.status(201).json(completed);
     } catch (err) {
@@ -97,14 +97,14 @@ class OrderController {
     try {
       const { id } = req.params;
       // const { pickupDate } = req.body;
-      const pickupDate = new Date()
+      const pickupDate = new Date();
       const collectorId = req.pass.id;
       const approved = await Order.update(
         {
           approvalStatus: "Approved",
           pickupDate,
           collectorId,
-          collectorChatId: collectorId + `${Date.now()}`
+          collectorChatId: collectorId + `${Date.now()}`,
         },
         {
           where: {
@@ -129,7 +129,7 @@ class OrderController {
           where: {
             id,
           },
-        },
+        }
       );
       res.status(201).json(paid);
     } catch (err) {
@@ -151,18 +151,19 @@ class OrderController {
     }
   }
 
-  static async getOrderById(req, res, next){
+  static async getOrderById(req, res, next) {
     try {
-      const id = + req.params.id
+      const id = +req.params.id;
       const foundOrder = await Order.findOne({
-        where:{
-          id
-        }
-      })
-      if(!foundOrder) throw new Error('Not found')
-      res.status(200).json(foundOrder)
+        where: {
+          id,
+        },
+        include: ["User"],
+      });
+      if (!foundOrder) throw new Error("Not found");
+      res.status(200).json(foundOrder);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

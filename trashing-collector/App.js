@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomePage from "./screens/HomePage";
 import ListOrder from "./screens/ListOrder";
+import DetailOrder from "./screens/DetailOrder";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -18,6 +19,11 @@ export default function App() {
           name="HomePage"
           component={HomePage}
         />
+        <Stack.Screen 
+        options={{
+          headerShown: false
+        }}
+        name="DetailOrder"component={DetailOrder} ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

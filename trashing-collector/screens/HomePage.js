@@ -20,7 +20,7 @@ const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default function HomePage() {
+export default function HomePage({ route }) {
   const [location, setLocation] = useState({
     coords: {
       latitude: "",
@@ -67,13 +67,13 @@ export default function HomePage() {
           longitudeDelta: LONGITUDE_DELTA,
         },
         destinationCord: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: route.params.latitude,
+          longitude: route.params.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         },
       });
-      console.log(location);
+      // console.log(location);
       setIsLoading(true);
     })();
   }, []);
@@ -116,66 +116,8 @@ export default function HomePage() {
     <SafeAreaView style={styles.container}>
       <MapView ref={mapRef} style={styles.map} initialRegion={pickUpCord}>
         <Marker coordinate={pickUpCord} image={imagePath.icCurLoc} />
-        {/* 
-        <Marker coordinate={destinationCord} image={imagePath.icGreenMarker} /> */}
-        <Marker
-          image={imagePath.icGreenMarker}
-          onPress={() => {
-            console.log("hai");
-            Alert.alert("Destination", "Choose this location", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") },
-            ]);
-            setState({
-              ...state,
-              destinationCord: {
-                latitude: -4.1358869,
-                longitude: 104.178226,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              },
-            });
-          }}
-          coordinate={{
-            latitude: -4.1358869,
-            longitude: 104.178226,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-        />
-        {/* <Marker
-          image={imagePath.icGreenMarker}
-          onPress={() => {
-            console.log("hai2");
-            Alert.alert("Destination", "Choose this location", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") },
-            ]);
-            setState({
-              ...state,
-              destinationCord: {
-                latitude: -4.1358869,
-                longitude: 104.179226,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              },
-            });
-          }}
-          coordinate={{
-            latitude: -4.1358869,
-            longitude: 104.179226,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-        /> */}
+
+        <Marker image={imagePath.icGreenMarker} coordinate={destinationCord} />
 
         <MapViewDirections
           origin={pickUpCord}
