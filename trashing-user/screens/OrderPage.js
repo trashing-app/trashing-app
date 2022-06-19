@@ -9,7 +9,13 @@ import { View, TextInput, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export default function OrderPage() {
+  const baseUrl =
+    "https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io";
   const navigation = useNavigation();
+  const [weight, setWeight] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
   return (
     <SafeAreaView>
       <TextInput
@@ -33,9 +39,17 @@ export default function OrderPage() {
         onChangeText={(newText) => setText(newText)}
       />
       <TouchableOpacity
-        onPress={() => {
-          // console.log("TO MAP");
-          navigation.navigate("MapPage");
+        onPress={async () => {
+          try {
+            // console.log("TO MAP");
+            // const { data } = await axios.post(`${baseUrl}/pub/users/login`, {
+            //   email,
+            //   password,
+            // });
+            navigation.navigate("MapPage");
+          } catch (error) {
+            console.log(error);
+          }
         }}
         style={{
           width: 100,
