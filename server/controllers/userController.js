@@ -112,7 +112,7 @@ class UserController {
           id,
         },
         attributes: {
-          exclude: ['password', 'role', 'createdAt', 'updatedAt'],
+          exclude: ['password', 'createdAt', 'updatedAt'],
         },
       });
 

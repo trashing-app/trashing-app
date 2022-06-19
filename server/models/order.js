@@ -14,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       orderDate: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
       pickupDate: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
       collectorId: {
         type: DataTypes.INTEGER,
@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'Not Paid',
       },
+      collectorChatId: {
+        type: DataTypes.STRING,
+      },
+      userChatId: {
+        type: DataTypes.STRING,
+      }
     },
     {
       sequelize,
