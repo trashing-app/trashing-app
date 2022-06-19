@@ -5,9 +5,11 @@ import {
   useSafeAreaInsets,
   initialWindowMetrics,
 } from "react-native-safe-area-context";
-import { View, TextInput } from "react-native";
+import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function OrderPage() {
+  const navigation = useNavigation();
   return (
     <SafeAreaView>
       <TextInput
@@ -30,6 +32,21 @@ export default function OrderPage() {
         placeholder="price"
         onChangeText={(newText) => setText(newText)}
       />
+      <TouchableOpacity
+        onPress={() => {
+          // console.log("TO MAP");
+          navigation.navigate("MapPage");
+        }}
+        style={{
+          width: 100,
+          height: 40,
+          backgroundColor: "cyan",
+          justifyContent: "center",
+          marginTop: 15,
+        }}
+      >
+        <Text style={{ textAlign: "center" }}>Order</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
