@@ -1,4 +1,4 @@
-const { Order, OrderItem } = require("../models");
+const { Order, OrderItem, sequelize } = require("../models");
 const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
@@ -10,12 +10,52 @@ class OrderController {
     }
   }
 
+  static async findOrderByRadius(req, res) {
+    try {
+      //Masih belum bisa digunakan
+      // distance on meter unit
+      const distance = 1000;
+      const long = "104.1793021";
+      const lat = "-4.1404221";
+
+      const result = await sequelize.query(
+        `select
+        id,
+        orderLocation
+      from
+        "Orders"
+      where
+        ST_DWithin(orderLocation,
+        ST_MakePoint(:lat,
+        :long),
+        :distance,
+      true) = true;`,
+        {
+          replacements: {
+            distance: +distance,
+            long: parseFloat(long),
+            lat: parseFloat(lat),
+          },
+          logging: console.log,
+          plain: false,
+          raw: false,
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
+
   static async addOrder(req, res, next) {
     try {
       // const { weight, categoryId, description, price } = req.body;
       const { latitude, longitude } = req.body;
       const userId = req.pass.id;
 
+      // console.log(new Date());
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
@@ -24,7 +64,6 @@ class OrderController {
           `POINT(${latitude} ${longitude})`
         ),
       });
-
       // const newOrderItem = await OrderItem.create({
       //   weight,
       //   categoryId,

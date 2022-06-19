@@ -8,5 +8,5 @@ router.put("/:id", OrderController.completeOrder);
 router.put("/:id", OrderController.approveOrder);
 router.put("/:id", OrderController.payOrder);
 router.delete("/:id", OrderController.deleteOrder);
-
+router.get("/nearestOrder", OrderController.findOrderByRadius);
 module.exports = router;

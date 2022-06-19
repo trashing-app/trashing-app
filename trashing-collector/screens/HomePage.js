@@ -73,7 +73,7 @@ export default function HomePage() {
           longitudeDelta: LONGITUDE_DELTA,
         },
       });
-      // console.log("5 detik");
+      console.log(location);
       setIsLoading(true);
     })();
   }, []);
@@ -147,7 +147,7 @@ export default function HomePage() {
             longitudeDelta: LONGITUDE_DELTA,
           }}
         />
-        <Marker
+        {/* <Marker
           image={imagePath.icGreenMarker}
           onPress={() => {
             console.log("hai2");
@@ -175,7 +175,7 @@ export default function HomePage() {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}
-        />
+        /> */}
 
         <MapViewDirections
           origin={pickUpCord}
