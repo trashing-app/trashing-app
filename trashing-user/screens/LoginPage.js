@@ -1,16 +1,65 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, TextInput, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios'
+import storage from '../storage';
 
 export default function LoginPage() {
-  const [email, onChangeEmail] = useState('');
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
   const [password, setPassword] = useState('');
 
-  const doLogin = () => {
+  useEffect(()=>{
+    storage
+    .load({
+      key: 'loginState',
+    })
+    .then(ret => {
+      navigation.navigate('tabnavigation')
+    })
+    .catch(err => {
+      switch (err.name) {
+        case 'NotFoundError':
+          navigation.navigate('Login')
+          break;
+        case 'ExpiredError':
+          navigation.navigate('Login')
+          break;
+      }
+    });
+  }, [])
+
+  const doLogin = async () => {
     // the fetching goes here
-    console.log('logging in');
+    const { data } = await axios.post(`https://c9ab-125-160-217-65.ap.ngrok.io/pub/users/login`, {
+      email,
+      password
+    })
+    if(data.access_token){
+      const {id, username, email, access_token} = data
+      console.log('login success')
+      storage.save({
+        key: 'loginState',
+        data: {
+          id,
+          name: username,
+          email,
+          photoUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          welcomeMessage: "Hello",
+          role: "default",
+          token: access_token
+        },
+        expires: null
+      })
+      navigation.navigate('tabnavigation')
+      setEmail("")
+      setPassword("")
+    } else {
+      throw ('login failed')
+    }
   };
 
   return (
@@ -21,7 +70,7 @@ export default function LoginPage() {
             placeholderTextColor="#ffffff"
             style={styles.inputField}
             value={email}
-            onChangeText={onChangeEmail}
+            onChangeText={setEmail}
             placeholder="Input email"
             keyboardType="email-address"
           />
