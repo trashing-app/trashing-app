@@ -24,6 +24,7 @@ class PublicUserController {
       const access_token = encode(payload);
       res.status(200).json(access_token);
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }

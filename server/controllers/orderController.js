@@ -28,6 +28,17 @@ class OrderController {
         price,
       });
 
+      await Order.update(
+        {
+          userChatId : newOrder.id + userId
+        },
+        {
+          where : {
+            id : newOrder.id,
+          },
+        }
+      );
+
       res.status(201).json(newOrder);
     } catch (err) {
       next(err);
@@ -63,6 +74,7 @@ class OrderController {
           approvalStatus: "Approved",
           pickupDate,
           collectorId,
+          collectorChatId:id+collectorId
         },
         {
           where: {

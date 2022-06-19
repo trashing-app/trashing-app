@@ -63,6 +63,24 @@ class CollectorController {
       next(err);
     }
   }
+
+  static async getCollectorById(req, res, next) {
+    try {
+      const id = +req.params.id
+      const collector = await Collector.findOne({
+        where: {
+          id,
+        },
+        attributes: {
+          exclude: ['password', 'createdAt', 'updatedAt'],
+        },
+      });
+      if(!collector) throw new Error("Not found")
+      res.status(200).json(collector)
+    } catch (err) {
+      next(err)
+    }
+  }
 }
 
 module.exports = CollectorController;
