@@ -1,5 +1,5 @@
 const { Order, OrderItem } = require("../models");
-
+const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
     try {
@@ -12,21 +12,26 @@ class OrderController {
 
   static async addOrder(req, res, next) {
     try {
-      const { weight, categoryId, description, price } = req.body;
+      // const { weight, categoryId, description, price } = req.body;
+      const { latitude, longitude } = req.body;
       const userId = req.pass.id;
 
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
+        orderLocation: Sequelize.fn(
+          "ST_GeomFromText",
+          `POINT(${latitude} ${longitude})`
+        ),
       });
 
-      const newOrderItem = await OrderItem.create({
-        weight,
-        categoryId,
-        description,
-        orderId: newOrder.id,
-        price,
-      });
+      // const newOrderItem = await OrderItem.create({
+      //   weight,
+      //   categoryId,
+      //   description,
+      //   orderId: newOrder.id,
+      //   price,
+      // });
 
       res.status(201).json(newOrder);
     } catch (err) {
