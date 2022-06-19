@@ -19,22 +19,20 @@ class OrderController {
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
-        orderLocation: Sequelize.fn(
-          "ST_GeomFromText",
-          `POINT(${latitude} ${longitude})`
-        ),
+        userChatId: userId + `${Date.now()}`
       });
 
-      // const newOrderItem = await OrderItem.create({
-      //   weight,
-      //   categoryId,
-      //   description,
-      //   orderId: newOrder.id,
-      //   price,
-      // });
+      await OrderItem.create({
+        weight,
+        categoryId,
+        description,
+        orderId: newOrder.id,
+        price,
+      });
 
       res.status(201).json(newOrder);
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -44,13 +42,13 @@ class OrderController {
       const { id } = req.params;
       const completed = await Order.update(
         {
+          orderStatus: "Completed",
+        },
+        {
           where: {
             id,
           },
         },
-        {
-          orderStatus: "Completed",
-        }
       );
       res.status(201).json(completed);
     } catch (err) {
@@ -61,13 +59,15 @@ class OrderController {
   static async approveOrder(req, res, next) {
     try {
       const { id } = req.params;
-      const { pickupDate } = req.body;
+      // const { pickupDate } = req.body;
+      const pickupDate = new Date()
       const collectorId = req.pass.id;
       const approved = await Order.update(
         {
           approvalStatus: "Approved",
           pickupDate,
           collectorId,
+          collectorChatId: collectorId + `${Date.now()}`
         },
         {
           where: {
@@ -86,13 +86,13 @@ class OrderController {
       const { id } = req.params;
       const paid = await Order.update(
         {
+          paymentStatus: "Paid",
+        },
+        {
           where: {
             id,
           },
         },
-        {
-          paymentStatus: "Paid",
-        }
       );
       res.status(201).json(paid);
     } catch (err) {
@@ -111,6 +111,21 @@ class OrderController {
       res.status(200).json(deleted);
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async getOrderById(req, res, next){
+    try {
+      const id = + req.params.id
+      const foundOrder = await Order.findOne({
+        where:{
+          id
+        }
+      })
+      if(!foundOrder) throw new Error('Not found')
+      res.status(200).json(foundOrder)
+    } catch (error) {
+      next(error)
     }
   }
 }
