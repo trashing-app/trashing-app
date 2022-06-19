@@ -15,15 +15,17 @@ export default function App() {
           component={ListOrder}
         ></Stack.Screen>
         <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="DetailOrder"
+          component={DetailOrder}
+        ></Stack.Screen>
+        <Stack.Screen
           options={{ headerShown: false }}
           name="HomePage"
           component={HomePage}
         />
-        <Stack.Screen 
-        options={{
-          headerShown: false
-        }}
-        name="DetailOrder"component={DetailOrder} ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

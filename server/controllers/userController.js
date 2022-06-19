@@ -1,5 +1,5 @@
-const { User } = require('../models');
-const { Sequelize } = require('sequelize');
+const { User } = require("../models");
+const { Sequelize } = require("sequelize");
 class UserController {
   static async getUsers(req, res, next) {
     try {
@@ -90,7 +90,10 @@ class UserController {
       // const { location } = req.body;
       const updated = await User.update(
         {
-          location: Sequelize.fn('ST_GeomFromText', 'POINT(107.5925576773082 -6.940669415817259)'),
+          location: Sequelize.fn(
+            "ST_GeomFromText",
+            "POINT(107.5925576773082 -6.940669415817259)"
+          ),
         },
         {
           where: {
@@ -112,7 +115,7 @@ class UserController {
           id,
         },
         attributes: {
-          exclude: ['password', 'createdAt', 'updatedAt'],
+          exclude: ["password", "createdAt", "updatedAt"],
         },
       });
 

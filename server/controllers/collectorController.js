@@ -50,6 +50,29 @@ class CollectorController {
     }
   }
 
+  static async updateLocation(req, res, next) {
+    try {
+      const { id } = req.params;
+      // const { location } = req.body;
+      const updated = await User.update(
+        {
+          location: Sequelize.fn(
+            "ST_GeomFromText",
+            "POINT(107.5925576773082 -6.940669415817259)"
+          ),
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      res.status(201).json(updated);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async deleteCollector(req, res, next) {
     try {
       const { id } = req.params;
@@ -66,19 +89,19 @@ class CollectorController {
 
   static async getCollectorById(req, res, next) {
     try {
-      const id = +req.params.id
+      const id = +req.params.id;
       const collector = await Collector.findOne({
         where: {
           id,
         },
         attributes: {
-          exclude: ['password', 'createdAt', 'updatedAt'],
+          exclude: ["password", "createdAt", "updatedAt"],
         },
       });
-      if(!collector) throw new Error("Not found")
-      res.status(200).json(collector)
+      if (!collector) throw new Error("Not found");
+      res.status(200).json(collector);
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
 }

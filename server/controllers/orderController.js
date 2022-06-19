@@ -3,7 +3,17 @@ const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
     try {
-      const orders = await Order.findAll();
+      const orders = await Order.findAll({
+        include: [
+          {
+            model: User,
+          },
+          {
+            model: OrderItem,
+            include: ["Category"],
+          },
+        ],
+      });
       res.status(200).json(orders);
     } catch (err) {
       next(err);
@@ -12,7 +22,6 @@ class OrderController {
 
   static async findOrderByRadius(req, res) {
     try {
-      //Masih belum bisa digunakan
       // distance on meter unit
       const distance = req.query.distance || 1000;
       const long = req.query.long || "-6.9439994342171225";

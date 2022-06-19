@@ -73,7 +73,6 @@ export default function HomePage({ route }) {
           longitudeDelta: LONGITUDE_DELTA,
         },
       });
-      // console.log(location);
       setIsLoading(true);
     })();
   }, []);
@@ -104,6 +103,17 @@ export default function HomePage({ route }) {
     return () => clearInterval(interval);
   });
 
+  function clickComplete(id) {
+    fetch(
+      `https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/complete/${id}`
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error("Error");
+      }
+      return res.json();
+    });
+  }
+
   if (!isLoading && location) {
     return (
       <SafeAreaView>
@@ -127,40 +137,53 @@ export default function HomePage({ route }) {
           optimizeWaypoints={true}
           onReady={(result) => {
             mapRef.current.fitToCoordinates(result.coordinates, {
-              edgePadding: {
-                // right: 30,
-                // bottom: 300,
-                // left: 30,
-                // top: 100,
-              },
+              edgePadding: {},
             });
           }}
         />
       </MapView>
-      {/* <View
+      <View
         style={{
-          width: "100%",
-          height: "10%",
-          alignItems: "center",
+          flex: 0.1,
+          paddingVertical: "5%",
           justifyContent: "center",
         }}
       >
-        <TouchableOpacity
+        <View
           style={{
-            borderRadius: 10,
-            borderWidth: 3,
-            alignItems: "center",
+            flexDirection: "row",
+            height: "70%",
             justifyContent: "center",
-            width: "75%",
-            height: "75%",
-          }}
-          onPress={() => {
-            goToChooseLocation();
           }}
         >
-          <Text>Choose Location</Text>
-        </TouchableOpacity>
-      </View> */}
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              borderRadius: 15,
+              borderWidth: 3,
+              height: "100%",
+              marginHorizontal: "5%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text>Complete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              borderRadius: 15,
+              borderWidth: 3,
+              height: "100%",
+              marginHorizontal: "5%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text>Chat</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -171,6 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   map: {
-    flex: 1,
+    flex: 0.9,
   },
 });
