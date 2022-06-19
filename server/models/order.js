@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'Not Paid',
       },
+      collectorChatId: {
+        type: DataTypes.STRING,
+      },
+      userChatId: {
+        type: DataTypes.STRING,
+      }
     },
     {
       sequelize,

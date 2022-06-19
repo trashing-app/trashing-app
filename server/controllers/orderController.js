@@ -18,6 +18,7 @@ class OrderController {
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
+        userChatId: userId + `${Date.now()}`
       });
 
       const newOrderItem = await OrderItem.create({
@@ -27,17 +28,6 @@ class OrderController {
         orderId: newOrder.id,
         price,
       });
-
-      await Order.update(
-        {
-          userChatId : newOrder.id + userId
-        },
-        {
-          where : {
-            id : newOrder.id,
-          },
-        }
-      );
 
       res.status(201).json(newOrder);
     } catch (err) {
@@ -51,13 +41,13 @@ class OrderController {
       const { id } = req.params;
       const completed = await Order.update(
         {
+          orderStatus: "Completed",
+        },
+        {
           where: {
             id,
           },
         },
-        {
-          orderStatus: "Completed",
-        }
       );
       res.status(201).json(completed);
     } catch (err) {
@@ -76,7 +66,7 @@ class OrderController {
           approvalStatus: "Approved",
           pickupDate,
           collectorId,
-          collectorChatId:id+collectorId
+          collectorChatId: collectorId + `${Date.now()}`
         },
         {
           where: {
@@ -95,13 +85,13 @@ class OrderController {
       const { id } = req.params;
       const paid = await Order.update(
         {
+          paymentStatus: "Paid",
+        },
+        {
           where: {
             id,
           },
         },
-        {
-          paymentStatus: "Paid",
-        }
       );
       res.status(201).json(paid);
     } catch (err) {
@@ -120,6 +110,21 @@ class OrderController {
       res.status(200).json(deleted);
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async getOrderById(req, res, next){
+    try {
+      const id = + req.params.id
+      const foundOrder = await Order.findOne({
+        where:{
+          id
+        }
+      })
+      if(!foundOrder) throw new Error('Not found')
+      res.status(200).json(foundOrder)
+    } catch (error) {
+      next(error)
     }
   }
 }
