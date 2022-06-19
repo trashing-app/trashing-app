@@ -41,6 +41,7 @@ class OrderController {
 
       res.status(201).json(newOrder);
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -67,7 +68,8 @@ class OrderController {
   static async approveOrder(req, res, next) {
     try {
       const { id } = req.params;
-      const { pickupDate } = req.body;
+      // const { pickupDate } = req.body;
+      const pickupDate = new Date()
       const collectorId = req.pass.id;
       const approved = await Order.update(
         {
