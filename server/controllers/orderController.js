@@ -72,7 +72,11 @@ class OrderController {
         orderDate: new Date(),
         userChatId: userId + `${Date.now()}`,
       });
-
+      orderItems.forEach((element) => {
+        if (!element.orderId) {
+          element.orderId = newOrder.id;
+        }
+      });
       await OrderItem.bulkCreate(orderItems);
 
       res.status(201).json(newOrder);

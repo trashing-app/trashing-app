@@ -118,7 +118,7 @@ export default function OrderPage() {
                 );
                 // console.log(rawData, "RAW DATA");
                 const access_token = rawData.token;
-                const { weight, categoryId, description, price } = input;
+                // const { weight, categoryId, description, price } = input;
 
                 let { status } =
                   await Location.requestForegroundPermissionsAsync();
@@ -142,27 +142,34 @@ export default function OrderPage() {
                 //   longitude,
                 //   latitude,
                 // });
-
-                // const { data } = await axios.post(
-                //   `https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io/orders`,
-                //   {
-                //     weight,
-                //     categoryId,
-                //     description,
-                //     price,
-                //      longitude,
-                // latitude
-                //   },
-                //   {
-                //     headers: { access_token },
-                //   }
-                // );
+                const { data } = await axios.post(
+                  `https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io/orders`,
+                  {
+                    // weight,
+                    // categoryId,
+                    // description,
+                    // price,
+                    orderItems: [input],
+                    longitude,
+                    latitude,
+                  },
+                  {
+                    headers: { access_token },
+                  }
+                );
                 // console.log(data, "CREATE ORDER");
                 // console.log(token);
-                // await AsyncStorage.setItem("order", `${data.id}`);
-                const id = await AsyncStorage.getItem("order");
-                console.log(id);
-                console.log(latitude, longitude, "coordinate");
+                // await AsyncStorage.setItem("order", `${data}`);
+                await AsyncStorage.setItem("order", JSON.stringify(data));
+                const id = data.id;
+                // console.log(id);
+                // console.log(latitude, longitude, "coordinate");
+                setInput({
+                  weight: 0,
+                  categoryId: 0,
+                  description: "",
+                  price: 0,
+                });
                 navigation.navigate("MapPage", { id, orderLocation });
               } catch (error) {
                 console.log(error);

@@ -11,6 +11,7 @@ import {
 import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import * as Location from "expo-location";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoadingMap({ customerLocation }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
@@ -118,7 +119,7 @@ export default function LoadingMap({ customerLocation }) {
   //   const { pickupCords, customerLocation, currentLocation, coordinate } = state;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFill}
@@ -137,7 +138,7 @@ export default function LoadingMap({ customerLocation }) {
         {/* <Marker coordinate={pickupCords} /> */}
         <Marker coordinate={customerLocation}>
           <Image
-            source={require("../assets/images/Person.png")}
+            source={require("../assets/images/greenMarker.png")}
             style={{ width: 40, height: 40 }}
           />
         </Marker>
@@ -179,7 +180,7 @@ export default function LoadingMap({ customerLocation }) {
         /> */}
         <Text>{text}</Text>
       </MapView>
-    </View>
+    </SafeAreaView>
   );
 }
 

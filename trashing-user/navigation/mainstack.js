@@ -7,6 +7,7 @@ import WelcomePage from "../screens/WelcomePage";
 import MapPage from "../screens/MapPage";
 import TabNavigation from "./tabNavigation.js";
 import OrderPage from "../screens/OrderPage";
+import Chat from "../components/Chat";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,14 @@ export default function MainStack() {
           }}
           name="MapPage"
           component={MapPage}
+        />
+        <Stack.Screen
+          options={{
+            title: "Chat",
+            headerTitleAlign: "center",
+          }}
+          name="Chat"
+          component={Chat}
         />
         <Stack.Screen
           options={{

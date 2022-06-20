@@ -178,10 +178,10 @@ export default function MapPage({ route }) {
             setApprovalStatus(data.approvalStatus);
           } else {
             if (data.orderStatus === "Completed") {
-              // await AsyncStorage.removeItem("order")
+              await AsyncStorage.removeItem("order");
               navigation.navigate("tabnavigation");
             } else {
-              console.log(data.collectorId, "CHANGE STATUS");
+              console.log(data.collectorId, "COLLECTOR ID");
               getCollectorLocation(data.collectorId);
             }
           }
@@ -213,71 +213,6 @@ export default function MapPage({ route }) {
   } else {
     return <Text>{text}</Text>;
   }
-
-  // return (
-  //   <View style={styles.container}>
-  //     <MapView
-  //       ref={mapRef}
-  //       style={StyleSheet.absoluteFill}
-  //       initialRegion={
-  //         // pickupCords
-  //         customerLocation
-  //         // {
-  //         //   ...currentLocation,
-  //         //   // latitude: 37.78825,
-  //         //   // longitude: -122.4324,
-  //         //   latitudeDelta: 0.0922,
-  //         //   longitudeDelta: 0.0421,
-  //         // }
-  //       }
-  //     >
-  //       {/* <Marker coordinate={pickupCords} /> */}
-  //       <Marker coordinate={customerLocation}>
-  //         <Image
-  //           source={require("../assets/images/Person.png")}
-  //           style={{ width: 40, height: 40 }}
-  //         />
-  //       </Marker>
-  //       {/* <Marker.Animated
-  //         ref={markerRef}
-  //         coordinate={{
-  //           ...currentLocation,
-  //           // latitudeDelta: 0.0922,
-  //           // longitudeDelta: 0.0421,
-  //         }}
-  //       >
-  //         <Image
-  //           source={require("../assets/images/MotorIcon.png")}
-  //           style={{ width: 40, height: 40 }}
-  //         />
-  //       </Marker.Animated>
-  //       <MapViewDirections
-  //         // origin={pickupCords}
-  //         origin={{
-  //           ...currentLocation,
-  //           latitudeDelta: 0.0922,
-  //           longitudeDelta: 0.0421,
-  //         }}
-  //         destination={customerLocation}
-  //         apikey={GOOGLE_MAPS_APIKEY}
-  //         strokeWidth={3}
-  //         strokeColor="hotpink"
-  //         optimizeWaypoints={true}
-  //         onReady={(result) => {
-  //           mapRef.current.fitToCoordinates(result.coordinates, {
-  //             edgePadding: {
-  //               right: 30,
-  //               bottom: 300,
-  //               left: 30,
-  //               top: 100,
-  //             },
-  //           });
-  //         }}
-  //       /> */}
-  //     </MapView>
-  //     {/* <Text>{text}</Text> */}
-  //   </View>
-  // );
 }
 
 const styles = StyleSheet.create({
