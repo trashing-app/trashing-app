@@ -8,8 +8,39 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import storage from '../storage';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
+  const navigation = useNavigation();
+  useEffect(() => {
+    storage
+      .load({
+        key: 'loginState',
+      })
+      .then((ret) => {
+        navigation.navigate('tabnavigation');
+      })
+      .catch((err) => {
+        switch (err.name) {
+          case 'NotFoundError':
+            navigation.navigate('LoginPage');
+            break;
+          case 'ExpiredError':
+            navigation.navigate('LoginPage');
+            break;
+        }
+      });
+  }, []);
+
+  function clickLogout() {
+    storage.remove({
+      key: 'loginState',
+    });
+    navigation.navigate('LoginPage');
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -71,6 +102,7 @@ export default function ProfilePage() {
             borderColor: '#caf0f8',
             borderWidth: 3,
           }}
+          onPress={clickLogout}
         >
           <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Logout</Text>
         </TouchableOpacity>
