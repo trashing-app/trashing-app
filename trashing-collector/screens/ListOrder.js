@@ -5,6 +5,11 @@ import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
+import {
+  getAllOrder,
+  getCurrLocationOrder,
+  updateLocationC,
+} from "../constant/collectorFunction";
 function ListOrder() {
   const [orders, setOrders] = useState([]);
   const [localLocation, setLocalLocation] = useState({
@@ -40,17 +45,7 @@ function ListOrder() {
   // get all orders
   useEffect(() => {
     if (orders) {
-      fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-          },
-        }
-      )
+      getAllOrder()
         .then((res) => {
           if (!res.ok) {
             throw new Error("Error");
@@ -76,17 +71,7 @@ function ListOrder() {
 
   // ini get nearestOrder
   useEffect(() => {
-    fetch(
-      "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-        },
-      }
-    )
+    getCurrLocationOrder()
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error");
@@ -105,17 +90,7 @@ function ListOrder() {
   // ini get nearestOrder
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-          },
-        }
-      )
+      getCurrLocationOrder()
         .then((res) => {
           if (!res.ok) {
             throw new Error("Error");
@@ -144,6 +119,23 @@ function ListOrder() {
 
         let location = await Location.getCurrentPositionAsync({});
         setLocalLocation(location);
+        updateLocationC(
+          1,
+          localLocation.coords.latitude,
+          localLocation.coords.longitude
+        )
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Error");
+            }
+            return res.json();
+          })
+          .then((_) => {
+            // console.log("10 detik");
+          })
+          .catch((err) => {
+            console.log(err, "<<<");
+          });
       })();
     }, 10000);
     return () => clearInterval(interval);
@@ -164,6 +156,7 @@ function ListOrder() {
           style={{
             flexDirection: "row",
             justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {allOrder.map((el) => {
