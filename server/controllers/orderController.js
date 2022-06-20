@@ -66,17 +66,23 @@ class OrderController {
     try {
       const { orderItems, longitude, latitude } = req.body;
 
+      const location = Sequelize.fn(
+        "ST_GeomFromText",
+        `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
+      );
+
       const userId = req.pass.id;
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
         userChatId: userId + `${Date.now()}`,
+        location,
       });
-      orderItems.forEach((element) => {
-        if (!element.orderId) {
-          element.orderId = newOrder.id;
-        }
+
+      orderItems.forEach((el) => {
+        el.orderId = newOrder.id;
       });
+
       await OrderItem.bulkCreate(orderItems);
 
       res.status(201).json(newOrder);
@@ -170,7 +176,7 @@ class OrderController {
         where: {
           id,
         },
-        include: ["User"],
+        include: ["User", "Collector"],
       });
       if (!foundOrder) throw new Error("Not found");
       res.status(200).json(foundOrder);

@@ -25,7 +25,7 @@ export default function OrderPage() {
     price: 0,
   });
 
-  const categories = ["Kaca", "Sampah Basah", "Sampah Kering"];
+  const categories = ["Plastik", "Sampah Basah", "Sampah Kering"];
   const navigation = useNavigation();
 
   return (
@@ -129,8 +129,6 @@ export default function OrderPage() {
 
                 let position = await Location.getCurrentPositionAsync({});
                 const { latitude, longitude } = position.coords;
-                // console.log("get customer location");
-                // animate(latitude, longitude);
                 const orderLocation = {
                   latitude: latitude,
                   longitude: longitude,
@@ -164,12 +162,12 @@ export default function OrderPage() {
                 const id = data.id;
                 // console.log(id);
                 // console.log(latitude, longitude, "coordinate");
-                setInput({
-                  weight: 0,
-                  categoryId: 0,
-                  description: "",
-                  price: 0,
-                });
+                // setInput({
+                //   weight: 0,
+                //   categoryId: 0,
+                //   description: "",
+                //   price: 0,
+                // });
                 navigation.navigate("MapPage", { id, orderLocation });
               } catch (error) {
                 console.log(error);

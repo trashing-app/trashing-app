@@ -142,42 +142,6 @@ export default function LoadingMap({ customerLocation }) {
             style={{ width: 40, height: 40 }}
           />
         </Marker>
-        {/* <Marker.Animated
-          ref={markerRef}
-          coordinate={{
-            ...currentLocation,
-            // latitudeDelta: 0.0922,
-            // longitudeDelta: 0.0421,
-          }}
-        >
-          <Image
-            source={require("../assets/images/MotorIcon.png")}
-            style={{ width: 40, height: 40 }}
-          />
-        </Marker.Animated>
-        <MapViewDirections
-          // origin={pickupCords}
-          origin={{
-            ...currentLocation,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          destination={customerLocation}
-          apikey={GOOGLE_MAPS_APIKEY}
-          strokeWidth={3}
-          strokeColor="hotpink"
-          optimizeWaypoints={true}
-          onReady={(result) => {
-            mapRef.current.fitToCoordinates(result.coordinates, {
-              edgePadding: {
-                right: 30,
-                bottom: 300,
-                left: 30,
-                top: 100,
-              },
-            });
-          }}
-        /> */}
         <Text>{text}</Text>
       </MapView>
     </SafeAreaView>

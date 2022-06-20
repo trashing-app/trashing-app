@@ -5,7 +5,19 @@ import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
+import storage from "../storage";
+import {
+  getAllOrder,
+  getCurrLocationOrder,
+  updateLocationC,
+} from "../constant/collectorFunction";
+
 function ListOrder() {
+  const [loggedUser, setLoggedUser] = useState({
+    id: "",
+    name: "",
+    token: "",
+  });
   const [orders, setOrders] = useState([]);
   const [localLocation, setLocalLocation] = useState({
     coords: {
@@ -39,83 +51,37 @@ function ListOrder() {
 
   // get all orders
   useEffect(() => {
-    if (orders) {
-      fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-          },
-        }
-      )
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Error");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          // console.log(data, "data full");
-          const orderId = orders.map((el) => {
-            return +el.id;
+    if (loggedUser.token) {
+      if (orders) {
+        getAllOrder(loggedUser.token)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Error");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            // console.log(data, "data full");
+            const orderId = orders.map((el) => {
+              return +el.id;
+            });
+            const result = data.filter(function (el) {
+              return this.indexOf(el.id) != -1;
+            }, orderId);
+            setAllOrder(result);
+            // console.log(result);
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          const result = data.filter(function (el) {
-            return this.indexOf(el.id) != -1;
-          }, orderId);
-          setAllOrder(result);
-          // console.log(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      }
     }
   }, [orders]);
 
   // ini get nearestOrder
   useEffect(() => {
-    fetch(
-      "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-        },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // console.log(data);
-        setOrders(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  // ini get nearestOrder
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
-          },
-        }
-      )
+    if (loggedUser.token) {
+      getCurrLocationOrder(loggedUser.token)
         .then((res) => {
           if (!res.ok) {
             throw new Error("Error");
@@ -123,31 +89,108 @@ function ListOrder() {
           return res.json();
         })
         .then((data) => {
+          // console.log(data);
           setOrders(data);
         })
         .catch((err) => {
           console.log(err);
         });
-    }, 60000);
-    return () => clearInterval(interval);
+    }
+  }, [loggedUser.token]);
+
+  // ini get nearestOrder
+  useEffect(() => {
+    if (loggedUser.token) {
+      const interval = setInterval(() => {
+        getCurrLocationOrder(loggedUser.token)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Error");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setOrders(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 60000);
+      return () => clearInterval(interval);
+    }
   });
 
   // ini get current loc collector
   useEffect(() => {
-    const interval = setInterval(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
-        }
+    if (loggedUser.token) {
+      const interval = setInterval(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== "granted") {
+            setErrorMsg("Permission to access location was denied");
+            return;
+          }
 
-        let location = await Location.getCurrentPositionAsync({});
-        setLocalLocation(location);
-      })();
-    }, 10000);
-    return () => clearInterval(interval);
+          let location = await Location.getCurrentPositionAsync({});
+          setLocalLocation(location);
+          updateLocationC(
+            loggedUser.token,
+            loggedUser.id,
+            location.coords.latitude,
+            location.coords.longitude
+          )
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Error");
+              }
+              return res.json();
+            })
+            .then((_) => {
+              // console.log("10 detik");
+            })
+            .catch((err) => {
+              console.log(err, "<<<11");
+            });
+        })();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
   });
+
+  //navigation guard
+  useEffect(() => {
+    storage
+      .load({
+        key: "loginState",
+      })
+      .then((ret) => {
+        setLoggedUser({
+          id: ret.id,
+          name: ret.name,
+          token: ret.token,
+        });
+        console.log(ret.id, ret.name, ret.token);
+      })
+      .catch((err) => {
+        console.warn(err.message);
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
+
+  if (!loggedUser.token) {
+    return (
+      <Text style={{ marginTop: "50%", paddingHorizontal: "50%" }}>
+        Loading...
+      </Text>
+    );
+  }
 
   return (
     <SafeAreaView>
@@ -164,6 +207,7 @@ function ListOrder() {
           style={{
             flexDirection: "row",
             justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {allOrder.map((el) => {

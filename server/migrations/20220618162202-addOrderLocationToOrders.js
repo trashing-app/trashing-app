@@ -1,11 +1,10 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Orders', 'orderLocation', Sequelize.GEOMETRY('POINT'));
+    await queryInterface.addColumn('Orders', 'location', Sequelize.GEOMETRY('POINT'));
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Orders', 'orderLocation');
-  },
+    await queryInterface.removeColumn('Orders', 'location');
+  }  
 };

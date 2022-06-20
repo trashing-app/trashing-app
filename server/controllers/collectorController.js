@@ -1,4 +1,6 @@
-const { Collector } = require("../models");
+
+const { Collector, Sequelize } = require("../models");
+
 
 class CollectorController {
   static async getCollectors(req, res, next) {
@@ -53,12 +55,12 @@ class CollectorController {
   static async updateLocation(req, res, next) {
     try {
       const { id } = req.params;
-      // const { location } = req.body;
-      const updated = await User.update(
+      const { longitude, latitude } = req.body;
+      const updated = await Collector.update(
         {
           location: Sequelize.fn(
             "ST_GeomFromText",
-            "POINT(107.5925576773082 -6.940669415817259)"
+            `POINT(${longitude} ${latitude})`
           ),
         },
         {
