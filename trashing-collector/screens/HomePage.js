@@ -30,7 +30,7 @@ export default function HomePage({ route }) {
     token:""
   })
   const [order, setOrder] = useState({})
-  const [location, setLocation] = useState({
+  const [localLocation, setLocalLocation] = useState({
     coords: {
       latitude: "",
       longitude: "",
@@ -65,7 +65,7 @@ export default function HomePage({ route }) {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      setLocalLocation(location);
 
       setState({
         ...state,
@@ -96,7 +96,7 @@ export default function HomePage({ route }) {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+        setLocalLocation(location);
         setState({
           ...state,
           pickUpCord: {
@@ -105,6 +105,12 @@ export default function HomePage({ route }) {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           },
+          destinationCord: {
+            latitude: route.params.latitude,
+            longitude: route.params.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }
         });
         setIsLoading(true);
       })();
@@ -169,7 +175,7 @@ export default function HomePage({ route }) {
     })
   },[])
 
-  if (!isLoading && location) {
+  if (!isLoading && localLocation) {
     return (
       <SafeAreaView>
         <Text>Loading...</Text>
