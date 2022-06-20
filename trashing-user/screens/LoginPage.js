@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Pressable, TextInput, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  Pressable,
+  TextInput,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ToastAndroid,
+  Image,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
 import { useNavigation } from '@react-navigation/native';
@@ -56,19 +65,33 @@ export default function LoginPage() {
           expires: null,
         });
         navigation.navigate('tabnavigation');
+        ToastAndroid.showWithGravity('Login successfull', ToastAndroid.LONG, ToastAndroid.CENTER);
         setEmail('');
         setPassword('');
       } else {
         throw 'login failed';
       }
     } catch (err) {
-      console.log(err);
+      ToastAndroid.showWithGravity(
+        'Invalid email/password',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
     }
   };
 
   return (
     <>
       <View style={styles.container}>
+        <Image
+          style={{
+            height: 70,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+          source={require('../assets/images/TRASHING.png')}
+        />
         <View style={styles.inputContainer}>
           <TextInput
             placeholderTextColor="#ffffff"
