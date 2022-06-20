@@ -143,7 +143,7 @@ export default function OrderPage() {
                 //   latitude,
                 // });
                 const { data } = await axios.post(
-                  `https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io/orders`,
+                  `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders`,
                   {
                     // weight,
                     // categoryId,

@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function MapPage({ route }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
   const baseUrl =
-    "https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io";
+    "https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io";
   const { id, orderLocation } = route.params;
   // const mapRef = useRef();
   // const markerRef = useRef();
