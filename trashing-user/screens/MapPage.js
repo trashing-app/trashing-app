@@ -15,14 +15,15 @@ import LoadingMap from "./LoadingMap";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AcceptedMap from "./AcceptedMap";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MapPage({ route }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
   const baseUrl =
     "https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io";
   const { id } = route.params;
-  const mapRef = useRef();
-  const markerRef = useRef();
+  // const mapRef = useRef();
+  // const markerRef = useRef();
   // const animate = (latitude, longitude) => {
   //   const newCoordinate = { latitude, longitude };
   //   if ((Platform.OS = "android")) {
@@ -65,6 +66,7 @@ export default function MapPage({ route }) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [approvalStatus, setApprovalStatus] = useState("Not Approved");
+  const navigation = useNavigation();
 
   useEffect(() => {
     // getLiveLocation();
@@ -121,6 +123,13 @@ export default function MapPage({ route }) {
         // longitudeDelta: 0.0421,
       },
     });
+    const { rawData } = JSON.parse(await AsyncStorage.getItem("loginState"));
+    const userId = rawData.id;
+    // console.log(userId, "USER");
+    const { data } = await axios.patch(`${baseUrl}/users/location/${userId}`, {
+      longitude,
+      latitude,
+    });
     setLocation(position);
   };
 
@@ -154,14 +163,14 @@ export default function MapPage({ route }) {
   const getCollectorLocation = async (collectorId) => {
     const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
     console.log(data.location, "GET COLLECTOR LOCATION");
-    // const [longitude, latitude] = data.location.coordinates;
-    // setState({
-    //   ...state,
-    //   collectorLocation: {
-    //     latitude,
-    //     longitude,
-    //   },
-    // });
+    const [longitude, latitude] = data.location.coordinates;
+    setState({
+      ...state,
+      collectorLocation: {
+        latitude,
+        longitude,
+      },
+    });
   };
 
   let text = "Loading..";
@@ -189,10 +198,14 @@ export default function MapPage({ route }) {
           // console.log(data, "Approval Status");
           if (approvalStatus === "Not Approved") {
             console.log(data.approvalStatus, "CHANGE STATUS");
-            // setApprovalStatus(data.approvalStatus);
+            setApprovalStatus(data.approvalStatus);
           } else {
-            console.log(data.collectorId, "CHANGE STATUS");
-            // getCollectorLocation(data.collectorId);
+            if (data.orderStatus === "Completed") {
+              navigation.navigate("tabnavigation");
+            } else {
+              console.log(data.collectorId, "CHANGE STATUS");
+              getCollectorLocation(data.collectorId);
+            }
           }
         } catch (error) {
           console.log(error);

@@ -18,7 +18,7 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
   const mapRef = useRef();
   const markerRef = useRef();
   console.log("LOADING....");
-  console.log(collectorLocation);
+  //   console.log(collectorLocation);
   //   const animate = (latitude, longitude) => {
   //     const newCoordinate = { latitude, longitude };
   //     if ((Platform.OS = "android")) {
@@ -101,7 +101,7 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
   //     setLocation(position);
   //   };
 
-  let text = "Waiting..";
+  let text = "Editing...";
   //   if (errorMsg) {
   //     text = errorMsg;
   //   } else if (location) {
@@ -188,8 +188,8 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
             });
           }}
         />
-        {/* <Text>{text}</Text> */}
       </MapView>
+      {/* <Text>{text}</Text> */}
     </View>
   );
 }

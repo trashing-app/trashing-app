@@ -1,5 +1,3 @@
-// import { useState } from "react";
-
 import { useEffect, useState } from "react";
 import {
   Pressable,
@@ -43,36 +41,39 @@ export default function LoginPage() {
   }, []);
 
   const doLogin = async () => {
-    // the fetching goes here
-    const { data } = await axios.post(
-      `https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/pub/users/login`,
-      {
-        email,
-        password,
-      }
-    );
-    if (data.access_token) {
-      const { id, username, email, access_token } = data;
-      console.log("login success");
-      storage.save({
-        key: "loginState",
-        data: {
-          id,
-          name: username,
+    try {
+      const { data } = await axios.post(
+        `https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io/pub/users/login`,
+        {
           email,
-          photoUrl:
-            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          welcomeMessage: "Hello",
-          role: "default",
-          token: access_token,
-        },
-        expires: null,
-      });
-      navigation.navigate("tabnavigation");
-      setEmail("");
-      setPassword("");
-    } else {
-      throw "login failed";
+          password,
+        }
+      );
+      if (data.access_token) {
+        const { id, username, email, access_token } = data;
+        console.log("login success");
+        storage.save({
+          key: "loginState",
+          data: {
+            id,
+            name: username,
+            email,
+            photoUrl:
+              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+            welcomeMessage: "Hello",
+            role: "default",
+            token: access_token,
+          },
+          expires: null,
+        });
+        navigation.navigate("tabnavigation");
+        setEmail("");
+        setPassword("");
+      } else {
+        throw "login failed";
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -157,5 +158,6 @@ const styles = StyleSheet.create({
     padding: 14,
     fontSize: 22,
     width: "87%",
+    color: "#ffffff",
   },
 });

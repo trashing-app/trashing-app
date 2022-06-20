@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "Not Paid",
       },
-      location: {
+      orderLocation: {
         type: DataTypes.GEOMETRY("POINT"),
       },
       collectorChatId: {

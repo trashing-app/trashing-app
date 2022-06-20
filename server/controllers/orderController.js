@@ -13,6 +13,10 @@ class OrderController {
             include: ["Category"],
           },
         ],
+        where: {
+          orderStatus: "Not Completed",
+          approvalStatus: "Not Approved",
+        },
       });
       res.status(200).json(orders);
     } catch (err) {
@@ -60,7 +64,8 @@ class OrderController {
 
   static async addOrder(req, res, next) {
     try {
-      const { weight, categoryId, description, price } = req.body;
+      const { orderItems, longitude, latitude } = req.body;
+
       const userId = req.pass.id;
       const newOrder = await Order.create({
         userId,
@@ -68,13 +73,7 @@ class OrderController {
         userChatId: userId + `${Date.now()}`,
       });
 
-      await OrderItem.create({
-        weight,
-        categoryId,
-        description,
-        orderId: newOrder.id,
-        price,
-      });
+      await OrderItem.bulkCreate(orderItems);
 
       res.status(201).json(newOrder);
     } catch (err) {
