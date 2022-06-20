@@ -13,10 +13,10 @@ class OrderController {
             include: ["Category"],
           },
         ],
-        where:{
-          orderStatus:"Not Completed",
-          approvalStatus: "Not Approved"
-        }
+        where: {
+          orderStatus: "Not Completed",
+          approvalStatus: "Not Approved",
+        },
       });
       res.status(200).json(orders);
     } catch (err) {
@@ -65,19 +65,24 @@ class OrderController {
   static async addOrder(req, res, next) {
     try {
       const { orderItems, longitude, latitude } = req.body;
+
       const location = Sequelize.fn(
         "ST_GeomFromText",
         `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
       )
+
       const userId = req.pass.id;
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
         userChatId: userId + `${Date.now()}`,
-        location
+        location       
       });
 
-      await OrderItem.bulkCreate(orderItems)
+      orderItems.forEach((el) => {
+        el.orderId = newOrder.id;
+
+      await OrderItem.bulkCreate(orderItems);
 
       res.status(201).json(newOrder);
     } catch (err) {

@@ -120,7 +120,7 @@ export default function HomePage({ route }) {
 
   function clickComplete(id) {
     fetch(
-      `https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/complete/${id}`
+      `https://2567-2001-448a-10a8-362f-28b9-de00-62a7-58c9.ap.ngrok.io/orders/complete/${id}`
     ).then((res) => {
       if (!res.ok) {
         throw new Error("Error");

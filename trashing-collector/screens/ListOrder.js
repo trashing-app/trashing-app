@@ -6,6 +6,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
 import storage from "../storage";
+import {
+  getAllOrder,
+  getCurrLocationOrder,
+  updateLocationC,
+} from "../constant/collectorFunction";
+
 function ListOrder() {
   const [loggedUser, setLoggedUser] = useState({
     id:"",
@@ -112,8 +118,7 @@ function ListOrder() {
 
   // ini get nearestOrder
   useEffect(() => {
-    if(loggedUser.token){
-      
+    if(loggedUser.token){     
       const interval = setInterval(() => {
         fetch(
           "https://c9ab-125-160-217-65.ap.ngrok.io/orders/nearestOrder",
@@ -234,6 +239,7 @@ function ListOrder() {
           style={{
             flexDirection: "row",
             justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {allOrder.map((el) => {
