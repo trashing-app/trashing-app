@@ -1,11 +1,11 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate(models) {
-      Order.belongsTo(models.User, { foreignKey: 'userId' });
-      Order.belongsTo(models.Collector, { foreignKey: 'collectorId' });
-      Order.hasMany(models.OrderItem, { foreignKey: 'orderId' });
+      Order.belongsTo(models.User, { foreignKey: "userId" });
+      Order.belongsTo(models.Collector, { foreignKey: "collectorId" });
+      Order.hasMany(models.OrderItem, { foreignKey: "orderId" });
     }
   }
   Order.init(
@@ -24,26 +24,29 @@ module.exports = (sequelize, DataTypes) => {
       },
       orderStatus: {
         type: DataTypes.STRING,
-        defaultValue: 'Not Completed',
+        defaultValue: "Not Completed",
       },
       approvalStatus: {
         type: DataTypes.STRING,
-        defaultValue: 'Not Approved',
+        defaultValue: "Not Approved",
       },
       paymentStatus: {
         type: DataTypes.STRING,
-        defaultValue: 'Not Paid',
+        defaultValue: "Not Paid",
+      },
+      location: {
+        type: DataTypes.GEOMETRY("POINT"),
       },
       collectorChatId: {
         type: DataTypes.STRING,
       },
       userChatId: {
         type: DataTypes.STRING,
-      }
+      },
     },
     {
       sequelize,
-      modelName: 'Order',
+      modelName: "Order",
     }
   );
   return Order;
