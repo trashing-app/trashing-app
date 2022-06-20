@@ -87,12 +87,13 @@ class UserController {
   static async updateLocation(req, res, next) {
     try {
       const { id } = req.params;
-      // const { location } = req.body;
+      console.log(req.body);
+      const { longitude, latitude } = req.body;
       const updated = await User.update(
         {
           location: Sequelize.fn(
             "ST_GeomFromText",
-            "POINT(107.5925576773082 -6.940669415817259)"
+            `POINT(${longitude} ${latitude})`
           ),
         },
         {
@@ -119,6 +120,24 @@ class UserController {
         },
       });
 
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getUserLocation(req, res, next) {
+    try {
+      const id = +req.params.id;
+      const user = await User.findOne({
+        where: {
+          id,
+        },
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "username", "email", "address", "phoneNumber", "balance", "role"],
+        },
+      });
+      if (!user) throw new Error("Not found");
       res.status(200).json(user);
     } catch (err) {
       next(err);

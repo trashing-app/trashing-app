@@ -104,6 +104,47 @@ class CollectorController {
       next(err);
     }
   }
+
+  static async getCollectorLocation(req, res, next) {
+    try {
+      const id = +req.params.id;
+      const collector = await Collector.findOne({
+        where: {
+          id,
+        },
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "username", "email", "address", "phoneNumber"],
+        },
+      });
+      if (!collector) throw new Error("Not found");
+      res.status(200).json(collector);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updateLocation(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { longitude, latitude } = req.body;
+      const updated = await Collector.update(
+        {
+          location: Sequelize.fn(
+            "ST_GeomFromText",
+            `POINT(${longitude} ${latitude})`
+          ),
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      res.status(201).json(updated);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = CollectorController;
