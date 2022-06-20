@@ -8,6 +8,7 @@ router.post('/', UserController.addUser);
 router.put('/:id', UserController.updateUser);
 router.put('/:id', UserController.topupBalance);
 router.patch('/location/:id', UserController.updateLocation);
+router.get('/location/:id', UserController.getUserLocation);
 router.delete('/:id', UserController.deleteUser);
 
 module.exports = router;
