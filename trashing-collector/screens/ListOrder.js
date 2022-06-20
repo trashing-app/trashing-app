@@ -14,10 +14,10 @@ import {
 
 function ListOrder() {
   const [loggedUser, setLoggedUser] = useState({
-    id:"",
-    name:"",
-    token:""
-  })
+    id: "",
+    name: "",
+    token: "",
+  });
   const [orders, setOrders] = useState([]);
   const [localLocation, setLocalLocation] = useState({
     coords: {
@@ -51,18 +51,9 @@ function ListOrder() {
 
   // get all orders
   useEffect(() => {
-    if (loggedUser.token){
+    if (loggedUser.token) {
       if (orders) {
-        fetch(
-          "https://c9ab-125-160-217-65.ap.ngrok.io/orders",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              access_token:loggedUser.token,
-            },
-          }
-        )
+        getAllOrder(loggedUser.token)
           .then((res) => {
             if (!res.ok) {
               throw new Error("Error");
@@ -89,47 +80,29 @@ function ListOrder() {
 
   // ini get nearestOrder
   useEffect(() => {
-    if(loggedUser.token){
-      fetch(
-        "https://c9ab-125-160-217-65.ap.ngrok.io/orders/nearestOrder",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            access_token:loggedUser.token,
-          },
-        }
-      )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // console.log(data);
-        setOrders(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (loggedUser.token) {
+      getCurrLocationOrder(loggedUser.token)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Error");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          // console.log(data);
+          setOrders(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [loggedUser.token]);
 
   // ini get nearestOrder
   useEffect(() => {
-    if(loggedUser.token){     
+    if (loggedUser.token) {
       const interval = setInterval(() => {
-        fetch(
-          "https://c9ab-125-160-217-65.ap.ngrok.io/orders/nearestOrder",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              access_token:loggedUser.token,
-            },
-          }
-        )
+        getCurrLocationOrder(loggedUser.token)
           .then((res) => {
             if (!res.ok) {
               throw new Error("Error");
@@ -149,79 +122,74 @@ function ListOrder() {
 
   // ini get current loc collector
   useEffect(() => {
-    if(loggedUser.token){
-    const interval = setInterval(() => {
+    if (loggedUser.token) {
+      const interval = setInterval(() => {
         (async () => {
           let { status } = await Location.requestForegroundPermissionsAsync();
           if (status !== "granted") {
             setErrorMsg("Permission to access location was denied");
             return;
           }
-  
+
           let location = await Location.getCurrentPositionAsync({});
           setLocalLocation(location);
-          fetch(
-            `https://c9ab-125-160-217-65.ap.ngrok.io/collectors/location/${loggedUser.id}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                access_token:loggedUser.token,
-              },
-              body: JSON.stringify({
-                latitude:location.coords.latitude,
-                longitude:location.coords.longitude,
-              }),
-            }
+          updateLocationC(
+            loggedUser.token,
+            loggedUser.id,
+            location.coords.latitude,
+            location.coords.longitude
           )
-          .then((res) => {
-                if (!res.ok) {
-                  throw new Error("Error");
-                }
-                return res.json();
-              })
-              .then((_) => {
-                // console.log("10 detik");
-              })
-              .catch((err) => {
-                console.log(err, "<<<11");
-              });
-          })();
-        }, 10000);
-        return () => clearInterval(interval);
-      }
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Error");
+              }
+              return res.json();
+            })
+            .then((_) => {
+              // console.log("10 detik");
+            })
+            .catch((err) => {
+              console.log(err, "<<<11");
+            });
+        })();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
   });
 
-
   //navigation guard
-  useEffect(()=>{
+  useEffect(() => {
     storage
-    .load({
-      key: 'loginState',
-    })
-    .then(ret => {
-      setLoggedUser({
-        id:ret.id,
-        name:ret.name,
-        token:ret.token
+      .load({
+        key: "loginState",
       })
-      console.log(ret.id, ret.name, ret.token)
-    })
-    .catch(err => {
-      console.warn(err.message);
-      switch (err.name) {
-        case 'NotFoundError':
-          navigation.navigate('LoginPage')
-          break
-        case 'ExpiredError':
-          navigation.navigate('LoginPage')
-          break
-      }
-    })
-  },[])
+      .then((ret) => {
+        setLoggedUser({
+          id: ret.id,
+          name: ret.name,
+          token: ret.token,
+        });
+        console.log(ret.id, ret.name, ret.token);
+      })
+      .catch((err) => {
+        console.warn(err.message);
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
 
-  if(!loggedUser.token){
-    return <Text style={{marginTop:"50%", paddingHorizontal:"50%"}}>Loading...</Text>
+  if (!loggedUser.token) {
+    return (
+      <Text style={{ marginTop: "50%", paddingHorizontal: "50%" }}>
+        Loading...
+      </Text>
+    );
   }
 
   return (

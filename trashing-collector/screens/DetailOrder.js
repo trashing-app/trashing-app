@@ -1,9 +1,45 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import storage from "../storage";
+import { commitOrder } from "../constant/collectorFunction";
+import { useEffect, useState } from "react";
 function DetailOrder({ route }) {
   const { order, distance } = route.params;
   // console.log(order, "<<<<<");
+  const [loggedUser, setLoggedUser] = useState({
+    id: "",
+    name: "",
+    token: "",
+  });
+
+  //navigation guard
+  useEffect(() => {
+    storage
+      .load({
+        key: "loginState",
+      })
+      .then((ret) => {
+        setLoggedUser({
+          id: ret.id,
+          name: ret.name,
+          token: ret.token,
+        });
+        console.log(ret.id, ret.name, ret.token);
+      })
+      .catch((err) => {
+        console.warn(err.message);
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
+
   const rupiahFormatter = (amount) => {
     let str = Number(amount)
       .toFixed(2)
@@ -11,7 +47,29 @@ function DetailOrder({ route }) {
     str = str.substring(0, str.length - 3);
     return "Rp." + str;
   };
+
   const navigation = useNavigation();
+
+  function handleCommitOrder() {
+    commitOrder(loggedUser.token, loggedUser.id)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        navigation.navigate("HomePage", {
+          longitude: order.location.coordinates[0],
+          latitude: order.location.coordinates[1],
+          orderId: order.id,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function goToListOrder() {
     navigation.navigate("ListOrder");
   }
@@ -82,11 +140,7 @@ function DetailOrder({ route }) {
               marginHorizontal: 10,
             }}
             onPress={() => {
-              navigation.navigate("HomePage", {
-                longitude: order.location.coordinates[0],
-                latitude: order.location.coordinates[1],
-                orderId: order.id,
-              });
+              handleCommitOrder();
             }}
           >
             <Text

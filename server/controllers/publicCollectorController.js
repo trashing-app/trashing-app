@@ -22,7 +22,12 @@ class PublicCollectorController {
         username: foundCollector.username,
       };
       const access_token = encode(payload);
-      res.status(200).json(access_token);
+      res.status(200).json({
+        id: foundCollector.id,
+        username: foundCollector.username,
+        email: foundCollector.email,
+        access_token,
+      });
     } catch (err) {
       next(err);
     }

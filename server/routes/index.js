@@ -4,8 +4,9 @@ const user = require("./user");
 const collector = require("./collector");
 const order = require("./order");
 const publicUser = require("./publicUser");
+const orderItem = require("./orderItem");
 const publicCollector = require("./publicCollector");
-const category = require('./category')
+const category = require("./category");
 const { errorHandler } = require("../middlewares/errorHandler");
 const { isLoggedIn } = require("../middlewares/isLoggedIn");
 
@@ -18,5 +19,6 @@ router.use("/collectors", collector);
 router.use("/pub/users", publicUser);
 router.use("/pub/collectors", publicCollector);
 router.use("/orders", isLoggedIn, order);
+router.use("/orderItems", orderItem);
 router.use(errorHandler);
 module.exports = router;
