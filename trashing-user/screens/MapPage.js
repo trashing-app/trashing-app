@@ -155,7 +155,6 @@ export default function MapPage({ route }) {
     const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
     // console.log(data.location, "GET COLLECTOR LOCATION");
     const [longitude, latitude] = data.location.coordinates;
-    // console.log(latitude, longitude, "CHECK");
     setState({
       ...state,
       collectorLocation: {
