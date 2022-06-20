@@ -12,12 +12,13 @@ import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import * as Location from "expo-location";
 
-export default function LoadingMap({ customerLocation }) {
+export default function AcceptedMap({ customerLocation, collectorLocation }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
 
   const mapRef = useRef();
   const markerRef = useRef();
   console.log("LOADING....");
+  console.log(collectorLocation);
   //   const animate = (latitude, longitude) => {
   //     const newCoordinate = { latitude, longitude };
   //     if ((Platform.OS = "android")) {
@@ -135,18 +136,24 @@ export default function LoadingMap({ customerLocation }) {
         }
       >
         {/* <Marker coordinate={pickupCords} /> */}
-        <Marker coordinate={customerLocation}>
+        <Marker
+          coordinate={{
+            ...customerLocation,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
           <Image
             source={require("../assets/images/Person.png")}
             style={{ width: 40, height: 40 }}
           />
         </Marker>
-        {/* <Marker.Animated
+        <Marker.Animated
           ref={markerRef}
           coordinate={{
-            ...currentLocation,
-            // latitudeDelta: 0.0922,
-            // longitudeDelta: 0.0421,
+            ...collectorLocation,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
         >
           <Image
@@ -157,11 +164,15 @@ export default function LoadingMap({ customerLocation }) {
         <MapViewDirections
           // origin={pickupCords}
           origin={{
-            ...currentLocation,
+            ...collectorLocation,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          destination={customerLocation}
+          destination={{
+            ...customerLocation,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
           apikey={GOOGLE_MAPS_APIKEY}
           strokeWidth={3}
           strokeColor="hotpink"
@@ -176,8 +187,8 @@ export default function LoadingMap({ customerLocation }) {
               },
             });
           }}
-        /> */}
-        <Text>{text}</Text>
+        />
+        {/* <Text>{text}</Text> */}
       </MapView>
     </View>
   );

@@ -14,6 +14,7 @@ import * as Location from "expo-location";
 import LoadingMap from "./LoadingMap";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AcceptedMap from "./AcceptedMap";
 
 export default function MapPage({ route }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
@@ -22,16 +23,16 @@ export default function MapPage({ route }) {
   const { id } = route.params;
   const mapRef = useRef();
   const markerRef = useRef();
-  const animate = (latitude, longitude) => {
-    const newCoordinate = { latitude, longitude };
-    if ((Platform.OS = "android")) {
-      if (markerRef.current) {
-        markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
-      }
-    } else {
-      coordinate.timing(newCoordinate).start();
-    }
-  };
+  // const animate = (latitude, longitude) => {
+  //   const newCoordinate = { latitude, longitude };
+  //   if ((Platform.OS = "android")) {
+  //     if (markerRef.current) {
+  //       markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
+  //     }
+  //   } else {
+  //     coordinate.timing(newCoordinate).start();
+  //   }
+  // };
   const [state, setState] = useState({
     // pickupCords: {
     //   latitude: -6.2,
@@ -44,6 +45,7 @@ export default function MapPage({ route }) {
       longitude: 110.370529,
     },
     customerLocation: false,
+    collectorLocation: false,
     // {
     // latitude: -6.178306,
     // latitude: -7.840243,
@@ -53,15 +55,17 @@ export default function MapPage({ route }) {
     // longitudeDelta: 0.0421,
     // },
     isLoading: false,
-    coordinate: new AnimatedRegion({
-      ...currentLocation,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
+    // coordinate: new AnimatedRegion({
+    //   ...currentLocation,
+    //   latitudeDelta: 0.0922,
+    //   longitudeDelta: 0.0421,
+    // }),
   });
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [approvalStatus, setApprovalStatus] = useState("Not Approved");
+
   useEffect(() => {
     // getLiveLocation();
     getCustomerLocation();
@@ -81,7 +85,7 @@ export default function MapPage({ route }) {
     };
 
     orderLocation().catch((error) => {
-      console.log(error, "LINE 78");
+      console.log(error, "LINE 84");
     });
     // setState({
     //   ...state,
@@ -113,8 +117,8 @@ export default function MapPage({ route }) {
       customerLocation: {
         latitude: latitude,
         longitude: longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        // latitudeDelta: 0.0922,
+        // longitudeDelta: 0.0421,
       },
     });
     setLocation(position);
@@ -147,7 +151,21 @@ export default function MapPage({ route }) {
   //   setLocation(position);
   // };
 
-  let text = "Waiting..";
+  const getCollectorLocation = async (collectorId) => {
+    const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
+    // console.log(data.location, "GET COLLECTOR LOCATION");
+    const [longitude, latitude] = data.location.coordinates;
+    // console.log(latitude, longitude, "CHECK");
+    setState({
+      ...state,
+      collectorLocation: {
+        latitude,
+        longitude,
+      },
+    });
+  };
+
+  let text = "Loading..";
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -157,14 +175,51 @@ export default function MapPage({ route }) {
   useEffect(() => {
     const interval = setInterval(() => {
       console.log("UPDATING....");
+      /*
+      check order status
+      */
+      let data = [];
+      const getOrder = async () => {
+        try {
+          const access_token = await AsyncStorage.getItem("access_token");
+          // console.log(id, "ID");
+          const order = await axios.get(`${baseUrl}/orders/${id}`, {
+            headers: { access_token },
+          });
+          data = order.data;
+          // console.log(data, "Approval Status");
+          if (approvalStatus === "Not Approved") {
+            console.log(data.approvalStatus, "CHANGE STATUS");
+            setApprovalStatus(data.approvalStatus);
+          } else {
+            console.log(data.collectorId, "CHANGE STATUS");
+            getCollectorLocation(data.collectorId);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getOrder().catch((error) => {
+        console.log(error, "LINE 200");
+      });
       // getLiveLocation();
     }, 5000);
     return () => clearInterval(interval);
   });
 
-  const { pickupCords, customerLocation, currentLocation, coordinate } = state;
+  const { customerLocation, currentLocation, collectorLocation } = state;
   if (customerLocation) {
-    return <LoadingMap customerLocation={customerLocation} />;
+    if (collectorLocation) {
+      return (
+        <AcceptedMap
+          customerLocation={customerLocation}
+          collectorLocation={collectorLocation}
+        />
+      );
+    } else {
+      return <LoadingMap customerLocation={customerLocation} />;
+    }
   } else {
     return <Text>{text}</Text>;
   }
