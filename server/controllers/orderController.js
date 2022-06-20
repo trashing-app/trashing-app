@@ -69,18 +69,19 @@ class OrderController {
       const location = Sequelize.fn(
         "ST_GeomFromText",
         `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
-      )
+      );
 
       const userId = req.pass.id;
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
         userChatId: userId + `${Date.now()}`,
-        location       
+        location,
       });
 
       orderItems.forEach((el) => {
         el.orderId = newOrder.id;
+      });
 
       await OrderItem.bulkCreate(orderItems);
 
