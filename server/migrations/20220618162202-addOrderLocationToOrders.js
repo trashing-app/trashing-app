@@ -10,7 +10,7 @@ module.exports = {
      */
     await queryInterface.addColumn(
       "Orders",
-      "orderLocation",
+      "location",
       Sequelize.GEOMETRY("POINT")
     );
   },
@@ -22,6 +22,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn("Orders", "orderLocation");
+    await queryInterface.removeColumn("Orders", "location");
   },
 };

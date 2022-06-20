@@ -8,6 +8,6 @@ router.put("/complete/:id", OrderController.completeOrder);
 router.put("/approve/:id", OrderController.approveOrder);
 router.put("/pay/:id", OrderController.payOrder);
 router.delete("/:id", OrderController.deleteOrder);
+router.get("/nearestOrder", OrderController.findOrderByRadius);
 router.get("/:id", OrderController.getOrderById);
-
 module.exports = router;
