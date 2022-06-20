@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: {
+          msg: 'Username already taken',
+        },
         validate: {
           notEmpty: {
             msg: 'Username required',
@@ -24,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: {
+          msg: 'Email already used',
+        },
         validate: {
           notEmpty: {
             msg: 'Email required',

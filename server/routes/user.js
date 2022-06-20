@@ -11,4 +11,3 @@ router.patch('/location/:id', UserController.updateLocation);
 router.delete('/:id', UserController.deleteUser);
 
 module.exports = router;
-/* <== TRASHING ==> */

@@ -1,52 +1,77 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  Image,
+  ScrollView,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AboutUs from '../components/AboutUs';
+
+const dimWidth = Dimensions.get('window').width;
 
 export default function HomePage() {
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 30, backgroundColor: 'blue', marginTop: '40%' }}>Trashing</Text>
-      <Text
-        style={{
-          fontSize: 18,
-          backgroundColor: 'black',
-          color: 'white',
-          marginTop: 10,
-          width: 390,
-          textAlign: 'center',
-        }}
-      >
-        Your solution to dispose of your household waste
-      </Text>
-      <StatusBar style="auto" />
-      <AboutUs />
-      <View style={styles.bottomCenter}>
-        <View
+      <ScrollView>
+        <Image
           style={{
-            justifyContent: 'center',
+            marginTop: 20,
+            height: 70,
             alignItems: 'center',
-            marginTop: 60,
+            justifyContent: 'center',
+            width: '100%',
+          }}
+          source={require('../assets/images/TRASHING.png')}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            marginTop: 10,
+            width: dimWidth,
+            paddingHorizontal: 20,
+            textAlign: 'center',
+            color: '#caf0f8',
           }}
         >
-          <View style={{ flexDirection: 'row' }}>
-            <Text>Already have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
-              <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>Login </Text>
-            </TouchableOpacity>
-            <Text>here! </Text>
-          </View>
-          <View style={{ flexDirection: 'row', marginTop: 5 }}>
-            <Text>or </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('RegisterPage')}>
-              <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>Register </Text>
-            </TouchableOpacity>
-            <Text>now!</Text>
+          Your solution to dispose of your household waste
+        </Text>
+        <StatusBar style="auto" />
+        <AboutUs />
+        <View style={styles.bottomCenter}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 60,
+            }}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: '#caf0f8', fontSize: 18 }}>Already have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
+                <Text style={{ color: '#03045e', textDecorationLine: 'underline', fontSize: 18 }}>
+                  Login
+                </Text>
+              </TouchableOpacity>
+              <Text style={{ color: '#caf0f8', fontSize: 18 }}> here! </Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+              <Text style={{ color: '#caf0f8', fontSize: 18 }}>or </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('RegisterPage')}>
+                <Text style={{ color: '#03045e', textDecorationLine: 'underline', fontSize: 18 }}>
+                  Register
+                </Text>
+              </TouchableOpacity>
+              <Text style={{ color: '#caf0f8', fontSize: 18 }}> now!</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -54,7 +79,7 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#00b4d8',
     alignItems: 'center',
   },
 });
