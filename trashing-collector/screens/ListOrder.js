@@ -5,7 +5,14 @@ import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
+import storage from "../storage";
+const BASE_URL = "https://c9ab-125-160-217-65.ap.ngrok.io/"
 function ListOrder() {
+  const [loggedUser, setLoggedUser] = useState({
+    id:"", 
+    name:"", 
+    token:""
+  })
   const [orders, setOrders] = useState([]);
   const [localLocation, setLocalLocation] = useState({
     coords: {
@@ -41,13 +48,12 @@ function ListOrder() {
   useEffect(() => {
     if (orders) {
       fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders",
+        BASE_URL+"orders",
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
+            access_token: loggedUser.token,
           },
         }
       )
@@ -77,13 +83,12 @@ function ListOrder() {
   // ini get nearestOrder
   useEffect(() => {
     fetch(
-      "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
+      BASE_URL+"orders/nearestOrder",
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
+          access_token:loggedUser.token,
         },
       }
     )
@@ -106,13 +111,12 @@ function ListOrder() {
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(
-        "https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/nearestOrder",
+        BASE_URL+"orders/nearestOrder",
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNjU1NjQwMDQyfQ.LWIrX8MBB8DM69SbB8PhZIAJIQx4UfRD-vkqB7skTtQ",
+            access_token:loggedUser.token,
           },
         }
       )
@@ -148,6 +152,38 @@ function ListOrder() {
     }, 10000);
     return () => clearInterval(interval);
   });
+
+
+  // Ini navigation guard
+  useEffect(()=>{
+    storage
+    .load({
+      key: 'loginState',
+    })
+    .then(ret => {
+      console.log(ret.id, ret.name, ret.token)
+      setLoggedUser({
+        id:ret.id,
+        name:ret.name,
+        token:ret.token
+      })
+    })
+    .catch(err => {
+      console.warn(err.message);
+      switch (err.name) {
+        case 'NotFoundError':
+          navigation.navigate('LoginPage')
+          break
+        case 'ExpiredError':
+          navigation.navigate('LoginPage')
+          break
+      }
+    })
+  },[])
+
+  if(!loggedUser.access_token){
+    return null
+  }
 
   return (
     <SafeAreaView>
