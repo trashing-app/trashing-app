@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
 
 export default function OrderPage() {
   const [input, setInput] = useState({
@@ -110,7 +111,7 @@ export default function OrderPage() {
             }}
             onPress={async () => {
               try {
-                console.log("TO MAP");
+                // console.log("TO MAP");
                 // console.log(weight, 1, description, price);
                 const { rawData } = JSON.parse(
                   await AsyncStorage.getItem("loginState")
@@ -118,6 +119,30 @@ export default function OrderPage() {
                 // console.log(rawData, "RAW DATA");
                 const access_token = rawData.token;
                 const { weight, categoryId, description, price } = input;
+
+                let { status } =
+                  await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                  setErrorMsg("Permission to access location was denied");
+                  return;
+                }
+
+                let position = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = position.coords;
+                // console.log("get customer location");
+                // animate(latitude, longitude);
+                const orderLocation = {
+                  latitude: latitude,
+                  longitude: longitude,
+                };
+                // const read = JSON.parse(await AsyncStorage.getItem("loginState"));
+                // const userId = read.rawData.id;
+                // console.log(userId, "USER");
+                // const { data } = await axios.patch(`${baseUrl}/users/location/${userId}`, {
+                //   longitude,
+                //   latitude,
+                // });
+
                 // const { data } = await axios.post(
                 //   `https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io/orders`,
                 //   {
@@ -125,6 +150,8 @@ export default function OrderPage() {
                 //     categoryId,
                 //     description,
                 //     price,
+                //      longitude,
+                // latitude
                 //   },
                 //   {
                 //     headers: { access_token },
@@ -134,9 +161,9 @@ export default function OrderPage() {
                 // console.log(token);
                 // await AsyncStorage.setItem("order", `${data.id}`);
                 const id = await AsyncStorage.getItem("order");
-                console.log(await AsyncStorage.getItem("order"));
-                console.log(await AsyncStorage.getItem("loginState"));
-                navigation.navigate("MapPage", { id });
+                console.log(id);
+                console.log(latitude, longitude, "coordinate");
+                navigation.navigate("MapPage", { id, orderLocation });
               } catch (error) {
                 console.log(error);
               }

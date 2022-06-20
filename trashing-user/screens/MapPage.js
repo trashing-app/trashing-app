@@ -21,7 +21,7 @@ export default function MapPage({ route }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
   const baseUrl =
     "https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io";
-  const { id } = route.params;
+  const { id, orderLocation } = route.params;
   // const mapRef = useRef();
   // const markerRef = useRef();
   // const animate = (latitude, longitude) => {
@@ -35,32 +35,9 @@ export default function MapPage({ route }) {
   //   }
   // };
   const [state, setState] = useState({
-    // pickupCords: {
-    //   latitude: -6.2,
-    //   longitude: 106.816666,
-    //   latitudeDelta: 0.0922,
-    //   longitudeDelta: 0.0421,
-    // },
-    currentLocation: {
-      latitude: -7.797068,
-      longitude: 110.370529,
-    },
     customerLocation: false,
     collectorLocation: false,
-    // {
-    // latitude: -6.178306,
-    // latitude: -7.840243,
-    // longitude: 106.631889,
-    // longitude: 110.408333,
-    // latitudeDelta: 0.0922,
-    // longitudeDelta: 0.0421,
-    // },
     isLoading: false,
-    // coordinate: new AnimatedRegion({
-    //   ...currentLocation,
-    //   latitudeDelta: 0.0922,
-    //   longitudeDelta: 0.0421,
-    // }),
   });
 
   const [location, setLocation] = useState(null);
@@ -68,40 +45,38 @@ export default function MapPage({ route }) {
   const [approvalStatus, setApprovalStatus] = useState("Not Approved");
   const navigation = useNavigation();
 
-  useEffect(() => {
-    // getLiveLocation();
-    getCustomerLocation();
-    console.log(state.customerLocation, "UPDATE LOKASI");
-
-    const orderLocation = async () => {
-      try {
-        const access_token = await AsyncStorage.getItem("access_token");
-        console.log(id, "ID");
-        const { data } = await axios.get(`${baseUrl}/orders/${id}`, {
-          headers: { access_token },
-        });
-        console.log(data, "ORDER LOCATION");
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    orderLocation().catch((error) => {
-      console.log(error, "LINE 84");
-    });
-    // setState({
-    //   ...state,
-    //   customerLocation: {
-    //     // latitude: -6.178306,
-    //     latitude: -7.840243,
-    //     // longitude: 106.631889,
-    //     longitude: 110.408333,
-    //     latitudeDelta: 0.0922,
-    //     longitudeDelta: 0.0421,
-    //   },
-    // });
-    // console.log(state.currentLocation, "Current location");
-  }, []);
+  // useEffect(() => {
+  // getLiveLocation();
+  // getCustomerLocation();
+  // console.log(state.customerLocation, "UPDATE LOKASI");
+  // const orderLocation = async () => {
+  //   try {
+  //     const access_token = await AsyncStorage.getItem("access_token");
+  //     console.log(id, "ID");
+  //     const { data } = await axios.get(`${baseUrl}/orders/${id}`, {
+  //       headers: { access_token },
+  //     });
+  //     console.log(data, "ORDER LOCATION");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // orderLocation().catch((error) => {
+  //   console.log(error, "LINE 84");
+  // });
+  // setState({
+  //   ...state,
+  //   customerLocation: {
+  //     // latitude: -6.178306,
+  //     latitude: -7.840243,
+  //     // longitude: 106.631889,
+  //     longitude: 110.408333,
+  //     latitudeDelta: 0.0922,
+  //     longitudeDelta: 0.0421,
+  //   },
+  // });
+  // console.log(state.currentLocation, "Current location");
+  // }, []);
 
   const getCustomerLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -112,8 +87,8 @@ export default function MapPage({ route }) {
 
     let position = await Location.getCurrentPositionAsync({});
     const { latitude, longitude } = position.coords;
-    console.log("get customer location");
     // animate(latitude, longitude);
+    console.log("get customer location");
     setState({
       ...state,
       customerLocation: {
@@ -126,11 +101,12 @@ export default function MapPage({ route }) {
     const { rawData } = JSON.parse(await AsyncStorage.getItem("loginState"));
     const userId = rawData.id;
     // console.log(userId, "USER");
-    const { data } = await axios.patch(`${baseUrl}/users/location/${userId}`, {
+    // console.log(latitude, longitude);
+    const update = await axios.patch(`${baseUrl}/users/location/${userId}`, {
       longitude,
       latitude,
     });
-    setLocation(position);
+    // setLocation(position);
   };
 
   // const getLiveLocation = async () => {
@@ -189,6 +165,7 @@ export default function MapPage({ route }) {
       let data = [];
       const getOrder = async () => {
         try {
+          await getCustomerLocation();
           const access_token = await AsyncStorage.getItem("access_token");
           // console.log(id, "ID");
           const order = await axios.get(`${baseUrl}/orders/${id}`, {
@@ -201,6 +178,7 @@ export default function MapPage({ route }) {
             setApprovalStatus(data.approvalStatus);
           } else {
             if (data.orderStatus === "Completed") {
+              // await AsyncStorage.removeItem("order")
               navigation.navigate("tabnavigation");
             } else {
               console.log(data.collectorId, "CHANGE STATUS");
@@ -221,16 +199,16 @@ export default function MapPage({ route }) {
   });
 
   const { customerLocation, currentLocation, collectorLocation } = state;
-  if (customerLocation) {
+  if (orderLocation) {
     if (collectorLocation) {
       return (
         <AcceptedMap
-          customerLocation={customerLocation}
+          customerLocation={orderLocation}
           collectorLocation={collectorLocation}
         />
       );
     } else {
-      return <LoadingMap customerLocation={customerLocation} />;
+      return <LoadingMap customerLocation={orderLocation} />;
     }
   } else {
     return <Text>{text}</Text>;

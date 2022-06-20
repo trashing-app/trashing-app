@@ -17,7 +17,7 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
 
   const mapRef = useRef();
   const markerRef = useRef();
-  console.log("LOADING....");
+  console.log("ACCEPTED....");
   //   console.log(collectorLocation);
   //   const animate = (latitude, longitude) => {
   //     const newCoordinate = { latitude, longitude };
