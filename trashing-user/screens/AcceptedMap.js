@@ -63,7 +63,7 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
           }}
         >
           <Image
-            source={require("../assets/images/bike.png")}
+            source={require("../assets/images/icon2.jpg")}
             style={{ width: 40, height: 40 }}
           />
         </Marker.Animated>
