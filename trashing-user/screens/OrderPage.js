@@ -111,8 +111,6 @@ export default function OrderPage() {
             }}
             onPress={async () => {
               try {
-                // console.log("TO MAP");
-                // console.log(weight, 1, description, price);
                 const { rawData } = JSON.parse(
                   await AsyncStorage.getItem("loginState")
                 );
