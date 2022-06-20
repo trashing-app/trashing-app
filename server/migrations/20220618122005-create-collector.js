@@ -24,11 +24,9 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       phoneNumber: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       location: {
         type: Sequelize.GEOMETRY('POINT'),

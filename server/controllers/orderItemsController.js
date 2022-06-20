@@ -5,6 +5,7 @@ class OrderItemController {
     try {
       const { orderId } = req.params;
       const orderItems = await OrderItem.findAll({
+        include: ["Category"],
         where: {
           orderId,
         },

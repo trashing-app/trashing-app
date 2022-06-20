@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev":"npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:dev": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
+    "db:test": "npx sequelize --env=test db:drop && npx sequelize --env=test db:create && npx sequelize --env=test db:migrate",
+    "test": "npx jest --verbose --detectOpenHandles --forceExit --runInBand --coverage",
+    "start": "nodemon bin/www.js"
   },
   "keywords": [],
   "author": "",

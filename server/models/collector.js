@@ -13,14 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: {
-          msg: 'Username already taken',
+          msg: 'Username is already taken',
         },
         validate: {
           notEmpty: {
-            msg: 'Username required',
+            msg: 'Username is required',
           },
           notNull: {
-            msg: 'Username required',
+            msg: 'Username is required',
           },
         },
       },
@@ -28,14 +28,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: {
-          msg: 'Email already used',
+          msg: 'Email is already taken',
         },
         validate: {
           notEmpty: {
-            msg: 'Email required',
+            msg: 'Email is required',
           },
           notNull: {
-            msg: 'Email required',
+            msg: 'Email is required',
           },
           isEmail: {
             msg: 'Invalid email format',
@@ -47,36 +47,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: 'Password required',
+            msg: 'Password is required',
           },
           notNull: {
-            msg: 'Password required',
+            msg: 'Password is required',
           },
         },
       },
       address: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: 'Address required',
-          },
-          notNull: {
-            msg: 'Address required',
-          },
-        },
       },
       phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: 'Phone Number required',
-          },
-          notNull: {
-            msg: 'Phone Number required',
-          },
-        },
       },
       location: {
         type: DataTypes.GEOMETRY('POINT'),
