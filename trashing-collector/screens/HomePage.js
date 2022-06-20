@@ -13,6 +13,8 @@ import MapView, { AnimatedRegion, Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import imagePath from "../constant/imagePath";
 import * as Location from "expo-location";
+import storage from "../storage";
+import { useNavigation } from "@react-navigation/native";
 const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
 
 const screen = Dimensions.get("window");
@@ -21,6 +23,13 @@ const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function HomePage({ route }) {
+  const navigation = useNavigation()
+  const [loggedUser, setLoggedUser] = useState({
+    id:"",
+    name:"",
+    token:""
+  })
+  const [order, setOrder] = useState({})
   const [location, setLocation] = useState({
     coords: {
       latitude: "",
@@ -111,8 +120,54 @@ export default function HomePage({ route }) {
         throw new Error("Error");
       }
       return res.json();
-    });
+    })
+    .catch(error => console.log(error))
   }
+
+  function onChat(){
+    fetch(`https://c9ab-125-160-217-65.ap.ngrok.io/orders/${route.params.orderId}`, {
+      headers:{
+        "Content-type":"application/json",
+        access_token:loggedUser.token
+      }
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("Error")
+      }
+      return res.json()
+    })
+    .then(res =>{
+      // setOrder(res)
+      navigation.navigate("Chat", {order:res})
+    })
+    .catch(error => console.log(error))
+  }
+
+  useEffect(()=>{
+    storage
+    .load({
+      key: 'loginState',
+    })
+    .then(ret => {
+      setLoggedUser({
+        id:ret.id,
+        name:ret.name,
+        token:ret.token
+      })
+    })
+    .catch(err => {
+      console.warn(err.message);
+      switch (err.name) {
+        case 'NotFoundError':
+          navigation.navigate('LoginPage')
+          break
+        case 'ExpiredError':
+          navigation.navigate('LoginPage')
+          break
+      }
+    })
+  },[])
 
   if (!isLoading && location) {
     return (
@@ -179,6 +234,7 @@ export default function HomePage({ route }) {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={onChat}
           >
             <Text>Chat</Text>
           </TouchableOpacity>

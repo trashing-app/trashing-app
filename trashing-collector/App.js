@@ -3,12 +3,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomePage from "./screens/HomePage";
 import ListOrder from "./screens/ListOrder";
 import DetailOrder from "./screens/DetailOrder";
+import LoginPage from "./screens/LoginPage";
+import Chat from "./components/Chat";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LoginPage"
+          component={LoginPage}
+        ></Stack.Screen>
         <Stack.Screen
           options={{ headerShown: false }}
           name="ListOrder"
@@ -25,6 +32,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="HomePage"
           component={HomePage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Chat"
+          component={Chat}
         />
       </Stack.Navigator>
     </NavigationContainer>

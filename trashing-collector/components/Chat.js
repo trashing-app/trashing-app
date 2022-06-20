@@ -1,11 +1,10 @@
 import * as TalkRn from '@talkjs/expo';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import storage from '../storage';
 import { Text, View } from 'react-native';
-const BASE_URL = "https://c9ab-125-160-217-65.ap.ngrok.io/"
 
-export default function Chat(props) {
+export default function Chat({ route }) {
+  const { order } = route.params
+  console.log(order);
   const [me, setMe] = useState({
       id: '',
       name: '',
@@ -27,31 +26,23 @@ export default function Chat(props) {
   const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
-    let temp
-    axios.get(BASE_URL+'orders/') // <---- butuh order id
-    .then(response => {
-      const { data } = response
-      temp = data
-      return storage.load({key: 'loginState'})
+    setMe({
+      id:order.collectorChatId,
+      name:order.Collector.username,
+      email:order.Collector.email,
+      photoUrl:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      welcomeMessage: "Hello",
+      role:"default"
     })
-    .then(loggedUser => {
-      const [ me ] = temp.filter(user => user.id === loggedUser.id)
-      const [ other ] = temp.filter(user => user.id !== loggedUser.id)
-      setMe(me)
-      setOther(other)
-      setLoading(false)
+    setOther({
+      id:order.userChatId,
+      name:order.User.username,
+      email:order.User.email,
+      photoUrl:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      welcomeMessage: "Hello",
+      role:"default"
     })
-    .catch(err => {
-      console.warn(err.message);
-      switch (err.name) {
-        case 'NotFoundError':
-          navigation.navigate('Login')
-          break
-        case 'ExpiredError':
-          navigation.navigate('Login')
-          break
-      }
-    })
+    setLoading(false)
   },[])
 
   const conversationBuilder = TalkRn.getConversationBuilder(
