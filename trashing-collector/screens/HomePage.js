@@ -20,7 +20,7 @@ const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default function HomePage() {
+export default function HomePage({ route }) {
   const [location, setLocation] = useState({
     coords: {
       latitude: "",
@@ -67,13 +67,12 @@ export default function HomePage() {
           longitudeDelta: LONGITUDE_DELTA,
         },
         destinationCord: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: route.params.latitude,
+          longitude: route.params.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         },
       });
-      // console.log("5 detik");
       setIsLoading(true);
     })();
   }, []);
@@ -104,6 +103,17 @@ export default function HomePage() {
     return () => clearInterval(interval);
   });
 
+  function clickComplete(id) {
+    fetch(
+      `https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/orders/complete/${id}`
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error("Error");
+      }
+      return res.json();
+    });
+  }
+
   if (!isLoading && location) {
     return (
       <SafeAreaView>
@@ -116,66 +126,8 @@ export default function HomePage() {
     <SafeAreaView style={styles.container}>
       <MapView ref={mapRef} style={styles.map} initialRegion={pickUpCord}>
         <Marker coordinate={pickUpCord} image={imagePath.icCurLoc} />
-        {/* 
-        <Marker coordinate={destinationCord} image={imagePath.icGreenMarker} /> */}
-        <Marker
-          image={imagePath.icGreenMarker}
-          onPress={() => {
-            console.log("hai");
-            Alert.alert("Destination", "Choose this location", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") },
-            ]);
-            setState({
-              ...state,
-              destinationCord: {
-                latitude: -4.1358869,
-                longitude: 104.178226,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              },
-            });
-          }}
-          coordinate={{
-            latitude: -4.1358869,
-            longitude: 104.178226,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-        />
-        <Marker
-          image={imagePath.icGreenMarker}
-          onPress={() => {
-            console.log("hai2");
-            Alert.alert("Destination", "Choose this location", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") },
-            ]);
-            setState({
-              ...state,
-              destinationCord: {
-                latitude: -4.1358869,
-                longitude: 104.179226,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              },
-            });
-          }}
-          coordinate={{
-            latitude: -4.1358869,
-            longitude: 104.179226,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-        />
+
+        <Marker image={imagePath.icGreenMarker} coordinate={destinationCord} />
 
         <MapViewDirections
           origin={pickUpCord}
@@ -185,40 +137,53 @@ export default function HomePage() {
           optimizeWaypoints={true}
           onReady={(result) => {
             mapRef.current.fitToCoordinates(result.coordinates, {
-              edgePadding: {
-                // right: 30,
-                // bottom: 300,
-                // left: 30,
-                // top: 100,
-              },
+              edgePadding: {},
             });
           }}
         />
       </MapView>
-      {/* <View
+      <View
         style={{
-          width: "100%",
-          height: "10%",
-          alignItems: "center",
+          flex: 0.1,
+          paddingVertical: "5%",
           justifyContent: "center",
         }}
       >
-        <TouchableOpacity
+        <View
           style={{
-            borderRadius: 10,
-            borderWidth: 3,
-            alignItems: "center",
+            flexDirection: "row",
+            height: "70%",
             justifyContent: "center",
-            width: "75%",
-            height: "75%",
-          }}
-          onPress={() => {
-            goToChooseLocation();
           }}
         >
-          <Text>Choose Location</Text>
-        </TouchableOpacity>
-      </View> */}
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              borderRadius: 15,
+              borderWidth: 3,
+              height: "100%",
+              marginHorizontal: "5%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text>Complete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              borderRadius: 15,
+              borderWidth: 3,
+              height: "100%",
+              marginHorizontal: "5%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text>Chat</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -229,6 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   map: {
-    flex: 1,
+    flex: 0.9,
   },
 });

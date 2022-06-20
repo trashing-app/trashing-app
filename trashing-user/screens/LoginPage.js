@@ -1,4 +1,6 @@
-import { useState } from "react";
+// import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -6,36 +8,71 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  // AsyncStorage,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import storage from "../storage";
 
 export default function LoginPage() {
-  const [email, onChangeEmail] = useState("");
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
   const [password, setPassword] = useState("");
-  const baseUrl =
-    "https://bb1a-2001-448a-4044-6908-74b9-8883-e2e8-277c.ap.ngrok.io";
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    storage
+      .load({
+        key: "loginState",
+      })
+      .then((ret) => {
+        navigation.navigate("tabnavigation");
+      })
+      .catch((err) => {
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
 
   const doLogin = async () => {
     // the fetching goes here
-    try {
-      const { data } = await axios.post(`${baseUrl}/pub/users/login`, {
+    const { data } = await axios.post(
+      `https://e920-2001-448a-10a8-362f-c9c4-4172-268e-d605.ap.ngrok.io/pub/users/login`,
+      {
         email,
         password,
+      }
+    );
+    if (data.access_token) {
+      const { id, username, email, access_token } = data;
+      console.log("login success");
+      storage.save({
+        key: "loginState",
+        data: {
+          id,
+          name: username,
+          email,
+          photoUrl:
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          welcomeMessage: "Hello",
+          role: "default",
+          token: access_token,
+        },
+        expires: null,
       });
-      // console.log(data);
-      await AsyncStorage.setItem("access_token", data);
-      // console.log("logging in");
-      navigation.navigate("OrderPage");
-    } catch (error) {
-      console.log(error);
+      navigation.navigate("tabnavigation");
+      setEmail("");
+      setPassword("");
+    } else {
+      throw "login failed";
     }
   };
 
@@ -47,7 +84,7 @@ export default function LoginPage() {
             placeholderTextColor="#ffffff"
             style={styles.inputField}
             value={email}
-            onChangeText={onChangeEmail}
+            onChangeText={setEmail}
             placeholder="Input email"
             keyboardType="email-address"
           />

@@ -153,15 +153,15 @@ export default function MapPage({ route }) {
 
   const getCollectorLocation = async (collectorId) => {
     const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
-    // console.log(data.location, "GET COLLECTOR LOCATION");
-    const [longitude, latitude] = data.location.coordinates;
-    setState({
-      ...state,
-      collectorLocation: {
-        latitude,
-        longitude,
-      },
-    });
+    console.log(data.location, "GET COLLECTOR LOCATION");
+    // const [longitude, latitude] = data.location.coordinates;
+    // setState({
+    //   ...state,
+    //   collectorLocation: {
+    //     latitude,
+    //     longitude,
+    //   },
+    // });
   };
 
   let text = "Loading..";
@@ -189,10 +189,10 @@ export default function MapPage({ route }) {
           // console.log(data, "Approval Status");
           if (approvalStatus === "Not Approved") {
             console.log(data.approvalStatus, "CHANGE STATUS");
-            setApprovalStatus(data.approvalStatus);
+            // setApprovalStatus(data.approvalStatus);
           } else {
             console.log(data.collectorId, "CHANGE STATUS");
-            getCollectorLocation(data.collectorId);
+            // getCollectorLocation(data.collectorId);
           }
         } catch (error) {
           console.log(error);

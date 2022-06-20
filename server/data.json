@@ -2,15 +2,18 @@
   "categories": [
     {
       "name": "Plastik",
-      "basePrice": 10000
+      "basePrice": 10000,
+      "description": "Lorem ipsum dolor"
     },
     {
       "name": "Sampah basah",
-      "basePrice": 5000
+      "basePrice": 5000,
+      "description": "Lorem ipsum dolor sit"
     },
     {
       "name": "Sampah kering",
-      "basePrice": 7000
+      "basePrice": 7000,
+      "description": "Lorem ipsum dolor sit amet"
     }
   ],
 
