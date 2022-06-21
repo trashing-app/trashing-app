@@ -400,3 +400,112 @@ describe("PUT /orders", () => {
       });
   });
 })
+
+describe("POST /orders", () => {
+  test("201 success create new order", (done) => {
+    request(app)
+      .post("/orders")
+      .set("access_token", validToken)
+      .send({
+          "orderItems":[
+              {
+                "categoryId":1,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              },
+              {
+                "categoryId":2,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              }
+          ],
+          "longitude":"107.5925576773082",
+          "latitude": "-6.940669415817259"
+      })
+      .then((response) => {
+        const { body, status } = response;
+
+        expect(status).toBe(201);
+        expect(body).toHaveProperty("id", expect.any(Number));
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  })
+
+  test("401 create new order with invalid token", (done) => {
+    request(app)
+      .post("/orders")
+      .set("access_token", invalidToken)
+      .send({
+          "orderItems":[
+              {
+                "categoryId":1,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              },
+              {
+                "categoryId":2,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              }
+          ],
+          "longitude":"107.5925576773082",
+          "latitude": "-6.940669415817259"
+      })
+      .then((response) => {
+        const { body, status } = response;
+
+        expect(status).toBe(401);
+        expect(body).toHaveProperty("message", "Invalid token");
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  })
+
+  test("401 create new order without token", (done) => {
+    request(app)
+      .post("/orders")
+      .send({
+          "orderItems":[
+              {
+                "categoryId":1,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              },
+              {
+                "categoryId":2,
+                "description":"something",
+                "orderId": 1,
+                "weight":0,
+                "price":0
+              }
+          ],
+          "longitude":"107.5925576773082",
+          "latitude": "-6.940669415817259"
+      })
+      .then((response) => {
+        const { body, status } = response;
+
+        expect(status).toBe(401);
+        expect(body).toHaveProperty("message", "Invalid token");
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  })
+})
