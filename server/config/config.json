@@ -11,7 +11,8 @@
     "password": "postgres",
     "database": "test_trasher_db",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
   },
   "production": {
     "username": "root",

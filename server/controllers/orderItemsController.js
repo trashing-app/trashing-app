@@ -20,8 +20,9 @@ class OrderItemController {
     try {
       const { orderId } = req.params;
       const { data } = req.body;
+      console.log(data);
       const orderItems = await OrderItem.findAll({
-        include: ["Category"],
+        include: ['Category'],
         where: {
           orderId,
         },
@@ -42,7 +43,7 @@ class OrderItemController {
       });
       console.log(result);
       const bulkOrderItem = await OrderItem.bulkCreate(result, {
-        updateOnDuplicate: ["price", "weight"],
+        updateOnDuplicate: ['price', 'weight'],
       });
       res.status(200).json(bulkOrderItem);
     } catch (err) {

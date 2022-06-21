@@ -5,17 +5,19 @@ class PublicUserController {
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
+      if(!email) throw new Error("Email is required")
+      if(!password) throw new Error("Password is required")
       const foundUser = await User.findOne({
         where: {
           email,
         },
       });
       if (!foundUser) {
-        throw new Error('invalid email');
+        throw new Error('Invalid email/password');
       }
       const validPassword = checkPassword(password, foundUser.password);
       if (!validPassword) {
-        throw new Error('invalid password');
+        throw new Error('Invalid email/password');
       }
       const payload = {
         id: foundUser.id,
@@ -43,7 +45,10 @@ class PublicUserController {
         phoneNumber,
         address,
       });
-      res.status(201).json(newUser);
+      res.status(201).json({
+        id:newUser.id,
+        email:newUser.email
+      });
     } catch (err) {
       next(err);
     }

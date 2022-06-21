@@ -95,7 +95,7 @@ class OrderController {
   static async completeOrder(req, res, next) {
     try {
       const { id } = req.params;
-      const completed = await Order.update(
+      const [completed] = await Order.update(
         {
           orderStatus: "Completed",
         },
@@ -105,7 +105,8 @@ class OrderController {
           },
         }
       );
-      res.status(201).json(completed);
+      if(!completed) throw new Error('Not found')
+      res.status(200).json({message:"Order completed"});
     } catch (err) {
       next(err);
     }
@@ -117,7 +118,7 @@ class OrderController {
       // const { pickupDate } = req.body;
       const pickupDate = new Date();
       const collectorId = req.pass.id;
-      const approved = await Order.update(
+      const [ approved ] = await Order.update(
         {
           approvalStatus: "Approved",
           pickupDate,
@@ -130,8 +131,8 @@ class OrderController {
           },
         }
       );
-      console.log(approved);
-      res.status(201).json(approved);
+      if(!approved) throw new Error("Not found")
+      res.status(200).json({message:"Order approved"});
     } catch (err) {
       next(err);
     }
@@ -140,7 +141,7 @@ class OrderController {
   static async payOrder(req, res, next) {
     try {
       const { id } = req.params;
-      const paid = await Order.update(
+      const [paid] = await Order.update(
         {
           paymentStatus: "Paid",
         },
@@ -150,7 +151,8 @@ class OrderController {
           },
         }
       );
-      res.status(201).json(paid);
+      if(!paid) throw new Error("Not found")
+      res.status(200).json({message:"Order paid"});
     } catch (err) {
       next(err);
     }
