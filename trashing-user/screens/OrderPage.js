@@ -74,8 +74,6 @@ export default function OrderPage() {
         },
         body: JSON.stringify({
           orderItems,
-          // latitude: lclLocation.location.coordinates[1],
-          // longitude: lclLocation.location.coordinates[0],
           latitude,
           longitude,
         }),
@@ -120,17 +118,6 @@ export default function OrderPage() {
   }, []);
 
   useEffect(() => {
-    // fetch(
-    //   "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io" + userData.id
-    // )
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     // console.log('🚀 ~ file: OrderPage.js ~ line 95 ~ .then ~ data', data);
-    //     setLclLocation(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     const getLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
