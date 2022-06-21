@@ -5,8 +5,7 @@ import storage from "../storage";
 import { Text, View } from "react-native";
 
 export default function Chat({ route }) {
-  const { order, access_token } = route.params;
-  // console.log(order, "ORDER");
+  const { data, access_token } = route.params;
   const [me, setMe] = useState({
     id: "",
     name: "",
@@ -28,40 +27,60 @@ export default function Chat({ route }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let temp;
-    axios
-      .get(
-        `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders/${order.id}`,
-        { headers: { access_token } }
-      ) // <---- butuh order id
-      .then((response) => {
-        const { data } = response;
-        temp = data;
-        return storage.load({ key: "loginState" });
-      })
-      .then((loggedUser) => {
-        console.log(temp, "SEE");
-        // const [me] = temp.filter((user) => user.id === loggedUser.id);
-        // const [other] = temp.filter((user) => user.id !== loggedUser.id);
-        // setMe(me);
-        // setOther(other);
-        setMe(temp.userId);
-        setOther(temp.collectorId);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("ERROR");
-        console.warn(err.message);
-        switch (err.name) {
-          case "NotFoundError":
-            navigation.navigate("Login");
-            break;
-          case "ExpiredError":
-            navigation.navigate("Login");
-            break;
-        }
-      });
+    console.log(data);
+    // let temp;
+    // temp = data;
+    // axios
+    //   .get(
+    //     `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders/${order.id}`,
+    //     { headers: { access_token } }
+    //   )
+    //   .then((response) => {
+    //     const { data } = response;
+    //     return storage.load({ key: "loginState" });
+    //   })
+    //   .then((loggedUser) => {
+    // const [me] = temp.filter((user) => user.id === loggedUser.id);
+    // const [other] = temp.filter((user) => user.id !== loggedUser.id);
+    // setMe(me);
+    // setOther(other);
+    // console.log(temp, "CHAT");
+    // setMe(temp.userId);
+    // setMe({id: temp.userChatId, name: temp.User.username, email: temp.User.email, photoUrl});
+    // setOther(temp.collectorId);
+    setOther({
+      id: data.collectorChatId,
+      name: data.Collector.username,
+      email: data.Collector.email,
+      photoUrl:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      welcomeMessage: "Hello",
+      role: "default",
+    });
+    setMe({
+      id: data.userChatId,
+      name: data.User.username,
+      email: data.User.email,
+      photoUrl:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      welcomeMessage: "Hello",
+      role: "default",
+    });
+    setLoading(false);
   }, []);
+  // .catch((err) => {
+  //   console.log("ERROR");
+  //   console.warn(err.message);
+  //   switch (err.name) {
+  //     case "NotFoundError":
+  //       navigation.navigate("Login");
+  //       break;
+  //     case "ExpiredError":
+  //       navigation.navigate("Login");
+  //       break;
+  //   }
+  // });
+  // }, []);
 
   const conversationBuilder = TalkRn.getConversationBuilder(
     TalkRn.oneOnOneId(me, other)

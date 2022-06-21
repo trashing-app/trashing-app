@@ -131,20 +131,9 @@ export default function OrderPage() {
                   latitude: latitude,
                   longitude: longitude,
                 };
-                // const read = JSON.parse(await AsyncStorage.getItem("loginState"));
-                // const userId = read.rawData.id;
-                // console.log(userId, "USER");
-                // const { data } = await axios.patch(`${baseUrl}/users/location/${userId}`, {
-                //   longitude,
-                //   latitude,
-                // });
                 const { data } = await axios.post(
                   `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders`,
                   {
-                    // weight,
-                    // categoryId,
-                    // description,
-                    // price,
                     orderItems: [input],
                     longitude,
                     latitude,
@@ -153,10 +142,10 @@ export default function OrderPage() {
                     headers: { access_token },
                   }
                 );
-                // console.log(data, "CREATE ORDER");
+                console.log(data, "CREATE ORDER");
                 // console.log(token);
                 // await AsyncStorage.setItem("order", `${data}`);
-                await AsyncStorage.setItem("order", JSON.stringify(data));
+                // await AsyncStorage.setItem("order", JSON.stringify(data));
                 const id = data.id;
                 // console.log(id);
                 // console.log(latitude, longitude, "coordinate");

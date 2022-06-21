@@ -15,8 +15,13 @@ import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
-export default function AcceptedMap({ customerLocation, collectorLocation }) {
+export default function AcceptedMap({
+  customerLocation,
+  collectorLocation,
+  orderId,
+}) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
   const mapRef = useRef();
   const markerRef = useRef();
@@ -29,19 +34,12 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
       <MapView
         ref={mapRef}
         style={styles.map}
-        initialRegion={
-          // pickupCords
-          {
-            ...customerLocation,
-            // ...currentLocation,
-            // latitude: 37.78825,
-            // longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }
-        }
+        initialRegion={{
+          ...customerLocation,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
-        {/* <Marker coordinate={pickupCords} /> */}
         <Marker
           coordinate={{
             ...customerLocation,
@@ -110,19 +108,6 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
             justifyContent: "center",
           }}
         >
-          {/* <TouchableOpacity
-            style={{
-              width: "40%",
-              borderRadius: 15,
-              borderWidth: 3,
-              height: "100%",
-              marginHorizontal: "5%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text>Complete</Text>
-          </TouchableOpacity> */}
           <TouchableOpacity
             style={{
               width: "40%",
@@ -135,12 +120,17 @@ export default function AcceptedMap({ customerLocation, collectorLocation }) {
             }}
             onPress={async () => {
               try {
-                const order = JSON.parse(await AsyncStorage.getItem("order"));
+                // const order = JSON.parse(await AsyncStorage.getItem("order"));
                 const access_token = await AsyncStorage.getItem("access_token");
                 //   const id = data.id;
                 // console.log(id);
                 // console.log(latitude, longitude, "coordinate");
-                navigation.navigate("Chat", { order, access_token });
+                // console.log(order, "ACCEPTED MAP");
+                const { data } = await axios.get(
+                  `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders/${orderId}`,
+                  { headers: { access_token } }
+                );
+                navigation.navigate("Chat", { data, access_token });
               } catch (error) {
                 console.log(error);
               }

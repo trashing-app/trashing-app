@@ -94,8 +94,6 @@ export default function MapPage({ route }) {
       customerLocation: {
         latitude: latitude,
         longitude: longitude,
-        // latitudeDelta: 0.0922,
-        // longitudeDelta: 0.0421,
       },
     });
     const { rawData } = JSON.parse(await AsyncStorage.getItem("loginState"));
@@ -106,7 +104,6 @@ export default function MapPage({ route }) {
       longitude,
       latitude,
     });
-    // setLocation(position);
   };
 
   // const getLiveLocation = async () => {
@@ -205,6 +202,7 @@ export default function MapPage({ route }) {
         <AcceptedMap
           customerLocation={orderLocation}
           collectorLocation={collectorLocation}
+          orderId={id}
         />
       );
     } else {
