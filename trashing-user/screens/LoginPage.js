@@ -43,7 +43,7 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(`https://0372-125-165-31-194.ap.ngrok.io/pub/users/login`, {
+      const { data } = await axios.post(`https://33c2-125-165-31-194.ap.ngrok.io/pub/users/login`, {
         email,
         password,
       });

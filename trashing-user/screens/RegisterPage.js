@@ -9,6 +9,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
@@ -27,7 +28,7 @@ export default function RegisterPage({ navigation }) {
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch('https://d8e2-36-71-139-195.ap.ngrok.io/pub/users/register', {
+    fetch('https://0372-125-165-31-194.ap.ngrok.io/pub/users/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -35,8 +36,20 @@ export default function RegisterPage({ navigation }) {
       },
       body: JSON.stringify(input),
     })
-      .then(navigation.navigate('LoginPage'))
-      .catch((err) => console.log(err));
+      .then((response) => {
+        if (response.status == 400) {
+          throw { message: 'Please check your input' };
+        }
+        navigation.replace('LoginPage');
+        ToastAndroid.showWithGravity(
+          'Registered Successfully',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravity(`${err.message}`, ToastAndroid.SHORT, ToastAndroid.CENTER);
+      });
   };
 
   return (
