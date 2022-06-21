@@ -27,7 +27,6 @@ export default function AcceptedMap({
   const markerRef = useRef();
   console.log("ACCEPTED....");
   const navigation = useNavigation();
-  let text = "Editing...";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,7 +65,6 @@ export default function AcceptedMap({
           />
         </Marker.Animated>
         <MapViewDirections
-          // origin={pickupCords}
           origin={{
             ...collectorLocation,
             latitudeDelta: 0.0922,
@@ -93,7 +91,6 @@ export default function AcceptedMap({
           }}
         />
       </MapView>
-      {/* <Text>{text}</Text> */}
       <View
         style={{
           flex: 0.1,
@@ -120,17 +117,12 @@ export default function AcceptedMap({
             }}
             onPress={async () => {
               try {
-                // const order = JSON.parse(await AsyncStorage.getItem("order"));
                 const access_token = await AsyncStorage.getItem("access_token");
-                //   const id = data.id;
-                // console.log(id);
-                // console.log(latitude, longitude, "coordinate");
-                // console.log(order, "ACCEPTED MAP");
                 const { data } = await axios.get(
                   `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders/${orderId}`,
                   { headers: { access_token } }
                 );
-                navigation.navigate("Chat", { data, access_token });
+                navigation.navigate("Chat", { data });
               } catch (error) {
                 console.log(error);
               }
@@ -148,8 +140,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   map: {
     flex: 0.9,

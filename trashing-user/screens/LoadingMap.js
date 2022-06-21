@@ -1,13 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useRef, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  PermissionsAndroid,
-  Platform,
-  Image,
-} from "react-native";
+import { useRef } from "react";
+import { StyleSheet, Text, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 

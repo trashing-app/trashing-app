@@ -114,10 +114,7 @@ export default function OrderPage() {
                 const { rawData } = JSON.parse(
                   await AsyncStorage.getItem("loginState")
                 );
-                // console.log(rawData, "RAW DATA");
                 const access_token = rawData.token;
-                // const { weight, categoryId, description, price } = input;
-
                 let { status } =
                   await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
@@ -142,19 +139,7 @@ export default function OrderPage() {
                     headers: { access_token },
                   }
                 );
-                console.log(data, "CREATE ORDER");
-                // console.log(token);
-                // await AsyncStorage.setItem("order", `${data}`);
-                // await AsyncStorage.setItem("order", JSON.stringify(data));
                 const id = data.id;
-                // console.log(id);
-                // console.log(latitude, longitude, "coordinate");
-                // setInput({
-                //   weight: 0,
-                //   categoryId: 0,
-                //   description: "",
-                //   price: 0,
-                // });
                 navigation.navigate("MapPage", { id, orderLocation });
               } catch (error) {
                 console.log(error);
