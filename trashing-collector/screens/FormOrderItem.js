@@ -8,10 +8,15 @@ import {
   Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { getOrderItems, updateOrderItem } from "../constant/collectorFunction";
+import {
+  getOrderItems,
+  topUpBalanceUser,
+  updateOrderItem,
+} from "../constant/collectorFunction";
 import storage from "../storage";
 import { useNavigation } from "@react-navigation/native";
 import { completeOrder } from "../constant/collectorFunction";
+import { baseUrl } from "../constant/baseUrl";
 
 function FormOrderItem({ route }) {
   // console.log(route);
@@ -23,9 +28,9 @@ function FormOrderItem({ route }) {
   });
   const navigation = useNavigation();
   const [input, setInput] = useState({});
-
+  const [order, setOrder] = useState({});
+  // const [sum, setSum] = useState(0);
   function handlerOnChangeText(name, text) {
-    // console.log(e);
     setInput({ ...input, [name]: text });
   }
 
@@ -55,35 +60,67 @@ function FormOrderItem({ route }) {
   }, []);
 
   useEffect(() => {
-    getOrderItems(loggedUser.token, route.params.orderId)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
-        }
-        return res.json();
+    if (loggedUser.token) {
+      fetch(`${baseUrl}/orders/${route.params.orderId}`, {
+        headers: {
+          "Content-type": "application/json",
+          access_token: loggedUser.token,
+        },
       })
-      .then((data) => {
-        // console.log(data);
-        setOrderItems(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Error");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setOrder(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedUser.token]);
+
+  useEffect(() => {
+    if (loggedUser.token) {
+      getOrderItems(loggedUser.token, route.params.orderId)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Error");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          // console.log(data);
+          setOrderItems(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedUser.token]);
 
   function handleSubmit() {
+    // console.log(loggedUser, input, route.params.orderId);
     updateOrderItem(loggedUser.token, input, route.params.orderId)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
+      .then((_) => {
+        return completeOrder(loggedUser.token, route.params.orderId);
+      })
+      .then((_) => {
+        let sum = 0;
+        for (const key in input) {
+          orderItems.forEach((e) => {
+            if (e.categoryId == key) {
+              sum += input[key] * e.Category.basePrice;
+            }
+          });
         }
-        return res.json();
+        return topUpBalanceUser(loggedUser.token, order.userId, sum);
       })
       .then((_) => {
         navigation.navigate("ListOrder");
-        return completeOrder(loggedUser.token, route.params.orderId);
       })
-      .then((_) => {})
       .catch((err) => {
         console.log(err);
       });
