@@ -13,6 +13,8 @@ import MapView, { AnimatedRegion, Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import imagePath from "../constant/imagePath";
 import * as Location from "expo-location";
+import storage from "../storage";
+import { useNavigation } from "@react-navigation/native";
 const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
 
 const screen = Dimensions.get("window");
@@ -21,7 +23,14 @@ const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function HomePage({ route }) {
-  const [location, setLocation] = useState({
+  const navigation = useNavigation();
+  const [loggedUser, setLoggedUser] = useState({
+    id: "",
+    name: "",
+    token: "",
+  });
+  const [order, setOrder] = useState({});
+  const [localLocation, setLocalLocation] = useState({
     coords: {
       latitude: "",
       longitude: "",
@@ -56,7 +65,7 @@ export default function HomePage({ route }) {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      setLocalLocation(location);
 
       setState({
         ...state,
@@ -87,12 +96,18 @@ export default function HomePage({ route }) {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+        setLocalLocation(location);
         setState({
           ...state,
           pickUpCord: {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          },
+          destinationCord: {
+            latitude: route.params.latitude,
+            longitude: route.params.longitude,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           },
@@ -103,18 +118,55 @@ export default function HomePage({ route }) {
     return () => clearInterval(interval);
   });
 
-  function clickComplete(id) {
+  function onChat() {
     fetch(
-      `https://2567-2001-448a-10a8-362f-28b9-de00-62a7-58c9.ap.ngrok.io/orders/complete/${id}`
-    ).then((res) => {
-      if (!res.ok) {
-        throw new Error("Error");
+      `https://0de3-2001-448a-10ab-3534-d5bb-cdfa-79ef-5a3a.ap.ngrok.io/orders/${route.params.orderId}`,
+      {
+        headers: {
+          "Content-type": "application/json",
+          access_token: loggedUser.token,
+        },
       }
-      return res.json();
-    });
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        // setOrder(res)
+        navigation.navigate("Chat", { order: res });
+      })
+      .catch((error) => console.log(error));
   }
 
-  if (!isLoading && location) {
+  useEffect(() => {
+    storage
+      .load({
+        key: "loginState",
+      })
+      .then((ret) => {
+        setLoggedUser({
+          id: ret.id,
+          name: ret.name,
+          token: ret.token,
+        });
+      })
+      .catch((err) => {
+        console.warn(err.message);
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
+
+  if (!isLoading && localLocation) {
     return (
       <SafeAreaView>
         <Text>Loading...</Text>
@@ -166,8 +218,13 @@ export default function HomePage({ route }) {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={() => {
+              navigation.navigate("FormOrderItem", {
+                orderId: route.params.orderId,
+              });
+            }}
           >
-            <Text>Complete</Text>
+            <Text>Input Order Item</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -179,6 +236,7 @@ export default function HomePage({ route }) {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={onChat}
           >
             <Text>Chat</Text>
           </TouchableOpacity>

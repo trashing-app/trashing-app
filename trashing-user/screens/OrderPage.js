@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -11,6 +13,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import storage from '../storage';
 
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function OrderPage() {
@@ -21,7 +28,7 @@ export default function OrderPage() {
     id: '',
     token: '',
   });
-
+ const navigation = useNavigation();
   useEffect(() => {
     fetch('https://33c2-125-165-31-194.ap.ngrok.io/categories')
       .then((res) => res.json())

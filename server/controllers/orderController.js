@@ -65,15 +65,18 @@ class OrderController {
   static async addOrder(req, res, next) {
     try {
       const { orderItems, longitude, latitude } = req.body;
+
+      const location = Sequelize.fn(
+        "ST_GeomFromText",
+        `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
+      );
+
       const userId = req.pass.id;
       const newOrder = await Order.create({
         userId,
         orderDate: new Date(),
         userChatId: userId + `${Date.now()}`,
-        location: Sequelize.fn(
-          "ST_GeomFromText",
-          `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
-        ),
+        location,
       });
 
       orderItems.forEach((el) => {
@@ -173,7 +176,7 @@ class OrderController {
         where: {
           id,
         },
-        include: ["User"],
+        include: ["User", "Collector"],
       });
       if (!foundOrder) throw new Error("Not found");
       res.status(200).json(foundOrder);

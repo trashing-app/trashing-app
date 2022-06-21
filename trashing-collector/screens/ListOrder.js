@@ -5,12 +5,19 @@ import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
+import storage from "../storage";
 import {
   getAllOrder,
   getCurrLocationOrder,
   updateLocationC,
 } from "../constant/collectorFunction";
+
 function ListOrder() {
+  const [loggedUser, setLoggedUser] = useState({
+    id: "",
+    name: "",
+    token: "",
+  });
   const [orders, setOrders] = useState([]);
   const [localLocation, setLocalLocation] = useState({
     coords: {
@@ -44,102 +51,146 @@ function ListOrder() {
 
   // get all orders
   useEffect(() => {
-    if (orders) {
-      getAllOrder()
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Error");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          // console.log(data, "data full");
-          const orderId = orders.map((el) => {
-            return +el.id;
-          });
-          const result = data.filter(function (el) {
-            return this.indexOf(el.id) != -1;
-          }, orderId);
-          setAllOrder(result);
-          // console.log(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [orders]);
-
-  // ini get nearestOrder
-  useEffect(() => {
-    getCurrLocationOrder()
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // console.log(data);
-        setOrders(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  // ini get nearestOrder
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getCurrLocationOrder()
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Error");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setOrders(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, 60000);
-    return () => clearInterval(interval);
-  });
-
-  // ini get current loc collector
-  useEffect(() => {
-    const interval = setInterval(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        setLocalLocation(location);
-        updateLocationC(
-          1,
-          localLocation.coords.latitude,
-          localLocation.coords.longitude
-        )
+    if (loggedUser.token) {
+      if (orders) {
+        getAllOrder(loggedUser.token)
           .then((res) => {
             if (!res.ok) {
               throw new Error("Error");
             }
             return res.json();
           })
-          .then((_) => {
-            // console.log("10 detik");
+          .then((data) => {
+            // console.log(data, "data full");
+            const orderId = orders.map((el) => {
+              return +el.id;
+            });
+            const result = data.filter(function (el) {
+              return this.indexOf(el.id) != -1;
+            }, orderId);
+            setAllOrder(result);
+            // console.log(result);
           })
           .catch((err) => {
-            console.log(err, "<<<");
+            console.log(err);
           });
-      })();
-    }, 10000);
-    return () => clearInterval(interval);
+      }
+    }
+  }, [orders]);
+
+  // ini get nearestOrder
+  useEffect(() => {
+    if (loggedUser.token) {
+      getCurrLocationOrder(loggedUser.token)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Error");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          // console.log(data);
+          setOrders(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedUser.token]);
+
+  // ini get nearestOrder
+  useEffect(() => {
+    if (loggedUser.token) {
+      const interval = setInterval(() => {
+        getCurrLocationOrder(loggedUser.token)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Error");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setOrders(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 60000);
+      return () => clearInterval(interval);
+    }
   });
+
+  // ini get current loc collector
+  useEffect(() => {
+    if (loggedUser.token) {
+      const interval = setInterval(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== "granted") {
+            setErrorMsg("Permission to access location was denied");
+            return;
+          }
+
+          let location = await Location.getCurrentPositionAsync({});
+          setLocalLocation(location);
+          updateLocationC(
+            loggedUser.token,
+            loggedUser.id,
+            location.coords.latitude,
+            location.coords.longitude
+          )
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Error");
+              }
+              return res.json();
+            })
+            .then((_) => {
+              // console.log("10 detik");
+            })
+            .catch((err) => {
+              console.log(err, "<<<11");
+            });
+        })();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  });
+
+  //navigation guard
+  useEffect(() => {
+    storage
+      .load({
+        key: "loginState",
+      })
+      .then((ret) => {
+        setLoggedUser({
+          id: ret.id,
+          name: ret.name,
+          token: ret.token,
+        });
+        console.log(ret.id, ret.name, ret.token);
+      })
+      .catch((err) => {
+        console.warn(err.message);
+        switch (err.name) {
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
+            break;
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
+            break;
+        }
+      });
+  }, []);
+
+  if (!loggedUser.token) {
+    return (
+      <Text style={{ marginTop: "50%", paddingHorizontal: "50%" }}>
+        Loading...
+      </Text>
+    );
+  }
 
   return (
     <SafeAreaView>

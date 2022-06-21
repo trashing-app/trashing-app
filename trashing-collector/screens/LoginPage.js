@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -6,15 +6,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  ToastAndroid,
-  Image,
-} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import storage from '../storage';
-
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import storage from "../storage";
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -29,7 +26,7 @@ export default function LoginPage() {
         key: "loginState",
       })
       .then((ret) => {
-        navigation.navigate("tabnavigation");
+        navigation.replace("ListOrder");
       })
       .catch((err) => {
         switch (err.name) {
@@ -45,10 +42,13 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(`https://33c2-125-165-31-194.ap.ngrok.io/pub/users/login`, {
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        `https://0de3-2001-448a-10ab-3534-d5bb-cdfa-79ef-5a3a.ap.ngrok.io/pub/collectors/login`,
+        {
+          email,
+          password,
+        }
+      );
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         console.log("login success");
@@ -66,34 +66,20 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate('tabnavigation');
-        ToastAndroid.showWithGravity('Login successfull', ToastAndroid.LONG, ToastAndroid.CENTER);
-        setEmail('');
-        setPassword('');
+        navigation.navigate("ListOrder");
+        setEmail("");
+        setPassword("");
       } else {
         throw "login failed";
       }
     } catch (err) {
-      ToastAndroid.showWithGravity(
-        'Invalid email/password',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
+      console.log(err);
     }
   };
 
   return (
     <>
       <View style={styles.container}>
-        <Image
-          style={{
-            height: 70,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-          }}
-          source={require('../assets/images/TRASHING.png')}
-        />
         <View style={styles.inputContainer}>
           <TextInput
             placeholderTextColor="#ffffff"

@@ -134,7 +134,17 @@ class UserController {
           id,
         },
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt", "username", "email", "address", "phoneNumber", "balance", "role"],
+          exclude: [
+            "password",
+            "createdAt",
+            "updatedAt",
+            "username",
+            "email",
+            "address",
+            "phoneNumber",
+            "balance",
+            "role",
+          ],
         },
       });
       if (!user) throw new Error("Not found");

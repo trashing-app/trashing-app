@@ -1,5 +1,6 @@
-const { Collector } = require("../models");
-const { Sequelize } = require("sequelize");
+
+const { Collector, Sequelize } = require("../models");
+
 
 class CollectorController {
   static async getCollectors(req, res, next) {
