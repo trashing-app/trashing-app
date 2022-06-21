@@ -5,8 +5,8 @@ class PublicUserController {
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      if(!email) throw new Error("Email is required")
-      if(!password) throw new Error("Password is required")
+      if (!email) throw new Error('Email is required');
+      if (!password) throw new Error('Password is required');
       const foundUser = await User.findOne({
         where: {
           email,
@@ -31,6 +31,10 @@ class PublicUserController {
         access_token,
       });
     } catch (err) {
+      console.log(
+        '🚀 ~ file: publicUserController.js ~ line 34 ~ PublicUserController ~ login ~ err',
+        err
+      );
       next(err);
     }
   }
@@ -46,8 +50,8 @@ class PublicUserController {
         address,
       });
       res.status(201).json({
-        id:newUser.id,
-        email:newUser.email
+        id: newUser.id,
+        email: newUser.email,
       });
     } catch (err) {
       next(err);

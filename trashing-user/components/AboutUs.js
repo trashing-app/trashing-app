@@ -10,9 +10,9 @@ export default function AboutUs() {
           textAlign: 'center',
           fontSize: 30,
           fontWeight: '600',
-          marginTop: 20,
-          color: '#caf0f8',
+          color: '#DAD7CD',
           marginBottom: 10,
+          marginTop: -20,
         }}
       >
         About Us
@@ -20,15 +20,16 @@ export default function AboutUs() {
       <Text
         style={{
           width: dimWidth,
-          textAlign: 'center',
+          textAlign: 'justify',
           paddingHorizontal: 20,
-          color: '#caf0f8',
+          color: '#DAD7CD',
           fontSize: 20,
+          marginBottom: 30,
         }}
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis, nulla eu ultrices
-        finibus, metus sapien rhoncus lacus, vitae suscipit quam nulla sit amet nulla. Fusce et
-        scelerisque metus. Pellentesque.
+        We are promoting the movement of 3R (reduce, reuse and recycle) by providing people a place
+        to distribnute their household waste with a better impact for society and business. All in
+        the grasp of your hand.
       </Text>
     </View>
   );
