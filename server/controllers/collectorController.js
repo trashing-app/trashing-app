@@ -12,22 +12,6 @@ class CollectorController {
     }
   }
 
-  static async addCollectors(req, res, next) {
-    try {
-      const { username, email, password, phoneNumber, address } = req.body;
-      const newCollector = await Collector.create({
-        username,
-        email,
-        password,
-        phoneNumber,
-        address,
-      });
-      res.status(201).json(newCollector);
-    } catch (err) {
-      next(err);
-    }
-  }
-
   static async updateCollector(req, res, next) {
     try {
       const { id } = req.params;

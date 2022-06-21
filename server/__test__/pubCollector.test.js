@@ -142,4 +142,88 @@ describe("Collector Routes Test", ()=>{
         })
     })
   })
+
+  describe("POST /login - collector login", () => {
+    test("200 Success login - should return access_token", (done) => {
+      request(app)
+      .post("/pub/collectors/login")
+      .send(collector1)
+      .end((err, res) => {
+        if(err) return done(err)
+        const { body, status } = res
+        
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("access_token", expect.any(String))
+        return done()
+      })
+    })
+
+    test("401 Failed login - empty email should return error", (done) => {
+      request(app)
+      .post("/pub/collectors/login")
+      .send({
+        password: "qwerty"
+      })
+      .end((err, res) => {
+        if(err) return done(err)
+        const { body, status } = res
+        
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Email is required")
+        return done()
+      })
+    })
+
+    test("401 Failed login - empty password should return error", (done) => {
+      request(app)
+      .post("/pub/collectors/login")
+      .send({
+        email:"collector@mail.com",
+      })
+      .end((err, res) => {
+        if(err) return done(err)
+        const { body, status } = res
+        
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Password is required")
+        return done()
+      })
+    })
+
+    test("401 Failed login - wrong email should return error", (done) => {
+      request(app)
+      .post("/pub/collectors/login")
+      .send({
+        email:"wrong@mail.com",
+        password:"qwerty"
+      })
+      .end((err, res) => {
+        if(err) return done(err)
+        const { body, status } = res
+        
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Invalid email/password")
+        return done()
+      })
+    })
+
+    test("401 Failed login - wrong password should return error", (done) => {
+      request(app)
+      .post("/pub/collectors/login")
+      .send({
+        email:"collector@mail.com",
+        password:"wrong"
+      })
+      .end((err, res) => {
+        if(err) return done(err)
+        const { body, status } = res
+        
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Invalid email/password")
+        return done()
+      })
+    })
+
+    
+  })
 })

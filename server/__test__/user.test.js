@@ -1,229 +1,205 @@
 const app = require('../app')
 const request = require('supertest')
-const { User } = require('../models')
+const { User, sequelize } = require('../models')
+const { queryInterface } = sequelize;
 
-const user1 = {
-  email: "test@mail.com",
-  username: "test",
-  password: "qwerty",
-  phoneNumber: "081234567890",
-  address:"Jakarta",
-}
+beforeAll((done) => {
+  queryInterface.bulkInsert(
+    'Users',
+    [
+      {
+        "username": "test1",
+        "email": "test1@mail.com",
+        "password": "qwerty",
+        "phoneNumber": "08122233444",
+        "address": "Kuningan",
+        "location": null,
+        "balance": 50000,
+        "role": "user",
+        "createdAt": new Date(),
+        "updatedAt": new Date()
+      }, 
+      {
+        "username": "test2",
+        "email": "test2@mail.com",
+        "password": "qwerty",
+        "phoneNumber": "08122233444",
+        "address": "Kuningan",
+        "location": null,
+        "balance": 50000,
+        "role": "user",
+        "createdAt": new Date(),
+        "updatedAt": new Date()
+      },
+      {
+        "username": "test3",
+        "email": "test3@mail.com",
+        "password": "qwerty",
+        "phoneNumber": "08122233444",
+        "address": "Kuningan",
+        "location": null,
+        "balance": 50000,
+        "role": "user",
+        "createdAt": new Date(),
+        "updatedAt": new Date()
+      }
+    ],
+    {}
+  )
+  .then(() => {
+    done();
+  })
+  .catch((err) => {
+    done(err);
+  });
+});
 
 afterAll(done => {
-  User.destroy({ truncate: true, cascade: true, restartIdentity: true })
+  User.destroy({ truncate: true, cascade: true, restartIdentity: true})
     .then(_ => {
-      done()
+      done();
     })
     .catch(err => {
-      done(err)
-    })
-})
+      done(err);
+    });
+});
 
-describe("User Routes Test", ()=>{
-  describe("POST /register - create new User", () => {
-    test("201 Success register - should create new User", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send(user1)
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(201);
-          expect(body).toHaveProperty("id", expect.any(Number))
-          expect(body).toHaveProperty("email", user1.email)
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if username is null", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          email:"test@mail.com",
-          password: "qwerty"
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Username is required")
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if username is already taken", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          username:"test",
-          email:"test2@mail.com",
-          password: "qwerty"
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Username is already taken")
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if email is null", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          username:"test2",
-          password: "qwerty"
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Email is required")
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if email is already taken", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          username:"test2",
-          email:"test@mail.com",
-          password: "qwerty"
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Email is already taken")
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if email format is not valid", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          username:"test2",
-          email:"123",
-          password: "qwerty"
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Invalid email format")
-          return done()
-        })
-    })
-
-    test("400 Failed register - should return error if password is null", (done) => {
-      request(app)
-        .post("/pub/users/register")
-        .send({
-          username:"test2",
-          email:"test2@mail.com",
-        })
-        .end((err, res) => {
-          if(err) return done(err)
-          const { body, status } = res
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Password is required")
-          return done()
-        })
-    })
-  })
-
-  describe("POST /login - user login", () => {
-    test("200 Success login - should return access_token", (done) => {
-      request(app)
-      .post("/pub/users/login")
-      .send(user1)
-      .end((err, res) => {
-        if(err) return done(err)
-        const { body, status } = res
-        
-        expect(status).toBe(200)
-        expect(body).toHaveProperty("access_token", expect.any(String))
-        return done()
+describe("GET /users", () => {
+  test("200 success get users", (done) => {
+    request(app)
+      .get("/users")
+      .then((response) => {
+        const { body, status } = response;
+        expect(status).toBe(200);
+        expect(Array.isArray(body)).toBeTruthy();
+        done();
       })
-    })
+      .catch((err) => {
+        done(err);
+      });
+  });
 
-    test("401 Failed login - empty email should return error", (done) => {
-      request(app)
-      .post("/pub/users/login")
+  test("200 success get user by id", (done) => {
+    request(app)
+      .get("/users/1")
+      .then((response) => {
+        const { body, status } = response;
+
+        expect(status).toBe(200);
+        expect(body).toHaveProperty("id", expect.any(Number));
+        expect(body).toHaveProperty("email", expect.any(String));
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+ 
+});
+
+describe("PUT /users/:id", () => {
+  test("200 success update selected user", (done) => {
+    request(app)
+      .put(`/users/1`)
+      // .set("access_token", validToken)
       .send({
-        password: "qwerty"
+        "username": "test1[edited]"
       })
-      .end((err, res) => {
-        if(err) return done(err)
-        const { body, status } = res
-        
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Email is required")
-        return done()
-      })
-    })
+      .then((response) => {
+        const { body, status } = response;
 
-    test("401 Failed login - empty password should return error", (done) => {
-      request(app)
-      .post("/pub/users/login")
+        expect(status).toBe(200);
+        expect(body).toHaveProperty("message", "User has been updated");
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  test("200 success update selected user", (done) => {
+    request(app)
+      .put(`/users/topup/1`)
+      // .set("access_token", validToken)
       .send({
-        email:"test@mail.com",
+        "balance": 1000
       })
-      .end((err, res) => {
-        if(err) return done(err)
-        const { body, status } = res
-        
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Password is required")
-        return done()
-      })
-    })
+      .then((response) => {
+        const { body, status } = response;
 
-    test("401 Failed login - wrong email should return error", (done) => {
-      request(app)
-      .post("/pub/users/login")
+        expect(status).toBe(200);
+        expect(body).toHaveProperty("message", "User has been updated");
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+  
+
+  // test("403 update selected hero with unauthorized user", (done) => {
+  //   request(app)
+  //     .put(`/favourites/${idFavourite}`)
+  //     .set("access_token", validToken2)
+  //     .then((response) => {
+  //       const { body, status } = response;
+
+  //       expect(status).toBe(403);
+  //       expect(body).toHaveProperty("message", "You are not authorized");
+  //       done();
+  //     })
+  //     .catch((err) => {
+  //       done(err);
+  //     });
+  // });
+
+  // test("401 update selected hero with invalid token", (done) => {
+  //   request(app)
+  //     .put(`/favourites/${idFavourite}`)
+  //     .set("access_token", invalidToken)
+  //     .then((response) => {
+  //       const { body, status } = response;
+
+  //       expect(status).toBe(401);
+  //       expect(body).toHaveProperty("message", "Invalid token");
+  //       done();
+  //     })
+  //     .catch((err) => {
+  //       done(err);
+  //     });
+  // });
+
+  // test("401 update selected hero without token", (done) => {
+  //   request(app)
+  //     .put(`/favourites/${idFavourite}`)
+  //     .then((response) => {
+  //       const { body, status } = response;
+
+  //       expect(status).toBe(401);
+  //       expect(body).toHaveProperty("message", "Invalid token");
+  //       done();
+  //     })
+  //     .catch((err) => {
+  //       done(err);
+  //     });
+  // });
+
+  test("404 update selected hero not found", (done) => {
+    request(app)
+      .put(`/users/99`)
+      // .set("access_token", validToken)
       .send({
-        email:"wrong@mail.com",
-        password:"qwerty"
+        "username": "test99[edited]"
       })
-      .end((err, res) => {
-        if(err) return done(err)
-        const { body, status } = res
+      .then((response) => {
+        const { body, status } = response;
         
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Invalid email/password")
-        return done()
+        expect(status).toBe(404);
+        expect(body).toHaveProperty("message", "Not found");
+        done();
       })
-    })
-
-    test("401 Failed login - wrong password should return error", (done) => {
-      request(app)
-      .post("/pub/users/login")
-      .send({
-        email:"test@mail.com",
-        password:"wrong"
-      })
-      .end((err, res) => {
-        if(err) return done(err)
-        const { body, status } = res
-        
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Invalid email/password")
-        return done()
-      })
-    })
-
-    
-  })
-})
+      .catch((err) => {
+        done(err);
+      });
+  });
+});

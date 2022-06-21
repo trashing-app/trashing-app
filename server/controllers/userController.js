@@ -10,27 +10,11 @@ class UserController {
     }
   }
 
-  static async addUser(req, res, next) {
-    try {
-      const { username, email, password, phoneNumber, address } = req.body;
-      const newUser = await User.create({
-        username,
-        email,
-        password,
-        phoneNumber,
-        address,
-      });
-      res.status(201).json(newUser);
-    } catch (err) {
-      next(err);
-    }
-  }
-
   static async updateUser(req, res, next) {
     try {
       const { id } = req.params;
       const { username, email, password, phoneNumber, address } = req.body;
-      const updated = await User.update(
+      const [updated] = await User.update(
         {
           username,
           email,
@@ -44,7 +28,26 @@ class UserController {
           },
         }
       );
-      res.status(201).json(updated);
+      if(!updated) throw new Error("Not found")
+      res.status(200).json({message: "User has been updated"});
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async reduceBalance(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { balance } = req.body;
+      const reduced = await User.decrement("balance",
+        {
+          where: {
+            id,
+          },
+          by: balance
+        }
+      );
+      res.status(200).json({message:`The balance reduced ${balance}`});
     } catch (err) {
       next(err);
     }
@@ -54,17 +57,15 @@ class UserController {
     try {
       const { id } = req.params;
       const { balance } = req.body;
-      const topup = await User.update(
-        {
-          balance,
-        },
+      const topup = await User.increment("balance",
         {
           where: {
             id,
           },
+          by: balance
         }
       );
-      res.status(201).json(topup);
+      res.status(200).json({message:`The balance added ${balance}`});
     } catch (err) {
       next(err);
     }
