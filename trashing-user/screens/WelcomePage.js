@@ -12,7 +12,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import AboutUs from '../components/AboutUs';
 
-const dimWidth = Dimensions.get('window').width;
+const winWidth = Dimensions.get('window').width;
+const winHeight = Dimensions.get('window').height;
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -21,53 +22,92 @@ export default function HomePage() {
       <ScrollView>
         <Image
           style={{
-            marginTop: 20,
-            height: 70,
+            height: 170,
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
+            width: winWidth,
+            marginTop: winHeight * 0.2,
           }}
           source={require('../assets/images/TRASHING.png')}
         />
         <Text
           style={{
             fontSize: 20,
-            marginTop: 10,
-            width: dimWidth,
-            paddingHorizontal: 20,
+            width: winWidth,
+            paddingHorizontal: 10,
             textAlign: 'center',
-            color: '#caf0f8',
+            color: '#DAD7CD',
           }}
         >
           Your solution to dispose of your household waste
         </Text>
         <StatusBar style="auto" />
-        <AboutUs />
-        <View style={styles.bottomCenter}>
+        <View>
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              marginTop: 60,
+              marginTop: winHeight * 0.1,
             }}
           >
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ color: '#caf0f8', fontSize: 18 }}>Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
-                <Text style={{ color: '#03045e', textDecorationLine: 'underline', fontSize: 18 }}>
-                  Login
-                </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: winWidth,
+                height: 60,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  marginHorizontal: '5%',
+                  borderWidth: 4,
+                  borderRadius: 20,
+                  width: '30%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: '#344E41',
+                  backgroundColor: '#3A5A40',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                }}
+                onPress={() => navigation.navigate('RegisterPage')}
+              >
+                <Text style={{ color: '#DAD7CD', fontSize: 20 }}>Sign up</Text>
               </TouchableOpacity>
-              <Text style={{ color: '#caf0f8', fontSize: 18 }}> here! </Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <Text style={{ color: '#caf0f8', fontSize: 18 }}>or </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('RegisterPage')}>
-                <Text style={{ color: '#03045e', textDecorationLine: 'underline', fontSize: 18 }}>
-                  Register
-                </Text>
+              <Text style={{ fontSize: 30, fontWeight: '600', color: '#344E41' }}>X</Text>
+              <TouchableOpacity
+                style={{
+                  marginHorizontal: '5%',
+                  borderWidth: 4,
+                  borderRadius: 20,
+                  width: '30%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: '#344E41',
+                  backgroundColor: '#3A5A40',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                }}
+                onPress={() => navigation.navigate('LoginPage')}
+              >
+                <Text style={{ color: '#DAD7CD', fontSize: 20 }}>Sign in</Text>
               </TouchableOpacity>
-              <Text style={{ color: '#caf0f8', fontSize: 18 }}> now!</Text>
             </View>
           </View>
         </View>
@@ -79,7 +119,7 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00b4d8',
+    backgroundColor: '#588157',
     alignItems: 'center',
   },
 });

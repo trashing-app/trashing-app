@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Pressable,
   TextInput,
@@ -10,27 +10,29 @@ import {
   KeyboardAvoidingView,
   Image,
   ToastAndroid,
+  Dimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const winWidth = Dimensions.get('window').width;
+const winHeight = Dimensions.get('window').height;
 
 export default function RegisterPage({ navigation }) {
   const [input, setInput] = useState({
-    username: "",
-    email: "",
-    password: "",
-    address: "",
-    phoneNumber: "",
+    username: '',
+    email: '',
+    password: '',
+    address: '',
+    phoneNumber: '',
   });
 
-  const { passwordVisibility, rightIcon, handlePasswordVisibility } =
-    useTogglePasswordVisibility();
+  const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch('https://0372-125-165-31-194.ap.ngrok.io/pub/users/register', {
+    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/pub/users/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -60,12 +62,12 @@ export default function RegisterPage({ navigation }) {
         <ScrollView>
           <Image
             style={{
-              height: 70,
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
+              height: 170,
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: winWidth,
             }}
-            source={require("../assets/images/TRASHING.png")}
+            source={require('../assets/images/TRASHING.png')}
           />
           <View style={styles.inputContainer}>
             <TextInput
@@ -73,7 +75,7 @@ export default function RegisterPage({ navigation }) {
               onChangeText={(username) => setInput({ ...input, username })}
               placeholder="Username"
               keyboardType="default"
-              placeholderTextColor="#ffffff"
+              placeholderTextColor="#DAD7CD"
             />
           </View>
           <View style={styles.inputContainer}>
@@ -82,7 +84,7 @@ export default function RegisterPage({ navigation }) {
               onChangeText={(email) => setInput({ ...input, email })}
               placeholder="Email"
               keyboardType="email-address"
-              placeholderTextColor="#ffffff"
+              placeholderTextColor="#DAD7CD"
             />
           </View>
           <View style={styles.inputContainer}>
@@ -95,19 +97,15 @@ export default function RegisterPage({ navigation }) {
               textContentType="newPassword"
               secureTextEntry={passwordVisibility}
               enablesReturnKeyAutomatically
-              placeholderTextColor="#ffffff"
+              placeholderTextColor="#DAD7CD"
             />
             <Pressable onPress={handlePasswordVisibility}>
-              <MaterialCommunityIcons
-                name={rightIcon}
-                size={22}
-                color="#caf0f8"
-              />
+              <MaterialCommunityIcons name={rightIcon} size={22} color="#DAD7CD" />
             </Pressable>
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholderTextColor="#ffffff"
+              placeholderTextColor="#DAD7CD"
               style={styles.inputField}
               onChangeText={(address) => setInput({ ...input, address })}
               placeholder="Address"
@@ -116,12 +114,10 @@ export default function RegisterPage({ navigation }) {
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholderTextColor="#ffffff"
+              placeholderTextColor="#DAD7CD"
               name="phoneNumber"
               style={styles.inputField}
-              onChangeText={(phoneNumber) =>
-                setInput({ ...input, phoneNumber })
-              }
+              onChangeText={(phoneNumber) => setInput({ ...input, phoneNumber })}
               placeholder="Phone Number"
               keyboardType="name-phone-pad"
             />
@@ -130,19 +126,17 @@ export default function RegisterPage({ navigation }) {
             style={{
               width: 130,
               height: 50,
-              backgroundColor: "#00b4d8",
-              justifyContent: "center",
+              backgroundColor: '#344E41',
+              justifyContent: 'center',
               marginVertical: 15,
               borderRadius: 15,
-              marginHorizontal: "34%",
-              borderColor: "#caf0f8",
+              marginHorizontal: '34%',
+              borderColor: '#DAD7CD',
               borderWidth: 3,
             }}
             onPress={doRegister}
           >
-            <Text style={{ textAlign: "center", fontSize: 20, color: "white" }}>
-              Register
-            </Text>
+            <Text style={{ textAlign: 'center', fontSize: 20, color: '#DAD7CD' }}>Register</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -153,27 +147,27 @@ export default function RegisterPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#00b4d8",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#588157',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 1,
   },
   inputContainer: {
-    backgroundColor: "#00b4d8",
-    width: "90%",
+    backgroundColor: '#344E41',
+    width: winWidth * 0.9,
     height: 62,
-    marginHorizontal: "5%",
+    marginHorizontal: '5%',
     marginVertical: 10,
     borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 4,
-    borderColor: "#caf0f8",
+    borderColor: '#DAD7CD',
   },
   inputField: {
     padding: 14,
     fontSize: 20,
-    width: "87%",
-    color: "white",
+    width: winWidth * 0.78,
+    color: 'white',
   },
 });

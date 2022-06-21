@@ -1,5 +1,5 @@
-const { User } = require("../models");
-const { Sequelize } = require("sequelize");
+const { User } = require('../models');
+const { Sequelize } = require('sequelize');
 class UserController {
   static async getUsers(req, res, next) {
     try {
@@ -13,7 +13,14 @@ class UserController {
   static async updateUser(req, res, next) {
     try {
       const { id } = req.params;
+      console.log('🚀 ~ file: userController.js ~ line 16 ~ UserController ~ updateUser ~ id', id);
       const { username, email, password, phoneNumber, address } = req.body;
+      console.log(
+        '🚀 ~ file: userController.js ~ line 17 ~ UserController ~ updateUser ~ username, phoneNumber, address',
+        username,
+        phoneNumber,
+        address
+      );
       const [updated] = await User.update(
         {
           username,
@@ -28,8 +35,8 @@ class UserController {
           },
         }
       );
-      if(!updated) throw new Error("Not found")
-      res.status(200).json({message: "User has been updated"});
+      if (!updated) throw new Error('Not found');
+      res.status(200).json({ message: 'User has been updated' });
     } catch (err) {
       next(err);
     }
@@ -39,16 +46,14 @@ class UserController {
     try {
       const { id } = req.params;
       const { balance } = req.body;
-      const [reduced] = await User.decrement("balance",
-        {
-          where: {
-            id,
-          },
-          by: balance
-        }
-      );
-      if(!reduced[1]) throw new Error('Not found')
-      res.status(200).json({message:`The balance reduced ${balance}`});
+      const [reduced] = await User.decrement('balance', {
+        where: {
+          id,
+        },
+        by: balance,
+      });
+      if (!reduced[1]) throw new Error('Not found');
+      res.status(200).json({ message: `The balance reduced ${balance}` });
     } catch (err) {
       next(err);
     }
@@ -58,16 +63,14 @@ class UserController {
     try {
       const { id } = req.params;
       const { balance } = req.body;
-      const [topup] = await User.increment("balance",
-        {
-          where: {
-            id,
-          },
-          by: balance
-        }
-      );
-      if(!topup[1]) throw new Error('Not found')
-      res.status(200).json({message:`The balance added ${balance}`});
+      const [topup] = await User.increment('balance', {
+        where: {
+          id,
+        },
+        by: balance,
+      });
+      if (!topup[1]) throw new Error('Not found');
+      res.status(200).json({ message: `The balance added ${balance}` });
     } catch (err) {
       next(err);
     }
@@ -81,8 +84,8 @@ class UserController {
           id,
         },
       });
-      if(!deleted) throw new Error("Not found")
-      res.status(200).json({message: "User deleted"});
+      if (!deleted) throw new Error('Not found');
+      res.status(200).json({ message: 'User deleted' });
     } catch (err) {
       next(err);
     }
@@ -94,10 +97,7 @@ class UserController {
       const { longitude, latitude } = req.body;
       const [updated] = await User.update(
         {
-          location: Sequelize.fn(
-            "ST_GeomFromText",
-            `POINT(${longitude} ${latitude})`
-          ),
+          location: Sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`),
         },
         {
           where: {
@@ -105,8 +105,8 @@ class UserController {
           },
         }
       );
-      if(!updated) throw new Error('Not found')
-      res.status(200).json({message:"Location updated"});
+      if (!updated) throw new Error('Not found');
+      res.status(200).json({ message: 'Location updated' });
     } catch (err) {
       next(err);
     }
@@ -120,7 +120,7 @@ class UserController {
           id,
         },
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt"],
+          exclude: ['password', 'createdAt', 'updatedAt'],
         },
       });
 
@@ -139,20 +139,20 @@ class UserController {
         },
         attributes: {
           exclude: [
-            "password",
-            "createdAt",
-            "updatedAt",
-            "username",
-            "email",
-            "address",
-            "phoneNumber",
-            "balance",
-            "role",
+            'password',
+            'createdAt',
+            'updatedAt',
+            'username',
+            'email',
+            'address',
+            'phoneNumber',
+            'balance',
+            'role',
           ],
         },
       });
       console.log(user);
-      if (!user) throw new Error("Not found");
+      if (!user) throw new Error('Not found');
       res.status(200).json(user);
     } catch (err) {
       next(err);

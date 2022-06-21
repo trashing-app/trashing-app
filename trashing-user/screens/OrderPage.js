@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -13,12 +11,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import storage from '../storage';
 
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import * as Location from "expo-location";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
-const windowWidth = Dimensions.get('window').width;
+const winWidth = Dimensions.get('window').width;
+const winHeight = Dimensions.get('window').height;
 
 export default function OrderPage() {
   const [categories, setCategories] = useState([]);
@@ -28,9 +27,10 @@ export default function OrderPage() {
     id: '',
     token: '',
   });
- const navigation = useNavigation();
+  const navigation = useNavigation();
+
   useEffect(() => {
-    fetch('https://33c2-125-165-31-194.ap.ngrok.io/categories')
+    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/categories')
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
@@ -56,7 +56,7 @@ export default function OrderPage() {
         weight: 0,
       };
     });
-    console.log(orderItems);
+
     fetch('https://33c2-125-165-31-194.ap.ngrok.io/orders', {
       method: 'POST',
       headers: {
@@ -106,7 +106,6 @@ export default function OrderPage() {
     fetch('https://33c2-125-165-31-194.ap.ngrok.io/users/location/' + userData.id)
       .then((res) => res.json())
       .then((data) => {
-        // console.log('🚀 ~ file: OrderPage.js ~ line 95 ~ .then ~ data', data);
         setLclLocation(data);
       })
       .catch((err) => {
@@ -119,10 +118,10 @@ export default function OrderPage() {
     <SafeAreaView style={styles.container}>
       <Image
         style={{
-          height: 70,
+          height: 170,
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100%',
+          width: winWidth,
           marginTop: 20,
         }}
         source={require('../assets/images/TRASHING.png')}
@@ -131,7 +130,7 @@ export default function OrderPage() {
         return (
           <View
             style={{
-              width: windowWidth,
+              width: winWidth,
               paddingHorizontal: 2,
               marginVertical: 10,
               flexDirection: 'row',
@@ -143,19 +142,19 @@ export default function OrderPage() {
             <TouchableHighlight
               onPress={() => onChangeHandler(index)}
               activeOpacity={0.6}
-              underlayColor="#00b4d8"
+              underlayColor="#DAD7CD"
               style={{
-                width: 140,
-                height: 40,
+                width: 200,
+                height: 60,
                 borderWidth: 2,
                 borderRadius: 8,
                 justifyContent: 'center',
                 borderColor: 'white',
-                backgroundColor: checkedState[index] ? '#03045E' : '#00b4d8',
+                backgroundColor: checkedState[index] ? '#3A5A40' : '#A3B18A',
               }}
             >
               <Text
-                style={{ textAlign: 'center', color: '#FFFFFF', fontSize: 18, fontWeight: '700' }}
+                style={{ textAlign: 'center', color: '#FFFFFF', fontSize: 23, fontWeight: '700' }}
               >
                 {category.name}
               </Text>
@@ -168,15 +167,18 @@ export default function OrderPage() {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            width: 80,
-            height: 50,
+            width: 100,
+            height: 60,
             borderRadius: 15,
             borderWidth: 3,
             borderColor: 'white',
+            backgroundColor: '#3A5A40',
           }}
           onPress={onSubmitHandler}
         >
-          <Text style={{ textAlign: 'center', color: 'white' }}>Order</Text>
+          <Text style={{ textAlign: 'center', color: 'white', fontSize: 20, fontWeight: '600' }}>
+            Order
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -186,7 +188,7 @@ export default function OrderPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00b4d8',
+    backgroundColor: '#588157',
   },
   checkbox: {
     backgroundColor: '#ffffff',
