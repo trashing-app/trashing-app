@@ -12,6 +12,7 @@ import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibilit
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import storage from "../storage";
+import { baseUrl } from "../constant/baseUrl";
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -26,29 +27,25 @@ export default function LoginPage() {
         key: "loginState",
       })
       .then((ret) => {
-        navigation.replace("ListOrder");
+        navigation.replace("TabNavigator");
       })
       .catch((err) => {
         switch (err.name) {
           case "NotFoundError":
-            navigation.navigate("LoginPage");
+            navigation.navigate("TabNavigator");
             break;
           case "ExpiredError":
-            navigation.navigate("LoginPage");
+            navigation.navigate("TabNavigator");
             break;
         }
       });
   }, []);
-
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(
-        `https://211d-2001-448a-10ab-3534-3855-53fb-a1e9-60be.ap.ngrok.io/pub/collectors/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const { data } = await axios.post(`${baseUrl}/pub/collectors/login`, {
+        email,
+        password,
+      });
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         console.log("login success");
@@ -66,7 +63,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("ListOrder");
+        navigation.navigate("TabNavigator");
         setEmail("");
         setPassword("");
       } else {

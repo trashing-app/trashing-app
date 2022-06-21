@@ -79,11 +79,21 @@ function DetailOrder({ route }) {
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: "#588157",
       }}
     >
+      <Text
+        style={{
+          fontSize: 42,
+          textAlign: "center",
+          marginTop: "20%",
+        }}
+      >
+        Detail Order
+      </Text>
       <View
         style={{
-          marginTop: "50%",
+          marginTop: "20%",
           alignItems: "center",
         }}
       >

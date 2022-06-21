@@ -66,7 +66,7 @@ class OrderController {
 
       const location = Sequelize.fn(
         "ST_GeomFromText",
-        `POINT(${JSON.parse(latitude)} ${JSON.parse(longitude)})`
+        `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
       );
 
       const userId = req.pass.id;
@@ -140,7 +140,7 @@ class OrderController {
       // const { pickupDate } = req.body;
       const pickupDate = new Date();
       const collectorId = req.pass.id;
-      const [ approved ] = await Order.update(
+      const [approved] = await Order.update(
         {
           approvalStatus: "Approved",
           pickupDate,
@@ -153,8 +153,8 @@ class OrderController {
           },
         }
       );
-      if(!approved) throw new Error("Not found")
-      res.status(200).json({message:"Order approved"});
+      if (!approved) throw new Error("Not found");
+      res.status(200).json({ message: "Order approved" });
     } catch (err) {
       next(err);
     }
@@ -173,8 +173,8 @@ class OrderController {
           },
         }
       );
-      if(!paid) throw new Error("Not found")
-      res.status(200).json({message:"Order paid"});
+      if (!paid) throw new Error("Not found");
+      res.status(200).json({ message: "Order paid" });
     } catch (err) {
       next(err);
     }

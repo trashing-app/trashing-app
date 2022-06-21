@@ -15,6 +15,7 @@ import imagePath from "../constant/imagePath";
 import * as Location from "expo-location";
 import storage from "../storage";
 import { useNavigation } from "@react-navigation/native";
+import { baseUrl } from "../constant/baseUrl";
 const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
 
 const screen = Dimensions.get("window");
@@ -117,17 +118,13 @@ export default function HomePage({ route }) {
     }, 10000);
     return () => clearInterval(interval);
   });
-
   function onChat() {
-    fetch(
-      `https://0de3-2001-448a-10ab-3534-d5bb-cdfa-79ef-5a3a.ap.ngrok.io/orders/${route.params.orderId}`,
-      {
-        headers: {
-          "Content-type": "application/json",
-          access_token: loggedUser.token,
-        },
-      }
-    )
+    fetch(`${baseUrl}/orders/${route.params.orderId}`, {
+      headers: {
+        "Content-type": "application/json",
+        access_token: loggedUser.token,
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error");

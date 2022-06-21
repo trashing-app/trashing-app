@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity, View, Text } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Text,
+  Image,
+  Dimensions,
+  ImageBackground,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -11,6 +19,10 @@ import {
   getCurrLocationOrder,
   updateLocationC,
 } from "../constant/collectorFunction";
+import imagePath from "../constant/imagePath";
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 function ListOrder() {
   const [loggedUser, setLoggedUser] = useState({
@@ -162,7 +174,7 @@ function ListOrder() {
               console.log(err, "<<<11");
             });
         })();
-      }, 30000);
+      }, 10000);
       return () => clearInterval(interval);
     }
   });
@@ -203,23 +215,48 @@ function ListOrder() {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#588157",
+        width: width,
+        height: height,
+      }}
+    >
+      <ScrollView
+        style={{
+          flex: 1,
+          // backgroundColor: "green",
+        }}
+      >
+        <Image
+          source={imagePath.logo}
+          style={{
+            width: width,
+            height: (20 / 100) * height,
+            marginBottom: -30,
+          }}
+        />
         <Text
           style={{
             textAlign: "center",
             marginBottom: "10%",
             fontSize: 30,
-            marginVertical: "10%",
+            marginBottom: "10%",
+            color: "#DAD7CD",
           }}
         >
-          Get your order
+          Get Your Order
         </Text>
         <View
           style={{
-            flexDirection: "row",
+            // flexDirection: "row",
+            flex: 1,
             justifyContent: "center",
-            flexWrap: "wrap",
+            // flexWrap: "wrap",
+            alignItems: "center",
+            // backgroundColor: "red",
+            height: "100%",
           }}
         >
           {allOrder.map((el) => {
@@ -227,16 +264,21 @@ function ListOrder() {
               <View
                 key={el.id}
                 style={{
-                  width: "40%",
-                  marginHorizontal: "3%",
+                  width: "85%",
+                  height: (25 / 100) * height,
+                  marginVertical: "3%",
+                  justifyContent: "center",
                 }}
               >
                 <TouchableOpacity
                   style={{
+                    borderColor: "#DAD7CD",
                     borderWidth: 3,
                     alignItems: "center",
                     marginBottom: 20,
                     borderRadius: 12,
+                    height: "100%",
+                    justifyContent: "center",
                   }}
                   onPress={() => {
                     navigation.navigate("DetailOrder", {
@@ -250,34 +292,105 @@ function ListOrder() {
                     });
                   }}
                 >
-                  <FontAwesome5 name="people-carry" size={24} color="black" />
-                  <Text>{el.User.username}</Text>
                   <View
                     style={{
+                      width: "100%",
+                      height: "100%",
                       flexDirection: "row",
-                    }}
-                  >
-                    <Entypo name="location-pin" size={24} color="black" />
-                    <Text>
-                      {getDistanceFromLatLonInKm(
-                        localLocation.coords.latitude,
-                        localLocation.coords.longitude,
-                        el.location.coordinates[1],
-                        el.location.coordinates[0]
-                      )}{" "}
-                      Km
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
+                      backgroundColor: "#344E41",
+                      borderRadius: 12,
                       alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    <Text>{el.User.address}</Text>
-                  </View>
-                  <View>
-                    <Text>Total items {el.OrderItems.length}</Text>
+                    <View
+                      style={{
+                        width: "50%",
+                        height: "100%",
+                        // backgroundColor: "red",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <FontAwesome5
+                        name="people-carry"
+                        size={30}
+                        color="#DAD7CD"
+                      />
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: "#DAD7CD",
+                        }}
+                      >
+                        {el.User.username}
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Entypo name="location-pin" size={30} color="#DAD7CD" />
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            color: "#DAD7CD",
+                          }}
+                        >
+                          {getDistanceFromLatLonInKm(
+                            localLocation.coords.latitude,
+                            localLocation.coords.longitude,
+                            el.location.coordinates[1],
+                            el.location.coordinates[0]
+                          )}{" "}
+                          Km
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            color: "#DAD7CD",
+                          }}
+                        >
+                          {el.User.address}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            color: "#DAD7CD",
+                          }}
+                        >
+                          Total items: {el.OrderItems.length}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: "50%",
+                      }}
+                    >
+                      <Image
+                        source={{
+                          uri: "https://media.suara.com/pictures/653x366/2018/08/15/39804-ojek-online.jpg",
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderTopRightRadius: 12,
+                          borderBottomRightRadius: 12,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </View>
                   </View>
                 </TouchableOpacity>
               </View>
