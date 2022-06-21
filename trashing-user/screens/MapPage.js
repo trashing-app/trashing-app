@@ -7,6 +7,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AcceptedMap from "./AcceptedMap";
 import { useNavigation } from "@react-navigation/native";
+import storage from "../storage";
 
 export default function MapPage({ route }) {
   const baseUrl =
@@ -82,6 +83,9 @@ export default function MapPage({ route }) {
             setApprovalStatus(data.approvalStatus);
           } else {
             if (data.orderStatus === "Completed") {
+              storage.remove({
+                key: "order",
+              });
               ToastAndroid.showWithGravity(
                 "Thank you for the order",
                 ToastAndroid.LONG,
@@ -115,7 +119,7 @@ export default function MapPage({ route }) {
         />
       );
     } else {
-      return <LoadingMap customerLocation={orderLocation} />;
+      return <LoadingMap customerLocation={orderLocation} orderId={id} />;
     }
   } else {
     return <Text>{text}</Text>;

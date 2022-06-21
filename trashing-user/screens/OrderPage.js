@@ -81,6 +81,14 @@ export default function OrderPage() {
       .then((res) => res.json())
       .then((newOrder) => {
         const id = newOrder.id;
+        storage.save({
+          key: "order",
+          data: {
+            id,
+            orderLocation,
+          },
+          expires: null,
+        });
         navigation.navigate("MapPage", { id, orderLocation });
       });
   };
@@ -130,6 +138,31 @@ export default function OrderPage() {
     };
     getLocation();
   }, [userData.id]);
+
+  useEffect(() => {
+    storage
+      .load({
+        key: "order",
+      })
+      .then((ret) => {
+        // setUserData({
+        //   id: ret.id,
+        //   token: ret.token,
+        // });
+        const { id, orderLocation } = ret;
+        navigation.navigate("MapPage", { id, orderLocation });
+      })
+      .catch((err) => {
+        // switch (err.name) {
+        //   case "NotFoundError":
+        //     navigation.navigate("HomePage");
+        //     break;
+        //   case "ExpiredError":
+        //     navigation.navigate("HomePage");
+        //     break;
+        // }
+      });
+  }, [lclLocation]);
 
   return (
     <SafeAreaView style={styles.container}>

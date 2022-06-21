@@ -51,7 +51,7 @@ export default function AcceptedMap({
         >
           <Image
             source={require("../assets/images/icon2.jpg")}
-            style={{ width: 40, height: 40 }}
+            style={styles.marker}
           />
         </Marker.Animated>
         <MapViewDirections
@@ -133,5 +133,13 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 0.9,
+  },
+  marker: {
+    width: 40,
+    height: 40,
+    borderTopLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
 });
