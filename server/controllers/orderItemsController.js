@@ -21,6 +21,14 @@ class OrderItemController {
       const { orderId } = req.params;
       const { orderItems } = req.body;
 
+      const foundOrderItem = await OrderItem.findOne({
+        where:{
+          orderId
+        }
+      })
+
+      if(!foundOrderItem) throw new Error('Not found')
+
       orderItems.forEach((e) => {
         e.orderId = orderId;
       });
@@ -28,6 +36,7 @@ class OrderItemController {
       const bulkOrderItem = await OrderItem.bulkCreate(orderItems, {
         updateOnDuplicate: ["price", "weight"],
       });
+
       res.status(200).json(bulkOrderItem);
     } catch (err) {
       next(err);

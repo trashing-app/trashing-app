@@ -10,7 +10,6 @@ class CategoryController {
       next(error)
     }
   }
-
 }
 
 module.exports = CategoryController

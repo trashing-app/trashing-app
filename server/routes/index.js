@@ -11,7 +11,7 @@ const { errorHandler } = require("../middlewares/errorHandler");
 const { isLoggedIn } = require("../middlewares/isLoggedIn");
 
 router.get("/", (req, res) => {
-  res.send("Trash");
+  res.status(200).json({message:"Trash people"});
 });
 router.use("/users", user);
 router.use("/categories", category);

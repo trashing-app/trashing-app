@@ -12,6 +12,11 @@ function errorHandler(error, req, res, next) {
     msg = error.message
   }
 
+  if (error.message === 'No token'){
+    code = 401
+    msg = 'Invalid token'
+  }
+
   if (error.message === 'Email is required'){
     code = 401
     msg = error.message
@@ -32,6 +37,10 @@ function errorHandler(error, req, res, next) {
     msg = error.errors[0].message
   }
 
+  if (error.name === "JsonWebTokenError"){
+    code = 401
+    msg = "Invalid token"
+  }
 
   res.status(code).json({
     statusCode: code,

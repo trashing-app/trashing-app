@@ -39,7 +39,7 @@ class UserController {
     try {
       const { id } = req.params;
       const { balance } = req.body;
-      const reduced = await User.decrement("balance",
+      const [reduced] = await User.decrement("balance",
         {
           where: {
             id,
@@ -47,6 +47,7 @@ class UserController {
           by: balance
         }
       );
+      if(!reduced[1]) throw new Error('Not found')
       res.status(200).json({message:`The balance reduced ${balance}`});
     } catch (err) {
       next(err);
@@ -57,7 +58,7 @@ class UserController {
     try {
       const { id } = req.params;
       const { balance } = req.body;
-      const topup = await User.increment("balance",
+      const [topup] = await User.increment("balance",
         {
           where: {
             id,
@@ -65,6 +66,7 @@ class UserController {
           by: balance
         }
       );
+      if(!topup[1]) throw new Error('Not found')
       res.status(200).json({message:`The balance added ${balance}`});
     } catch (err) {
       next(err);
@@ -79,7 +81,8 @@ class UserController {
           id,
         },
       });
-      res.status(201).json(deleted);
+      if(!deleted) throw new Error("Not found")
+      res.status(200).json({message: "User deleted"});
     } catch (err) {
       next(err);
     }
@@ -88,9 +91,8 @@ class UserController {
   static async updateLocation(req, res, next) {
     try {
       const { id } = req.params;
-      console.log(req.body);
       const { longitude, latitude } = req.body;
-      const updated = await User.update(
+      const [updated] = await User.update(
         {
           location: Sequelize.fn(
             "ST_GeomFromText",
@@ -103,7 +105,8 @@ class UserController {
           },
         }
       );
-      res.status(201).json(updated);
+      if(!updated) throw new Error('Not found')
+      res.status(200).json({message:"Location updated"});
     } catch (err) {
       next(err);
     }
@@ -138,6 +141,7 @@ class UserController {
           exclude: ["password", "createdAt", "updatedAt", "username", "email", "address", "phoneNumber", "balance", "role"],
         },
       });
+      console.log(user);
       if (!user) throw new Error("Not found");
       res.status(200).json(user);
     } catch (err) {
