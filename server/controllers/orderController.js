@@ -130,6 +130,7 @@ class OrderController {
           },
         }
       );
+      console.log(approved);
       res.status(201).json(approved);
     } catch (err) {
       next(err);
