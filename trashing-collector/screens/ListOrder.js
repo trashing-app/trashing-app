@@ -48,7 +48,6 @@ function ListOrder() {
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
-
   // get all orders
   useEffect(() => {
     if (loggedUser.token) {
@@ -61,7 +60,6 @@ function ListOrder() {
             return res.json();
           })
           .then((data) => {
-            // console.log(data, "data full");
             const orderId = orders.map((el) => {
               return +el.id;
             });
@@ -81,7 +79,11 @@ function ListOrder() {
   // ini get nearestOrder
   useEffect(() => {
     if (loggedUser.token) {
-      getCurrLocationOrder(loggedUser.token)
+      getCurrLocationOrder(
+        loggedUser.token,
+        localLocation.coords.longitude,
+        localLocation.coords.latitude
+      )
         .then((res) => {
           if (!res.ok) {
             throw new Error("Error");
@@ -89,20 +91,25 @@ function ListOrder() {
           return res.json();
         })
         .then((data) => {
-          // console.log(data);
+          // console.log(data, "lalala");
           setOrders(data);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [loggedUser.token]);
+  }, [localLocation]);
 
   // ini get nearestOrder
   useEffect(() => {
     if (loggedUser.token) {
       const interval = setInterval(() => {
-        getCurrLocationOrder(loggedUser.token)
+        // console.log(localLocation, "ini locallocation");
+        getCurrLocationOrder(
+          loggedUser.token,
+          localLocation.coords.longitude,
+          localLocation.coords.latitude
+        )
           .then((res) => {
             if (!res.ok) {
               throw new Error("Error");
@@ -110,7 +117,9 @@ function ListOrder() {
             return res.json();
           })
           .then((data) => {
+            // console.log(data);
             setOrders(data);
+            // console.log("5 dtk");
           })
           .catch((err) => {
             console.log(err);
@@ -125,6 +134,7 @@ function ListOrder() {
     if (loggedUser.token) {
       const interval = setInterval(() => {
         (async () => {
+          // console.log(localLocation, "ini locallocation");
           let { status } = await Location.requestForegroundPermissionsAsync();
           if (status !== "granted") {
             setErrorMsg("Permission to access location was denied");
@@ -152,7 +162,7 @@ function ListOrder() {
               console.log(err, "<<<11");
             });
         })();
-      }, 10000);
+      }, 30000);
       return () => clearInterval(interval);
     }
   });
@@ -199,9 +209,11 @@ function ListOrder() {
           style={{
             textAlign: "center",
             marginBottom: "10%",
+            fontSize: 30,
+            marginVertical: "10%",
           }}
         >
-          List Order
+          Get your order
         </Text>
         <View
           style={{
@@ -263,6 +275,9 @@ function ListOrder() {
                     }}
                   >
                     <Text>{el.User.address}</Text>
+                  </View>
+                  <View>
+                    <Text>Total items {el.OrderItems.length}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
