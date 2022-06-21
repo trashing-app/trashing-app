@@ -9,10 +9,12 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Image,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
-import { SafeAreaView } from "react-native-safe-area-context";
+  ToastAndroid,
+} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 export default function RegisterPage({ navigation }) {
   const [input, setInput] = useState({
@@ -28,19 +30,28 @@ export default function RegisterPage({ navigation }) {
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch(
-      "https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/pub/users/register",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      }
-    )
-      .then(navigation.navigate("LoginPage"))
-      .catch((err) => console.log(err));
+    fetch('https://0372-125-165-31-194.ap.ngrok.io/pub/users/register', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
+    })
+      .then((response) => {
+        if (response.status == 400) {
+          throw { message: 'Please check your input' };
+        }
+        navigation.replace('LoginPage');
+        ToastAndroid.showWithGravity(
+          'Registered Successfully',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravity(`${err.message}`, ToastAndroid.SHORT, ToastAndroid.CENTER);
+      });
   };
 
   return (

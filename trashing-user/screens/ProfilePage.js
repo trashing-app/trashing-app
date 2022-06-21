@@ -10,9 +10,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import storage from '../storage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
+  const [profile, setProfile] = useState({
+    username: '',
+    address: '',
+    phoneNumber: '',
+  });
+
+  useEffect(() => {
+    fetch('https://8ac4-125-165-31-194.ap.ngrok.io/users/');
+  });
+
   const navigation = useNavigation();
   useEffect(() => {
     storage
@@ -96,7 +106,7 @@ export default function ProfilePage() {
             height: 50,
             backgroundColor: '#0077b6',
             justifyContent: 'center',
-            marginVertical: 15,
+            marginVertical: 5,
             borderRadius: 15,
             marginHorizontal: '34%',
             borderColor: '#caf0f8',

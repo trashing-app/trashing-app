@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Pressable,
   TextInput,
@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import storage from "../storage";
+  ToastAndroid,
+  Image,
+} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import storage from '../storage';
+
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -42,13 +45,10 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(
-        `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/pub/users/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const { data } = await axios.post(`https://33c2-125-165-31-194.ap.ngrok.io/pub/users/login`, {
+        email,
+        password,
+      });
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         console.log("login success");
@@ -66,20 +66,34 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("tabnavigation");
-        setEmail("");
-        setPassword("");
+        navigation.navigate('tabnavigation');
+        ToastAndroid.showWithGravity('Login successfull', ToastAndroid.LONG, ToastAndroid.CENTER);
+        setEmail('');
+        setPassword('');
       } else {
         throw "login failed";
       }
     } catch (err) {
-      console.log(err);
+      ToastAndroid.showWithGravity(
+        'Invalid email/password',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
     }
   };
 
   return (
     <>
       <View style={styles.container}>
+        <Image
+          style={{
+            height: 70,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+          source={require('../assets/images/TRASHING.png')}
+        />
         <View style={styles.inputContainer}>
           <TextInput
             placeholderTextColor="#ffffff"

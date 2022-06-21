@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function MapPage({ route }) {
   const baseUrl =
-    "https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io";
+    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
   const { id, orderLocation } = route.params;
 
   const [state, setState] = useState({
@@ -19,7 +19,7 @@ export default function MapPage({ route }) {
     isLoading: false,
   });
 
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState(orderLocation);
   const [errorMsg, setErrorMsg] = useState(null);
   const [approvalStatus, setApprovalStatus] = useState("Not Approved");
   const navigation = useNavigation();
