@@ -50,7 +50,7 @@ export default function AcceptedMap({
           }}
         >
           <Image
-            source={require("../assets/images/icon2.jpg")}
+            source={require("../assets/images/motorbike.jpg")}
             style={styles.marker}
           />
         </Marker.Animated>

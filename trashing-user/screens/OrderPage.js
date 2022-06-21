@@ -7,6 +7,8 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableHighlight,
+  Alert,
+  ToastAndroid,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import storage from "../storage";
@@ -27,6 +29,17 @@ export default function OrderPage() {
     token: "",
   });
   const navigation = useNavigation();
+  const checkOrder = () => {
+    storage
+      .load({
+        key: "order",
+      })
+      .then((ret) => {
+        const { id, orderLocation } = ret;
+        navigation.navigate("MapPage", { id, orderLocation });
+      })
+      .catch((err) => {});
+  };
   useEffect(() => {
     fetch(
       "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/categories"
@@ -40,56 +53,107 @@ export default function OrderPage() {
     setCheckedState(new Array(categories.length).fill(false));
   }, [categories]);
 
-  useEffect(() => {
-    console.log(checkedState);
-  }, [checkedState]);
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const filtered = categories.filter(
-      (el, index) => el && checkedState[index]
-    );
-    // console.log(filtered);
-    const orderItems = filtered.map((el) => {
-      return {
-        categoryId: el.id,
-        description: el.description,
-        price: 0,
-        weight: 0,
-      };
-    });
-    const { latitude, longitude } = lclLocation.coords;
-    const orderLocation = {
-      latitude,
-      longitude,
-    };
-    fetch(
-      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          access_token: userData.token,
-        },
-        body: JSON.stringify({
-          orderItems,
+    storage
+      .load({
+        key: "order",
+      })
+      .then((ret) => {
+        Alert.alert(
+          "You have unfinished order. Do you want to cancel them?",
+          "Cancel order?",
+          [
+            {
+              text: "Don't cancel",
+              style: "cancel",
+              onPress: () => {},
+            },
+            {
+              text: "Cancel order",
+              style: "destructive",
+              onPress: async () => {
+                const access_token = await AsyncStorage.getItem("access_token");
+                const status = await axios.get(
+                  `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                  { headers: { access_token } }
+                );
+                if (status.data.approvalStatus === "Approved") {
+                  Alert.alert(
+                    "We are sorry, but you have an active order right now"
+                  );
+                  navigation.navigate("MapPage", {
+                    id: ret.id,
+                    orderLocation: ret.orderLocation,
+                  });
+                } else {
+                  const { data } = await axios.delete(
+                    `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                    { headers: { access_token } }
+                  );
+                  storage.remove({
+                    key: "order",
+                  });
+                  ToastAndroid.showWithGravity(
+                    "Order cancelled",
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER
+                  );
+                  navigation.replace("tabnavigation");
+                }
+              },
+            },
+          ]
+        );
+      })
+      .catch((err) => {
+        const filtered = categories.filter(
+          (el, index) => el && checkedState[index]
+        );
+        const orderItems = filtered.map((el) => {
+          return {
+            categoryId: el.id,
+            description: el.description,
+            price: 0,
+            weight: 0,
+          };
+        });
+        const { latitude, longitude } = lclLocation.coords;
+        const orderLocation = {
           latitude,
           longitude,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((newOrder) => {
-        const id = newOrder.id;
-        storage.save({
-          key: "order",
-          data: {
-            id,
-            orderLocation,
-          },
-          expires: null,
-        });
-        navigation.navigate("MapPage", { id, orderLocation });
+        };
+        fetch(
+          "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              access_token: userData.token,
+            },
+            body: JSON.stringify({
+              orderItems,
+              latitude,
+              longitude,
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((newOrder) => {
+            const { id } = newOrder;
+            storage.save({
+              key: "order",
+              data: {
+                id,
+                orderLocation,
+              },
+              expires: null,
+            });
+            navigation.navigate("MapPage", { id, orderLocation });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
   };
 
@@ -140,29 +204,12 @@ export default function OrderPage() {
   }, [userData.id]);
 
   useEffect(() => {
-    storage
-      .load({
-        key: "order",
-      })
-      .then((ret) => {
-        // setUserData({
-        //   id: ret.id,
-        //   token: ret.token,
-        // });
-        const { id, orderLocation } = ret;
-        navigation.navigate("MapPage", { id, orderLocation });
-      })
-      .catch((err) => {
-        // switch (err.name) {
-        //   case "NotFoundError":
-        //     navigation.navigate("HomePage");
-        //     break;
-        //   case "ExpiredError":
-        //     navigation.navigate("HomePage");
-        //     break;
-        // }
-      });
+    checkOrder();
   }, [lclLocation]);
+
+  // useEffect(() => {
+  //   checkOrder();
+  // });
 
   return (
     <SafeAreaView style={styles.container}>

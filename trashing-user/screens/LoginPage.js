@@ -53,7 +53,6 @@ export default function LoginPage() {
       );
       if (data.access_token) {
         const { id, username, email, access_token } = data;
-        console.log("login success");
         storage.save({
           key: "loginState",
           data: {
