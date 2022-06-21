@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomePage() {
   const [modalVisible, setModalVisible] = useState(false);
-  const categories = ['Plastik', 'Sampah Kering', 'Sampah Basah'];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch('https://33c2-125-165-31-194.ap.ngrok.io/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const rupiahFormatter = (amount) => {
+    let str = Number(amount)
+      .toFixed(2)
+      .replace(/\d(?=(\d{3})+\.)/g, '$&.');
+    str = str.substring(0, str.length - 3);
+    return 'Rp.' + str;
+  };
 
   return (
     <SafeAreaView style={styles.centeredView}>
@@ -14,8 +29,7 @@ export default function HomePage() {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          marginTop: 20,
-          marginBottom: 240,
+          marginBottom: 200,
         }}
         source={require('../assets/images/TRASHING.png')}
       />
@@ -32,13 +46,23 @@ export default function HomePage() {
           <View style={styles.modalView}>
             {categories.map((category, index) => {
               return (
-                <View key={index}>
-                  <Text style={{ margin: 10 }}>{category}</Text>
+                <View style={{ margin: 10, textAlign: 'left' }} key={index}>
+                  <Text style={{ textAlign: 'left' }}>
+                    {index + 1}. {category.name} : {rupiahFormatter(category.basePrice)}
+                  </Text>
+                  <Text>{category.description}</Text>
                 </View>
               );
             })}
             <Pressable
-              style={{ backgroundColor: '#2196F3', width: 70, borderRadius: 10, marginTop: 10 }}
+              style={{
+                backgroundColor: '#2196F3',
+                width: 70,
+                borderRadius: 10,
+                marginTop: 10,
+                height: 30,
+                justifyContent: 'center',
+              }}
               onPress={() => setModalVisible(!modalVisible)}
             >
               <Text style={styles.textStyle}>Close</Text>
@@ -83,6 +107,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     width: '35%',
+    marginBottom: 70,
   },
   buttonOpen: {
     backgroundColor: '#0077b6',
