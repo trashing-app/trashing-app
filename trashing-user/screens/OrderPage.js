@@ -49,7 +49,7 @@ export default function OrderPage() {
     const filtered = categories.filter(
       (el, index) => el && checkedState[index]
     );
-    console.log(filtered);
+    // console.log(filtered);
     const orderItems = filtered.map((el) => {
       return {
         categoryId: el.id,
@@ -58,7 +58,6 @@ export default function OrderPage() {
         weight: 0,
       };
     });
-    console.log(orderItems, lclLocation.coords, "INPUT");
     const { latitude, longitude } = lclLocation.coords;
     const orderLocation = {
       latitude,
@@ -132,7 +131,6 @@ export default function OrderPage() {
     getLocation();
   }, [userData.id]);
 
-  console.log(lclLocation);
   return (
     <SafeAreaView style={styles.container}>
       <Image

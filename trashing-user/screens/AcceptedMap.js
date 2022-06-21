@@ -16,7 +16,6 @@ export default function AcceptedMap({
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
   const mapRef = useRef();
   const markerRef = useRef();
-  console.log("ACCEPTED....");
   const navigation = useNavigation();
 
   return (

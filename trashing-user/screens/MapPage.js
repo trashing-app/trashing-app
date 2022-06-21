@@ -33,7 +33,6 @@ export default function MapPage({ route }) {
 
     let position = await Location.getCurrentPositionAsync({});
     const { latitude, longitude } = position.coords;
-    console.log("get customer location");
     setState({
       ...state,
       customerLocation: {
@@ -51,7 +50,6 @@ export default function MapPage({ route }) {
 
   const getCollectorLocation = async (collectorId) => {
     const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
-    console.log(data.location, "GET COLLECTOR LOCATION");
     const [longitude, latitude] = data.location.coordinates;
     setState({
       ...state,
@@ -71,7 +69,6 @@ export default function MapPage({ route }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("UPDATING....");
       let data = [];
       const getOrder = async () => {
         try {
@@ -82,7 +79,6 @@ export default function MapPage({ route }) {
           });
           data = order.data;
           if (approvalStatus === "Not Approved") {
-            console.log(data.approvalStatus, "CHANGE STATUS");
             setApprovalStatus(data.approvalStatus);
           } else {
             if (data.orderStatus === "Completed") {
@@ -93,7 +89,6 @@ export default function MapPage({ route }) {
               );
               navigation.navigate("tabnavigation");
             } else {
-              console.log(data.collectorId, "COLLECTOR ID");
               getCollectorLocation(data.collectorId);
             }
           }
@@ -103,7 +98,7 @@ export default function MapPage({ route }) {
       };
 
       getOrder().catch((error) => {
-        console.log(error, "LINE 108");
+        console.log(error);
       });
     }, 5000);
     return () => clearInterval(interval);

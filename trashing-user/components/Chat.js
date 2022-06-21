@@ -66,11 +66,11 @@ export default function Chat({ route }) {
         <Text>Loading ...</Text>
       </View>
     );
+  } else {
+    return (
+      <TalkRn.Session appId="tAFwv4ga" me={me}>
+        <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
+      </TalkRn.Session>
+    );
   }
-
-  return (
-    <TalkRn.Session appId="tAFwv4ga" me={me}>
-      <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
-    </TalkRn.Session>
-  );
 }

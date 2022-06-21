@@ -7,8 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function LoadingMap({ customerLocation }) {
   const mapRef = useRef();
 
-  console.log("LOADING....");
-
   let text = "Waiting..";
 
   return (
