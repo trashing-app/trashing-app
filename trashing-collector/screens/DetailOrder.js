@@ -6,7 +6,7 @@ import { commitOrder } from "../constant/collectorFunction";
 import { useEffect, useState } from "react";
 function DetailOrder({ route }) {
   const { order, distance } = route.params;
-  // console.log(order, "<<<<<");
+  console.log(order, "<<<<<");
   const [loggedUser, setLoggedUser] = useState({
     id: "",
     name: "",
@@ -51,7 +51,7 @@ function DetailOrder({ route }) {
   const navigation = useNavigation();
 
   function handleCommitOrder() {
-    commitOrder(loggedUser.token, loggedUser.id)
+    commitOrder(loggedUser.token, order.id)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error");
@@ -59,6 +59,7 @@ function DetailOrder({ route }) {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         navigation.navigate("HomePage", {
           longitude: order.location.coordinates[0],
           latitude: order.location.coordinates[1],
