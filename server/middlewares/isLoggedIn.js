@@ -19,9 +19,7 @@ async function isLoggedIn(req, res, next) {
       },
     });
 
-    if (!foundUser && !foundCollector) {
-      throw new Error("Invalid token");
-    }
+    if (!foundUser && !foundCollector) throw new Error("Invalid token")
     req.pass = {
       id,
       username,
