@@ -57,8 +57,7 @@ class OrderController {
       );
       res.status(200).json(result);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      next(error)
     }
   }
 
@@ -83,11 +82,10 @@ class OrderController {
         el.orderId = newOrder.id;
       });
 
-      await OrderItem.bulkCreate(orderItems);
-
+      const created = await OrderItem.bulkCreate(orderItems);
+      if(!created || !created.length) throw "error"
       res.status(201).json(newOrder);
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
