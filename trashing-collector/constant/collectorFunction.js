@@ -1,6 +1,6 @@
-export const getCurrLocationOrder = (access_token) => {
+export const getCurrLocationOrder = (access_token, lat, long) => {
   return fetch(
-    "https://211d-2001-448a-10ab-3534-3855-53fb-a1e9-60be.ap.ngrok.io/orders/nearestOrder",
+    `https://211d-2001-448a-10ab-3534-3855-53fb-a1e9-60be.ap.ngrok.io/orders/nearestOrder?lat=${lat}&long=${long}`,
     {
       method: "GET",
       headers: {
@@ -77,6 +77,19 @@ export const updateOrderItem = (access_token, input, id) => {
         access_token,
       },
       body: JSON.stringify({ data: input }),
+    }
+  );
+};
+
+export const completeOrder = (access_token, id) => {
+  return fetch(
+    `https://211d-2001-448a-10ab-3534-3855-53fb-a1e9-60be.ap.ngrok.io/orders/complete/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        access_token,
+      },
     }
   );
 };
