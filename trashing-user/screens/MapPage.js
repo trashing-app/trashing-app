@@ -1,13 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useRef, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  PermissionsAndroid,
-  Platform,
-  Image,
-} from "react-native";
+import { StyleSheet, Text } from "react-native";
 import * as Location from "expo-location";
 import LoadingMap from "./LoadingMap";
 import axios from "axios";
@@ -111,7 +104,7 @@ export default function MapPage({ route }) {
     return () => clearInterval(interval);
   });
 
-  const { customerLocation, currentLocation, collectorLocation } = state;
+  const { collectorLocation } = state;
   if (orderLocation) {
     if (collectorLocation) {
       return (

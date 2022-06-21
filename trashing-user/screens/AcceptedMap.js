@@ -1,17 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useRef, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  PermissionsAndroid,
-  Platform,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import MapView, { Marker, AnimatedRegion } from "react-native-maps";
+import { useRef } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
