@@ -12,6 +12,11 @@ function errorHandler(error, req, res, next) {
     msg = 'Invalid token'
   }
 
+  if (error.message === 'Not found'){
+    code = 404
+    msg = error.message
+  }
+
   if (error.message === 'Email is required'){
     code = 401
     msg = error.message

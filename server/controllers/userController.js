@@ -151,8 +151,7 @@ class UserController {
           ],
         },
       });
-      console.log(user);
-      if (!user) throw new Error('Not found');
+      if (!user) throw new Error("Not found");
       res.status(200).json(user);
     } catch (err) {
       next(err);
