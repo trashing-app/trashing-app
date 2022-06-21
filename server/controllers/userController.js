@@ -138,7 +138,17 @@ class UserController {
           id,
         },
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt", "username", "email", "address", "phoneNumber", "balance", "role"],
+          exclude: [
+            "password",
+            "createdAt",
+            "updatedAt",
+            "username",
+            "email",
+            "address",
+            "phoneNumber",
+            "balance",
+            "role",
+          ],
         },
       });
       console.log(user);

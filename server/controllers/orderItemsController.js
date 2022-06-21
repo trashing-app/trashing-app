@@ -19,26 +19,35 @@ class OrderItemController {
   static async updateOrderItems(req, res, next) {
     try {
       const { orderId } = req.params;
-      const { orderItems } = req.body;
-
-      const foundOrderItem = await OrderItem.findOne({
-        where:{
-          orderId
-        }
-      })
-
-      if(!foundOrderItem) throw new Error('Not found')
-
-      orderItems.forEach((e) => {
-        e.orderId = orderId;
+      const { data } = req.body;
+      console.log(data);
+      const orderItems = await OrderItem.findAll({
+        include: ['Category'],
+        where: {
+          orderId,
+        },
       });
 
-      const bulkOrderItem = await OrderItem.bulkCreate(orderItems, {
-        updateOnDuplicate: ["price", "weight"],
-      });
+      for (const key in data) {
+        orderItems.forEach((e) => {
+          if (e.categoryId == key) {
+            e.weight = data[key];
+            e.price = +data[key] * +e.Category.basePrice;
+            delete e.dataValues.Category;
+          }
+        });
+      }
 
+      const result = orderItems.map((el) => {
+        return el.dataValues;
+      });
+      console.log(result);
+      const bulkOrderItem = await OrderItem.bulkCreate(result, {
+        updateOnDuplicate: ['price', 'weight'],
+      });
       res.status(200).json(bulkOrderItem);
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }

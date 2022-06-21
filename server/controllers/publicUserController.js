@@ -25,13 +25,12 @@ class PublicUserController {
       };
       const access_token = encode(payload);
       res.status(200).json({
-        id:foundUser.id,
-        username:foundUser.username,
-        email:foundUser.email,
-        access_token
+        id: foundUser.id,
+        username: foundUser.username,
+        email: foundUser.email,
+        access_token,
       });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
@@ -51,7 +50,6 @@ class PublicUserController {
         email:newUser.email
       });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
