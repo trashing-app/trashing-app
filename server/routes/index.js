@@ -7,12 +7,14 @@ const publicUser = require("./publicUser");
 const orderItem = require("./orderItem");
 const publicCollector = require("./publicCollector");
 const category = require("./category");
+const history = require("./history")
 const { errorHandler } = require("../middlewares/errorHandler");
 const { isLoggedIn } = require("../middlewares/isLoggedIn");
 
 router.get("/", (req, res) => {
   res.status(200).json({message:"Trash people"});
 });
+router.use("/histories", history)
 router.use("/users", user);
 router.use("/categories", category);
 router.use("/collectors", collector);

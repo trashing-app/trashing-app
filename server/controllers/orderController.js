@@ -1,4 +1,4 @@
-const { Order, OrderItem, sequelize, User } = require("../models");
+const { Order, OrderItem, History, sequelize, User } = require("../models");
 const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
@@ -92,7 +92,22 @@ class OrderController {
 
   static async completeOrder(req, res, next) {
     try {
+      const transaction = await sequelize.transaction()
       const { id } = req.params;
+
+      const currentOrder = await Order.findOne({
+        where: {
+          id
+        },
+        include:["OrderItems"]
+      }, { transaction })
+
+      let total = 0
+      const { userId, collectorId } = currentOrder
+      currentOrder.OrderItems.forEach(el => total += el.price)
+
+      if(!currentOrder) throw new Error("Not found")
+
       const [completed] = await Order.update(
         {
           orderStatus: "Completed",
@@ -101,11 +116,21 @@ class OrderController {
           where: {
             id,
           },
-        }
-      );
+        },
+      { transaction });
       if(!completed) throw new Error('Not found')
-      res.status(200).json({message:"Order completed"});
+
+      const writtenHistory = await History.create({
+        userId, 
+        collectorId,
+        orderId:id,
+        description: `Rp${total.toLocaleString('id')},00 obtained`
+      }, { transaction })
+      if(!writtenHistory) throw new Error('Error')
+      await transaction.commit();
+      res.status(200).json({ message:"Order completed" });
     } catch (err) {
+      await transaction.rollback()
       next(err);
     }
   }
