@@ -14,7 +14,7 @@ import storage from "../storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-
+import { baseUrl } from "../constant/baseUrl";
 const winWidth = Dimensions.get("window").width;
 
 function Profile() {
@@ -25,7 +25,6 @@ function Profile() {
     address: "",
     phoneNumber: "",
   });
-  const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
 
   useEffect(() => {
     if (id) {

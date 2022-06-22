@@ -7,7 +7,11 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: "#DAD7CD" },
+        tabBarStyle: {
+          backgroundColor: "#DAD7CD",
+          borderColor: "#344E41",
+          borderTopWidth: 0,
+        },
         tabBarLabelStyle: { color: "#588157" },
         tabBarInactiveBackgroundColor: "#DAD7CD",
         tabBarActiveBackgroundColor: "#344E41",
