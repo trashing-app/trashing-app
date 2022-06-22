@@ -1,11 +1,17 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import OrderPage from "../screens/OrderPage.js";
 import HomePage from "../screens/HomePage.js";
+import ProfilePage from "../screens/ProfilePage.js";
+import HistoryPage from "../screens/HistoryPage.js";
 import storage from "../storage";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
-import ProfilePage from "../screens/ProfilePage.js";
+import {
+  Ionicons,
+  AntDesign,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { Text } from "react-native";
 
 export default function TabNavigation() {
@@ -79,6 +85,27 @@ export default function TabNavigation() {
             <AntDesign
               name="plussquare"
               size={24}
+              color={focused ? "#DAD7CD" : "#588157"}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryPage}
+        options={{
+          headerShown: false,
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={{ color: focused ? "#DAD7CD" : "#588157", fontSize: 12 }}
+            >
+              History
+            </Text>
+          ),
+          tabBarIcon: ({ color, size, focused }) => (
+            <MaterialIcons
+              name="history"
+              size={28}
               color={focused ? "#DAD7CD" : "#588157"}
             />
           ),

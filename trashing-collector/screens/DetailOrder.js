@@ -13,7 +13,7 @@ import storage from "../storage";
 import { commitOrder } from "../constant/collectorFunction";
 import { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
-
+import imagePath from "../constant/imagePath";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -102,9 +102,17 @@ function DetailOrder({ route }) {
       }}
     >
       <ScrollView>
+        <Image
+          source={imagePath.logo}
+          style={{
+            width: width,
+            height: (20 / 100) * height,
+            marginBottom: -40,
+          }}
+        />
         <Text
           style={{
-            fontSize: 42,
+            fontSize: 35,
             textAlign: "center",
             marginTop: "5%",
             color: "#A3B18A",
@@ -128,6 +136,7 @@ function DetailOrder({ route }) {
               borderRadius: 15,
               alignItems: "center",
               justifyContent: "center",
+              marginBottom: 50,
             }}
           >
             <View
@@ -178,16 +187,17 @@ function DetailOrder({ route }) {
                 >
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 25,
                       marginBottom: "3%",
                       color: "#344E41",
+                      fontWeight: "600",
                     }}
                   >
                     {order.User.username}
                   </Text>
                   <View
                     style={{
-                      marginLeft: -10,
+                      marginLeft: -39,
                       alignItems: "center",
                       flexDirection: "row",
                       justifyContent: "center",
@@ -202,18 +212,32 @@ function DetailOrder({ route }) {
                         marginHorizontal: "4%",
                       }}
                     >
+                      {" "}
                       {distance} Km
                     </Text>
                   </View>
-                  <Text
+                  <View
                     style={{
-                      fontSize: 20,
-                      marginBottom: "3%",
-                      color: "#344E41",
+                      flexDirection: "row",
                     }}
                   >
-                    {order.User.address}
-                  </Text>
+                    <Entypo
+                      style={{ marginRight: 5 }}
+                      name="address"
+                      size={24}
+                      color="#344E41"
+                    />
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        marginBottom: "3%",
+                        color: "#344E41",
+                        marginLeft: 5,
+                      }}
+                    >
+                      {order.User.address}
+                    </Text>
+                  </View>
                 </View>
               </View>
               <Text
