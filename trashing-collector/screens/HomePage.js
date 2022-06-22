@@ -165,6 +165,31 @@ export default function HomePage({ route }) {
       });
   }, []);
 
+  useEffect(() => {
+    return () => {
+      setLocalLocation({
+        coords: {
+          latitude: "",
+          longitude: "",
+        },
+      });
+      setState({
+        pickUpCord: {
+          latitude: 30.7046,
+          longitude: 77.1025,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        },
+        destinationCord: {
+          latitude: 30.7046,
+          longitude: 77.1125,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        },
+      });
+    };
+  }, []);
+
   if (!isLoading && localLocation) {
     return (
       <SafeAreaView>

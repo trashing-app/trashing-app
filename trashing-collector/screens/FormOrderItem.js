@@ -254,14 +254,18 @@ function FormOrderItem({ route }) {
           >
             <TouchableOpacity
               onPress={() => {
-                Alert.alert("Complete Order", "Choose option", [
-                  {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel",
-                  },
-                  { text: "OK", onPress: () => handleSubmit() },
-                ]);
+                Alert.alert(
+                  "Complete Order",
+                  "Are you sure? By completing this order the balance will be transfered to user",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
+                    },
+                    { text: "OK", onPress: () => handleSubmit() },
+                  ]
+                );
               }}
               style={{
                 borderRadius: 12,
