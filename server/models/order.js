@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       Order.belongsTo(models.User, { foreignKey: "userId" });
       Order.belongsTo(models.Collector, { foreignKey: "collectorId" });
       Order.hasMany(models.OrderItem, { foreignKey: "orderId" });
+      Order.hasOne(models.History, {foreignKey:"orderId"})
     }
   }
   Order.init(

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -8,13 +8,17 @@ import {
   TouchableOpacity,
   ToastAndroid,
   Image,
-} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import storage from '../storage';
+  Dimensions,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import storage from "../storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const winWidth = Dimensions.get("window").width;
+const winHeight = Dimensions.get("window").height;
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -45,13 +49,15 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(`https://33c2-125-165-31-194.ap.ngrok.io/pub/users/login`, {
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        `https://8a32-111-94-86-182.ap.ngrok.io/pub/users/login`,
+        {
+          email,
+          password,
+        }
+      );
       if (data.access_token) {
         const { id, username, email, access_token } = data;
-        console.log("login success");
         storage.save({
           key: "loginState",
           data: {
@@ -66,16 +72,21 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate('tabnavigation');
-        ToastAndroid.showWithGravity('Login successfull', ToastAndroid.LONG, ToastAndroid.CENTER);
-        setEmail('');
-        setPassword('');
+        await AsyncStorage.setItem("access_token", access_token);
+        navigation.navigate("tabnavigation");
+        ToastAndroid.showWithGravity(
+          "Login successfull",
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+        setEmail("");
+        setPassword("");
       } else {
         throw "login failed";
       }
     } catch (err) {
       ToastAndroid.showWithGravity(
-        'Invalid email/password',
+        "Invalid email/password",
         ToastAndroid.LONG,
         ToastAndroid.CENTER
       );
@@ -87,29 +98,31 @@ export default function LoginPage() {
       <View style={styles.container}>
         <Image
           style={{
-            height: 70,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
+            height: 170,
+            alignItems: "center",
+            justifyContent: "center",
+            width: winWidth,
+            marginBottom: -30,
+            marginTop: winHeight * 0.2,
           }}
-          source={require('../assets/images/TRASHING.png')}
+          source={require("../assets/images/TRASHING.png")}
         />
         <View style={styles.inputContainer}>
           <TextInput
-            placeholderTextColor="#ffffff"
+            placeholderTextColor="#DAD7CD"
             style={styles.inputField}
             value={email}
             onChangeText={setEmail}
-            placeholder="Input email"
+            placeholder="Email"
             keyboardType="email-address"
           />
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholderTextColor="#ffffff"
+            placeholderTextColor="#DAD7CD"
             style={styles.inputField}
             name="password"
-            placeholder="Enter password"
+            placeholder="Password"
             autoCapitalize="none"
             autoCorrect={false}
             textContentType="newPassword"
@@ -122,7 +135,7 @@ export default function LoginPage() {
             <MaterialCommunityIcons
               name={rightIcon}
               size={22}
-              color="#ffffff"
+              color="#DAD7CD"
             />
           </Pressable>
         </View>
@@ -130,7 +143,7 @@ export default function LoginPage() {
           style={{
             width: 130,
             height: 50,
-            backgroundColor: "#00b4d8",
+            backgroundColor: "#3A5A40",
             justifyContent: "center",
             marginVertical: 15,
             borderRadius: 15,
@@ -152,26 +165,27 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#00b4d8",
+    backgroundColor: "#588157",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     paddingHorizontal: 1,
+    height: winHeight,
   },
   inputContainer: {
-    backgroundColor: "#00b4d8",
-    width: "90%",
-    marginHorizontal: "5%",
-    marginVertical: 10,
+    backgroundColor: "#3A5A40",
+    width: winWidth * 0.85,
+    marginHorizontal: "10%",
+    marginVertical: 15,
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 4,
-    borderColor: "#d7d7d7",
+    borderColor: "#DAD7CD",
   },
   inputField: {
     padding: 14,
     fontSize: 22,
     width: "87%",
-    color: "#ffffff",
+    color: "#DAD7CD",
   },
 });

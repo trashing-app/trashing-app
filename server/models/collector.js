@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   class Collector extends Model {
     static associate(models) {
       Collector.hasMany(models.Order, { foreignKey: 'collectorId' });
+      Collector.hasMany(models.History, { foreignKey: 'collectorId' })
     }
   }
   Collector.init(
