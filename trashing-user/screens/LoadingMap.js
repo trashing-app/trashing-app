@@ -19,6 +19,8 @@ import storage from "../storage";
 export default function LoadingMap({ customerLocation, orderId }) {
   const mapRef = useRef();
   const navigation = useNavigation();
+  const baseUrl =
+    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
   let text = "Waiting..";
 
   return (
@@ -78,8 +80,6 @@ export default function LoadingMap({ customerLocation, orderId }) {
                     {
                       text: "Cancel order",
                       style: "destructive",
-                      // If the user confirmed, then we dispatch the action we blocked earlier
-                      // This will continue the action that had triggered the removal of the screen
                       onPress: async () => {
                         try {
                           const ret = await storage.load({ key: "order" });
@@ -87,7 +87,7 @@ export default function LoadingMap({ customerLocation, orderId }) {
                             "access_token"
                           );
                           const status = await axios.get(
-                            `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                            `${baseUrl}/orders/${ret.id}`,
                             { headers: { access_token } }
                           );
                           if (status.data.approvalStatus === "Approved") {
@@ -96,7 +96,7 @@ export default function LoadingMap({ customerLocation, orderId }) {
                             );
                           } else {
                             const { data } = await axios.delete(
-                              `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                              `${baseUrl}/orders/${ret.id}`,
                               { headers: { access_token } }
                             );
                             storage.remove({

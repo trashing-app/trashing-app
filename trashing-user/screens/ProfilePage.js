@@ -24,13 +24,12 @@ export default function ProfilePage() {
     address: "",
     phoneNumber: "",
   });
+  const baseUrl =
+    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
 
   useEffect(() => {
     if (id) {
-      fetch(
-        "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/users/" +
-          id
-      )
+      fetch(`${baseUrl}/users/${id}`)
         .then((res) => res.json())
         .then((data) => {
           setProfile({
@@ -82,21 +81,17 @@ export default function ProfilePage() {
 
   const onSubmitEdit = () => {
     console.log(id);
-    fetch(
-      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/users/" +
-        id,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: profile.username,
-          address: profile.address,
-          phoneNumber: profile.phoneNumber,
-        }),
-      }
-    )
+    fetch(`${baseUrl}/users/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: profile.username,
+        address: profile.address,
+        phoneNumber: profile.phoneNumber,
+      }),
+    })
       .then((res) => res.json())
       .then(() => {
         ToastAndroid.showWithGravity(
