@@ -139,7 +139,7 @@ function ListOrder() {
       }, 60000);
       return () => clearInterval(interval);
     }
-  });
+  }, [loggedUser.token]);
 
   // ini get current loc collector
   useEffect(() => {
@@ -177,7 +177,7 @@ function ListOrder() {
       }, 10000);
       return () => clearInterval(interval);
     }
-  });
+  }, [loggedUser.token]);
 
   //navigation guard
   useEffect(() => {
