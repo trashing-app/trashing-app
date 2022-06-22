@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -11,48 +11,53 @@ import {
   Image,
   ToastAndroid,
   Dimensions,
-} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const winWidth = Dimensions.get('window').width;
-const winHeight = Dimensions.get('window').height;
+const winWidth = Dimensions.get("window").width;
+const winHeight = Dimensions.get("window").height;
 
 export default function RegisterPage({ navigation }) {
   const [input, setInput] = useState({
-    username: '',
-    email: '',
-    password: '',
-    address: '',
-    phoneNumber: '',
+    username: "",
+    email: "",
+    password: "",
+    address: "",
+    phoneNumber: "",
   });
 
-  const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
+  const { passwordVisibility, rightIcon, handlePasswordVisibility } =
+    useTogglePasswordVisibility();
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/pub/users/register', {
-      method: 'POST',
+    fetch("https://8a32-111-94-86-182.ap.ngrok.io/pub/users/register", {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(input),
     })
       .then((response) => {
         if (response.status == 400) {
-          throw { message: 'Please check your input' };
+          throw { message: "Please check your input" };
         }
-        navigation.replace('LoginPage');
+        navigation.replace("LoginPage");
         ToastAndroid.showWithGravity(
-          'Registered Successfully',
+          "Registered Successfully",
           ToastAndroid.LONG,
           ToastAndroid.CENTER
         );
       })
       .catch((err) => {
-        ToastAndroid.showWithGravity(`${err.message}`, ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity(
+          `${err.message}`,
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
       });
   };
 
@@ -63,11 +68,11 @@ export default function RegisterPage({ navigation }) {
           <Image
             style={{
               height: 170,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
               width: winWidth,
             }}
-            source={require('../assets/images/TRASHING.png')}
+            source={require("../assets/images/TRASHING.png")}
           />
           <View style={styles.inputContainer}>
             <TextInput
@@ -100,7 +105,11 @@ export default function RegisterPage({ navigation }) {
               placeholderTextColor="#DAD7CD"
             />
             <Pressable onPress={handlePasswordVisibility}>
-              <MaterialCommunityIcons name={rightIcon} size={22} color="#DAD7CD" />
+              <MaterialCommunityIcons
+                name={rightIcon}
+                size={22}
+                color="#DAD7CD"
+              />
             </Pressable>
           </View>
           <View style={styles.inputContainer}>
@@ -117,7 +126,9 @@ export default function RegisterPage({ navigation }) {
               placeholderTextColor="#DAD7CD"
               name="phoneNumber"
               style={styles.inputField}
-              onChangeText={(phoneNumber) => setInput({ ...input, phoneNumber })}
+              onChangeText={(phoneNumber) =>
+                setInput({ ...input, phoneNumber })
+              }
               placeholder="Phone Number"
               keyboardType="name-phone-pad"
             />
@@ -126,17 +137,21 @@ export default function RegisterPage({ navigation }) {
             style={{
               width: 130,
               height: 50,
-              backgroundColor: '#344E41',
-              justifyContent: 'center',
+              backgroundColor: "#344E41",
+              justifyContent: "center",
               marginVertical: 15,
               borderRadius: 15,
-              marginHorizontal: '34%',
-              borderColor: '#DAD7CD',
+              marginHorizontal: "34%",
+              borderColor: "#DAD7CD",
               borderWidth: 3,
             }}
             onPress={doRegister}
           >
-            <Text style={{ textAlign: 'center', fontSize: 20, color: '#DAD7CD' }}>Register</Text>
+            <Text
+              style={{ textAlign: "center", fontSize: 20, color: "#DAD7CD" }}
+            >
+              Register
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -147,27 +162,27 @@ export default function RegisterPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#588157',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#588157",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 1,
   },
   inputContainer: {
-    backgroundColor: '#344E41',
+    backgroundColor: "#344E41",
     width: winWidth * 0.9,
     height: 62,
-    marginHorizontal: '5%',
+    marginHorizontal: "5%",
     marginVertical: 10,
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 4,
-    borderColor: '#DAD7CD',
+    borderColor: "#DAD7CD",
   },
   inputField: {
     padding: 14,
     fontSize: 20,
     width: winWidth * 0.78,
-    color: 'white',
+    color: "white",
   },
 });
