@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import storage from "../storage";
 import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const winWidth = Dimensions.get("window").width;
 
@@ -69,7 +70,9 @@ export default function ProfilePage() {
     storage.remove({
       key: "loginState",
     });
-    navigation.navigate("WelcomePage");
+    AsyncStorage.removeItem("access_token").then((res) => {
+      navigation.navigate("WelcomePage");
+    });
   }
 
   const onChangeHandler = (key, value) => {
@@ -80,7 +83,6 @@ export default function ProfilePage() {
   };
 
   const onSubmitEdit = () => {
-    console.log(id);
     fetch(`${baseUrl}/users/${id}`, {
       method: "PUT",
       headers: {

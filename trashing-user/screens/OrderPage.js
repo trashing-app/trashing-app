@@ -44,6 +44,9 @@ export default function OrderPage() {
       .catch((err) => {});
   };
   useEffect(() => {
+    // storage.remove({
+    //   key: "order",
+    // });
     fetch(`${baseUrl}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
