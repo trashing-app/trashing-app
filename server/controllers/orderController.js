@@ -27,7 +27,7 @@ class OrderController {
   static async findOrderByRadius(req, res) {
     try {
       // distance on meter unit
-      const distance = req.query.distance || 2000;
+      const distance = req.query.distance || 2000000;
       const long = req.query.long || "-6.9439994342171225";
       const lat = req.query.lat || "107.5904275402039";
       const result = await sequelize.query(

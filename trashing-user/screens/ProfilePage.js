@@ -28,7 +28,7 @@ export default function ProfilePage() {
 
   const [balance, setBalance] = useState(0);
   const baseUrl =
-    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
+    "https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io";
   const rupiahFormatter = (amount) => {
     let str = Number(amount)
       .toFixed(2)

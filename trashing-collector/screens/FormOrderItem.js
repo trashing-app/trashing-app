@@ -8,7 +8,7 @@ import {
   Alert,
   Dimensions,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   changeStatusPayment,
   getOrderItems,
@@ -19,9 +19,18 @@ import storage from "../storage";
 import { useNavigation } from "@react-navigation/native";
 import { completeOrder } from "../constant/collectorFunction";
 import { baseUrl } from "../constant/baseUrl";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
-
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+let sum = 0;
 function FormOrderItem({ route }) {
   // console.log(route);
   const [orderItems, setOrderItems] = useState([]);
@@ -33,7 +42,34 @@ function FormOrderItem({ route }) {
   const navigation = useNavigation();
   const [input, setInput] = useState({});
   const [order, setOrder] = useState({});
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   // const [sum, setSum] = useState(0);
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   function handlerOnChangeText(name, text) {
     setInput({ ...input, [name]: text });
   }
@@ -78,6 +114,7 @@ function FormOrderItem({ route }) {
           return res.json();
         })
         .then((data) => {
+          console.log(data);
           setOrder(data);
         })
         .catch((err) => {
@@ -112,7 +149,6 @@ function FormOrderItem({ route }) {
         return completeOrder(loggedUser.token, route.params.orderId);
       })
       .then((_) => {
-        let sum = 0;
         for (const key in input) {
           orderItems.forEach((e) => {
             if (e.categoryId == key) {
@@ -126,6 +162,7 @@ function FormOrderItem({ route }) {
         return changeStatusPayment(loggedUser.token, order.id);
       })
       .then((_) => {
+        sendPushNotification(order.User.device_token);
         ToastAndroid.showWithGravity(
           "Order completed",
           ToastAndroid.SHORT,
@@ -246,12 +283,60 @@ function FormOrderItem({ route }) {
           </View>
         </View>
       </View>
-      {/* <TextInput
-        placeholderTextColor="#ffffff"
-        placeholder="Enter item price"
-      /> */}
     </SafeAreaView>
   );
+}
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  return token;
+}
+
+//fungsi yang nanti dipanggil buat notify
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "Order Completed",
+    body: `Balance added ${sum}`,
+    data: { someData: "goes here" },
+  };
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(message),
+  });
 }
 
 export default FormOrderItem;

@@ -72,7 +72,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("TabNavigator");
+        navigation.replace("TabNavigator");
       } else {
         throw "login failed";
       }

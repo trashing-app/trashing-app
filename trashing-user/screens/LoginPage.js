@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -16,8 +16,17 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import storage from "../storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -25,6 +34,33 @@ export default function LoginPage() {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
   const [password, setPassword] = useState("");
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     storage
@@ -32,6 +68,15 @@ export default function LoginPage() {
         key: "loginState",
       })
       .then((ret) => {
+        return axios.patch(
+          `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/registerdevice`,
+          {
+            email: ret.email,
+            device_token: expoPushToken,
+          }
+        );
+      })
+      .then((_) => {
         navigation.navigate("tabnavigation");
       })
       .catch((err) => {
@@ -49,7 +94,7 @@ export default function LoginPage() {
   const doLogin = async () => {
     try {
       const { data } = await axios.post(
-        `https://033b-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/login`,
+        `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/login`,
         {
           email,
           password,
@@ -71,12 +116,21 @@ export default function LoginPage() {
           },
           expires: null,
         });
+
         await AsyncStorage.setItem("access_token", access_token);
         navigation.navigate("tabnavigation");
         ToastAndroid.showWithGravity(
           "Login successfull",
           ToastAndroid.LONG,
           ToastAndroid.CENTER
+        );
+
+        await axios.patch(
+          `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/registerdevice`,
+          {
+            email: email,
+            device_token: expoPushToken,
+          }
         );
         setEmail("");
         setPassword("");
@@ -188,3 +242,56 @@ const styles = StyleSheet.create({
     color: "#DAD7CD",
   },
 });
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  return token;
+}
+
+//fungsi yang nanti dipanggil buat notify
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "Original Title",
+    body: "And here is the body!",
+    data: { someData: "goes here" },
+  };
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(message),
+  });
+}
