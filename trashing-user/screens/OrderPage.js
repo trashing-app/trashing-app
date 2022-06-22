@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import storage from "../storage";
-
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -43,9 +42,9 @@ export default function OrderPage() {
       .catch((err) => {});
   };
   useEffect(() => {
-    // storage.remove({
-    //   key: "order",
-    // });
+    storage.remove({
+      key: "order",
+    });
     fetch(`${baseUrl}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
@@ -70,6 +69,16 @@ export default function OrderPage() {
             {
               text: "Don't cancel",
               style: "cancel",
+              onPress: () => {
+                navigation.navigate("MapPage", {
+                  id: ret.id,
+                  orderLocation: ret.orderLocation,
+                });
+              },
+            },
+            {
+              text: "To current order",
+              style: "default",
               onPress: () => {
                 navigation.navigate("MapPage", {
                   id: ret.id,
@@ -132,39 +141,47 @@ export default function OrderPage() {
             weight: 0,
           };
         });
-        const { latitude, longitude } = lclLocation.coords;
-        const orderLocation = {
-          latitude,
-          longitude,
-        };
-        fetch(`${baseUrl}/orders`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            access_token: userData.token,
-          },
-          body: JSON.stringify({
-            orderItems,
+        if (orderItems.length === 0) {
+          ToastAndroid.showWithGravity(
+            "Please choose at least one",
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+        } else {
+          const { latitude, longitude } = lclLocation.coords;
+          const orderLocation = {
             latitude,
             longitude,
-          }),
-        })
-          .then((res) => res.json())
-          .then((newOrder) => {
-            const { id } = newOrder;
-            storage.save({
-              key: "order",
-              data: {
-                id,
-                orderLocation,
-              },
-              expires: null,
-            });
-            navigation.navigate("MapPage", { id, orderLocation });
+          };
+          fetch(`${baseUrl}/orders`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              access_token: userData.token,
+            },
+            body: JSON.stringify({
+              orderItems,
+              latitude,
+              longitude,
+            }),
           })
-          .catch((err) => {
-            console.log(err);
-          });
+            .then((res) => res.json())
+            .then((newOrder) => {
+              const { id } = newOrder;
+              storage.save({
+                key: "order",
+                data: {
+                  id,
+                  orderLocation,
+                },
+                expires: null,
+              });
+              navigation.navigate("MapPage", { id, orderLocation });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       });
   };
 
@@ -217,10 +234,6 @@ export default function OrderPage() {
     checkOrder();
   }, [lclLocation]);
 
-  // useEffect(() => {
-  //   checkOrder();
-  // });
-
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -233,6 +246,26 @@ export default function OrderPage() {
         }}
         source={require("../assets/images/TRASHING.png")}
       />
+      <Text
+        style={{
+          fontSize: 20,
+          color: "white",
+          textAlign: "center",
+          paddingBottom: 15,
+        }}
+      >
+        What's your household waste?
+      </Text>
+      <Text
+        style={{
+          fontSize: 15,
+          color: "white",
+          textAlign: "center",
+          paddingBottom: 15,
+        }}
+      >
+        (choose that is suitable)
+      </Text>
       {categories.map((category, index) => {
         return (
           <View

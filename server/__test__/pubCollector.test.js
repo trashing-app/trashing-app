@@ -226,4 +226,80 @@ describe("Collector Routes Test", ()=>{
 
     
   })
+
+  describe("PATCH /RegisterDevice", () => {
+    test("200 Register device_token for collector", (done) => {
+      request(app)
+        .patch('/pub/collectors/registerdevice')
+        .send({
+          email:"collector@mail.com",
+          device_token:"some_token"
+        })
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(200);
+          expect(body).toHaveProperty("message", `Device registered`);
+          done();
+        })
+        .catch((err) => {
+          done(err)
+        })
+    })
+
+    test("400 Register device_token for without", (done) => {
+      request(app)
+        .patch('/pub/collectors/registerdevice')
+        .send({
+          email:"collector@mail.com",
+        })
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(400);
+          expect(body).toHaveProperty("message", `Invalid token`);
+          done();
+        })
+        .catch((err) => {
+          done(err)
+        })
+    })
+
+    test("404 Register device_token without email", (done) => {
+      request(app)
+        .patch('/pub/collectors/registerdevice')
+        .send({
+          device_token:"some_token"
+        })
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(401);
+          expect(body).toHaveProperty("message", `Email is required`);
+          done();
+        })
+        .catch((err) => {
+          done(err)
+        })
+    })
+
+    test("404 Register device_token with unregistered email", (done) => {
+      request(app)
+        .patch('/pub/collectors/registerdevice')
+        .send({
+          email:"unregistered@mail.com",
+          device_token:"some_token"
+        })
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(404);
+          expect(body).toHaveProperty("message", `Not found`);
+          done();
+        })
+        .catch((err) => {
+          done(err)
+        })
+    })
+  })
 })

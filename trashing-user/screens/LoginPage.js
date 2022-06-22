@@ -16,7 +16,6 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import storage from "../storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
 

@@ -1,6 +1,7 @@
 import * as TalkRn from "@talkjs/expo";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { baseUrl } from "../baseUrl";
 
 export default function Chat({ route }) {
   const { data } = route.params;

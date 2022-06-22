@@ -4,5 +4,6 @@ const publicCollectorController = require("../controllers/publicCollectorControl
 
 router.post("/login", publicCollectorController.login);
 router.post("/register", publicCollectorController.register);
+router.patch("/registerDevice", publicCollectorController.registerDevice);
 
 module.exports = router;
