@@ -6,11 +6,6 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator
-      // tabBarOptions={{
-      //   style: {
-      //     elevation: 0,
-      //   },
-      // }}
       screenOptions={{
         tabBarStyle: {
           backgroundColor: "#DAD7CD",

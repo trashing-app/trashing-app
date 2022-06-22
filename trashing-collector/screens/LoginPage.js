@@ -41,6 +41,14 @@ export default function LoginPage() {
         }
       });
   }, []);
+
+  useEffect(() => {
+    return () => {
+      setPassword("");
+      setEmail("");
+    };
+  }, []);
+
   const doLogin = async () => {
     try {
       const { data } = await axios.post(`${baseUrl}/pub/collectors/login`, {
@@ -64,9 +72,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("TabNavigator");
-        setEmail("");
-        setPassword("");
+        navigation.navigate("ListOrder");
       } else {
         throw "login failed";
       }
