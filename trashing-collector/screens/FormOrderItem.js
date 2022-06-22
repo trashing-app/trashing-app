@@ -31,6 +31,13 @@ Notifications.setNotificationHandler({
   }),
 });
 let sum = 0;
+const rupiahFormatter = (amount) => {
+  let str = Number(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&.");
+  str = str.substring(0, str.length - 3);
+  return "Rp." + str;
+};
 function FormOrderItem({ route }) {
   // console.log(route);
   const [orderItems, setOrderItems] = useState([]);
@@ -174,6 +181,7 @@ function FormOrderItem({ route }) {
         console.log(err);
       });
   }
+
   // console.log(input);
   return (
     <SafeAreaView>
@@ -189,6 +197,7 @@ function FormOrderItem({ route }) {
           style={{
             fontSize: 40,
             marginVertical: "8%",
+            color: "#DAD7CD",
           }}
         >
           Order Items
@@ -216,31 +225,63 @@ function FormOrderItem({ route }) {
                     marginBottom: "7%",
                   }}
                 >
-                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
+                  <Text
+                    style={{
+                      fontSize: 25,
+                      marginLeft: 5,
+                      color: "#DAD7CD",
+                      marginBottom: "3%",
+                      fontWeight: "700",
+                    }}
+                  >
                     {el.Category.name}
                   </Text>
-                  <Text style={{ fontSize: 20, marginLeft: 5 }}>Weight :</Text>
-                  <TextInput
+                  <View
                     style={{
-                      backgroundColor: "#ffffff",
-                      borderRadius: 5,
-                      width: (50 / 100) * width,
-                      fontSize: 20,
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      marginRight: "10%",
                     }}
-                    onChangeText={(text) =>
-                      handlerOnChangeText(el.Category.id, text)
-                    }
-                    keyboardType={"number-pad"}
-                  />
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        marginLeft: 5,
+                        color: "#DAD7CD",
+                        marginBottom: "3%",
+                      }}
+                    >
+                      Weight :
+                    </Text>
+                    <TextInput
+                      style={{
+                        backgroundColor: "#ffffff",
+                        borderRadius: 5,
+                        width: 100,
+                        fontSize: 20,
+                        marginLeft: 5,
+                      }}
+                      onChangeText={(text) =>
+                        handlerOnChangeText(el.Category.id, text)
+                      }
+                      keyboardType={"number-pad"}
+                    />
+                  </View>
 
-                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
-                    Total Price :
-                  </Text>
-                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
-                    {}
-                    {+input[`${el.Category.id}`] * +el.Category.basePrice
-                      ? +input[`${el.Category.id}`] * +el.Category.basePrice
-                      : 0}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginLeft: 5,
+                      color: "#DAD7CD",
+                      marginTop: "3%",
+                    }}
+                  >
+                    Total Price :{" "}
+                    {rupiahFormatter(
+                      +input[`${el.Category.id}`] * +el.Category.basePrice
+                        ? +input[`${el.Category.id}`] * +el.Category.basePrice
+                        : 0
+                    )}
                   </Text>
                 </View>
               );
@@ -278,7 +319,8 @@ function FormOrderItem({ route }) {
               <Text
                 style={{
                   fontSize: 22,
-                  color: "#DAD7CD",
+                  color: "#344E41",
+                  marginVertical: "3%",
                 }}
               >
                 Submit
@@ -328,7 +370,7 @@ async function sendPushNotification(expoPushToken) {
     to: expoPushToken,
     sound: "default",
     title: "Order Completed",
-    body: `Balance added ${sum}`,
+    body: `Balance added ${rupiahFormatter(sum)}`,
     data: { someData: "goes here" },
   };
 
