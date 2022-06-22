@@ -86,6 +86,7 @@ export default function AcceptedMap({
           flex: 0.1,
           paddingVertical: "5%",
           justifyContent: "center",
+          backgroundColor: "#588157",
         }}
       >
         <View
@@ -104,6 +105,7 @@ export default function AcceptedMap({
               marginHorizontal: "5%",
               alignItems: "center",
               justifyContent: "center",
+              backgroundColor: "#DAD7CD",
             }}
             onPress={async () => {
               try {

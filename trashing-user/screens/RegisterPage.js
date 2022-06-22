@@ -33,14 +33,17 @@ export default function RegisterPage({ navigation }) {
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch("https://8a32-111-94-86-182.ap.ngrok.io/pub/users/register", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    })
+    fetch(
+      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/pub/users/register",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+      }
+    )
       .then((response) => {
         if (response.status == 400) {
           throw { message: "Please check your input" };
