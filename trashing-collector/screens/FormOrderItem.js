@@ -7,6 +7,7 @@ import {
   ToastAndroid,
   Alert,
   Dimensions,
+  Image,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -21,6 +22,8 @@ import { completeOrder } from "../constant/collectorFunction";
 import { baseUrl } from "../constant/baseUrl";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import imagePath from "../constant/imagePath";
+imagePath;
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 Notifications.setNotificationHandler({
@@ -193,9 +196,17 @@ function FormOrderItem({ route }) {
           backgroundColor: "#588157",
         }}
       >
+        <Image
+          source={imagePath.logo}
+          style={{
+            width: width,
+            height: (20 / 100) * height,
+            marginBottom: -60,
+          }}
+        />
         <Text
           style={{
-            fontSize: 40,
+            fontSize: 35,
             marginVertical: "8%",
             color: "#DAD7CD",
           }}
@@ -314,6 +325,7 @@ function FormOrderItem({ route }) {
                 alignItems: "center",
                 width: "80%",
                 backgroundColor: "#A3B18A",
+            
               }}
             >
               <Text
