@@ -1,13 +1,10 @@
 import * as TalkRn from "@talkjs/expo";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import storage from "../storage";
 import { Text, View } from "react-native";
 import { baseUrl } from "../baseUrl";
 
 export default function Chat({ route }) {
-  const { order, access_token } = route.params;
-  // console.log(order, "ORDER");
+  const { data } = route.params;
   const [me, setMe] = useState({
     id: "",
     name: "",
@@ -29,39 +26,25 @@ export default function Chat({ route }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let temp;
-    axios
-      .get(
-        `${baseUrl}/orders/${order.id}`,
-        { headers: { access_token } }
-      ) // <---- butuh order id
-      .then((response) => {
-        const { data } = response;
-        temp = data;
-        return storage.load({ key: "loginState" });
-      })
-      .then((loggedUser) => {
-        console.log(temp, "SEE");
-        // const [me] = temp.filter((user) => user.id === loggedUser.id);
-        // const [other] = temp.filter((user) => user.id !== loggedUser.id);
-        // setMe(me);
-        // setOther(other);
-        setMe(temp.userId);
-        setOther(temp.collectorId);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("ERROR");
-        console.warn(err.message);
-        switch (err.name) {
-          case "NotFoundError":
-            navigation.navigate("Login");
-            break;
-          case "ExpiredError":
-            navigation.navigate("Login");
-            break;
-        }
-      });
+    setOther({
+      id: data.collectorChatId,
+      name: data.Collector.username,
+      email: data.Collector.email,
+      photoUrl:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      welcomeMessage: "Hello",
+      role: "default",
+    });
+    setMe({
+      id: data.userChatId,
+      name: data.User.username,
+      email: data.User.email,
+      photoUrl:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      welcomeMessage: "Hello",
+      role: "default",
+    });
+    setLoading(false);
   }, []);
 
   const conversationBuilder = TalkRn.getConversationBuilder(
@@ -84,11 +67,11 @@ export default function Chat({ route }) {
         <Text>Loading ...</Text>
       </View>
     );
+  } else {
+    return (
+      <TalkRn.Session appId="tAFwv4ga" me={me}>
+        <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
+      </TalkRn.Session>
+    );
   }
-
-  return (
-    <TalkRn.Session appId="tAFwv4ga" me={me}>
-      <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
-    </TalkRn.Session>
-  );
 }

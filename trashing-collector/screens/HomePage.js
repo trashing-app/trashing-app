@@ -117,7 +117,8 @@ export default function HomePage({ route }) {
       })();
     }, 10000);
     return () => clearInterval(interval);
-  });
+  }, []);
+
   function onChat() {
     fetch(`${baseUrl}/orders/${route.params.orderId}`, {
       headers: {

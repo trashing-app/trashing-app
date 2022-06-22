@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ScrollView, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { baseUrl } from '../baseUrl';
-import AboutUs from '../components/AboutUs';
 
-const winWidth = Dimensions.get('window').width;
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  ScrollView,
+  Dimensions,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AboutUs from "../components/AboutUs";
+
+const winWidth = Dimensions.get("window").width;
 
 export default function HomePage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(baseUrl+'/categories')
+
+    fetch("https://8a32-111-94-86-182.ap.ngrok.io/categories")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -23,9 +32,9 @@ export default function HomePage() {
   const rupiahFormatter = (amount) => {
     let str = Number(amount)
       .toFixed(2)
-      .replace(/\d(?=(\d{3})+\.)/g, '$&.');
+      .replace(/\d(?=(\d{3})+\.)/g, "$&.");
     str = str.substring(0, str.length - 3);
-    return 'Rp.' + str;
+    return "Rp." + str;
   };
 
   if (loading) {
@@ -33,9 +42,9 @@ export default function HomePage() {
       <SafeAreaView
         style={{
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#588157',
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#588157",
         }}
       >
         <Text>Loading...</Text>
@@ -48,22 +57,22 @@ export default function HomePage() {
           <Image
             style={{
               height: 170,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
               width: winWidth,
               marginTop: -30,
               marginBottom: 10,
             }}
-            source={require('../assets/images/TRASHING.png')}
+            source={require("../assets/images/TRASHING.png")}
           />
           <AboutUs />
           <Text
             style={{
               marginBottom: 19,
               fontSize: 30,
-              fontWeight: '600',
-              textAlign: 'center',
-              color: '#DAD7CD',
+              fontWeight: "600",
+              textAlign: "center",
+              color: "#DAD7CD",
             }}
           >
             Categories
@@ -79,10 +88,10 @@ export default function HomePage() {
                   />
                   <Text
                     style={{
-                      textAlign: 'center',
-                      color: '#DAD7CD',
+                      textAlign: "center",
+                      color: "#DAD7CD",
                       fontSize: 15,
-                      fontWeight: '600',
+                      fontWeight: "600",
                       marginTop: 5,
                     }}
                   >
@@ -102,7 +111,7 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#588157',
+    alignItems: "center",
+    backgroundColor: "#588157",
   },
 });

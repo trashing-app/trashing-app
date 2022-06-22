@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    // console.log(storage);
     storage
       .load({
         key: "loginState",
@@ -32,14 +33,22 @@ export default function LoginPage() {
       .catch((err) => {
         switch (err.name) {
           case "NotFoundError":
-            navigation.navigate("TabNavigator");
+            navigation.navigate("LoginPage");
             break;
           case "ExpiredError":
-            navigation.navigate("TabNavigator");
+            navigation.navigate("LoginPage");
             break;
         }
       });
   }, []);
+
+  useEffect(() => {
+    return () => {
+      setPassword("");
+      setEmail("");
+    };
+  }, []);
+
   const doLogin = async () => {
     try {
       const { data } = await axios.post(`${baseUrl}/pub/collectors/login`, {
@@ -63,9 +72,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("TabNavigator");
-        setEmail("");
-        setPassword("");
+        navigation.navigate("ListOrder");
       } else {
         throw "login failed";
       }

@@ -56,7 +56,7 @@ class OrderController {
       );
       res.status(200).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -82,7 +82,7 @@ class OrderController {
       });
 
       const created = await OrderItem.bulkCreate(orderItems);
-      if(!created || !created.length) throw "error"
+      if (!created || !created.length) throw "error";
       res.status(201).json(newOrder);
     } catch (err) {
       next(err);
@@ -91,21 +91,24 @@ class OrderController {
 
   static async completeOrder(req, res, next) {
     try {
-      const transaction = await sequelize.transaction()
+      const transaction = await sequelize.transaction();
       const { id } = req.params;
 
-      const currentOrder = await Order.findOne({
-        where: {
-          id
+      const currentOrder = await Order.findOne(
+        {
+          where: {
+            id,
+          },
+          include: ["OrderItems"],
         },
-        include:["OrderItems"]
-      }, { transaction })
+        { transaction }
+      );
 
-      let total = 0
-      const { userId, collectorId } = currentOrder
-      currentOrder.OrderItems.forEach(el => total += el.price)
+      let total = 0;
+      const { userId, collectorId } = currentOrder;
+      currentOrder.OrderItems.forEach((el) => (total += el.price));
 
-      if(!currentOrder) throw new Error("Not found")
+      if (!currentOrder) throw new Error("Not found");
 
       const [completed] = await Order.update(
         {
@@ -116,20 +119,25 @@ class OrderController {
             id,
           },
         },
-      { transaction });
-      if(!completed) throw new Error('Not found')
+        { transaction }
+      );
+      if (!completed) throw new Error("Not found");
 
-      const writtenHistory = await History.create({
-        userId, 
-        collectorId,
-        orderId:id,
-        description: `Rp${total.toLocaleString('id')},00 obtained`
-      }, { transaction })
-      if(!writtenHistory) throw new Error('Error')
+      const writtenHistory = await History.create(
+        {
+          userId,
+          collectorId,
+          orderId: id,
+          description: `Rp${total.toLocaleString("id")},00 obtained`,
+        },
+        { transaction }
+      );
+      if (!writtenHistory) throw new Error("Error");
       await transaction.commit();
-      res.status(200).json({ message:"Order completed" });
+      res.status(200).json({ message: "Order completed" });
     } catch (err) {
-      await transaction.rollback()
+      const transaction = await sequelize.transaction();
+      await transaction.rollback();
       next(err);
     }
   }
