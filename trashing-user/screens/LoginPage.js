@@ -15,6 +15,7 @@ import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibilit
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import storage from "../storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
@@ -49,7 +50,7 @@ export default function LoginPage() {
   const doLogin = async () => {
     try {
       const { data } = await axios.post(
-        `https://d5b9-114-122-23-77.ap.ngrok.io/pub/users/login`,
+        `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/pub/users/login`,
         {
           email,
           password,
@@ -57,7 +58,6 @@ export default function LoginPage() {
       );
       if (data.access_token) {
         const { id, username, email, access_token } = data;
-        console.log("login success");
         storage.save({
           key: "loginState",
           data: {
@@ -72,6 +72,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
+        await AsyncStorage.setItem("access_token", access_token);
         navigation.navigate("tabnavigation");
         ToastAndroid.showWithGravity(
           "Login successfull",

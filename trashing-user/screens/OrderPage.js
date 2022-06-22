@@ -20,6 +20,8 @@ import * as Location from "expo-location";
 
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
+const baseUrl =
+  "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
 
 export default function OrderPage() {
   const [categories, setCategories] = useState([]);
@@ -42,9 +44,10 @@ export default function OrderPage() {
       .catch((err) => {});
   };
   useEffect(() => {
-    fetch(
-      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/categories"
-    )
+    // storage.remove({
+    //   key: "order",
+    // });
+    fetch(`${baseUrl}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
@@ -79,10 +82,9 @@ export default function OrderPage() {
                     "access_token"
                   );
                   const status = await axios.get(
-                    `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                    `${baseUrl}/orders/${ret.id}`,
                     { headers: { access_token } }
                   );
-                  console.log(status);
                   if (status.data.approvalStatus === "Approved") {
                     Alert.alert(
                       "We are sorry, but you have an active order right now"
@@ -93,7 +95,7 @@ export default function OrderPage() {
                     });
                   } else {
                     const { data } = await axios.delete(
-                      `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                      `${baseUrl}/orders/${ret.id}`,
                       { headers: { access_token } }
                     );
                     storage.remove({
@@ -131,21 +133,18 @@ export default function OrderPage() {
           latitude,
           longitude,
         };
-        fetch(
-          "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              access_token: userData.token,
-            },
-            body: JSON.stringify({
-              orderItems,
-              latitude,
-              longitude,
-            }),
-          }
-        )
+        fetch(`${baseUrl}/orders`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            access_token: userData.token,
+          },
+          body: JSON.stringify({
+            orderItems,
+            latitude,
+            longitude,
+          }),
+        })
           .then((res) => res.json())
           .then((newOrder) => {
             const { id } = newOrder;
@@ -169,7 +168,6 @@ export default function OrderPage() {
     const updatedCheckedState = checkedState.map((item, index) =>
       index === position ? !item : item
     );
-
     setCheckedState(updatedCheckedState);
   };
 
