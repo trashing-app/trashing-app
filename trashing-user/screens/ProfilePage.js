@@ -25,8 +25,16 @@ export default function ProfilePage() {
     address: "",
     phoneNumber: "",
   });
+  const [balance, setBalance] = useState(0);
   const baseUrl =
     "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
+  const rupiahFormatter = (amount) => {
+    let str = Number(amount)
+      .toFixed(2)
+      .replace(/\d(?=(\d{3})+\.)/g, "$&.");
+    str = str.substring(0, str.length - 3);
+    return "Rp." + str;
+  };
 
   useEffect(() => {
     if (id) {
@@ -38,6 +46,7 @@ export default function ProfilePage() {
             address: data.address,
             phoneNumber: data.phoneNumber,
           });
+          setBalance(data.balance);
         })
         .catch((err) => {
           console.log(err);
@@ -118,6 +127,11 @@ export default function ProfilePage() {
           }}
           source={require("../assets/images/TRASHING.png")}
         />
+        <Text
+          style={{ padding: 5, fontSize: 20, color: "white", paddingLeft: 25 }}
+        >
+          Username
+        </Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.inputField}
@@ -127,6 +141,11 @@ export default function ProfilePage() {
             onChangeText={(username) => onChangeHandler("username", username)}
           />
         </View>
+        <Text
+          style={{ padding: 5, fontSize: 20, color: "white", paddingLeft: 25 }}
+        >
+          Address
+        </Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.inputField}
@@ -136,6 +155,11 @@ export default function ProfilePage() {
             onChangeText={(address) => onChangeHandler("address", address)}
           />
         </View>
+        <Text
+          style={{ padding: 5, fontSize: 20, color: "white", paddingLeft: 25 }}
+        >
+          Phone Number
+        </Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.inputField}
@@ -147,6 +171,11 @@ export default function ProfilePage() {
             }
           />
         </View>
+        <Text
+          style={{ padding: 5, fontSize: 15, color: "white", paddingLeft: 25 }}
+        >
+          Your balance : {rupiahFormatter(balance)}
+        </Text>
         <TouchableOpacity
           style={{
             width: 130,

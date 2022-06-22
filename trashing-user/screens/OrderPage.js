@@ -44,6 +44,9 @@ export default function OrderPage() {
       .catch((err) => {});
   };
   useEffect(() => {
+    storage.remove({
+      key: "order",
+    });
     fetch(`${baseUrl}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
@@ -137,7 +140,7 @@ export default function OrderPage() {
         });
         if (orderItems.length === 0) {
           ToastAndroid.showWithGravity(
-            "Please choose category",
+            "Please choose at least one",
             ToastAndroid.LONG,
             ToastAndroid.CENTER
           );
@@ -240,6 +243,26 @@ export default function OrderPage() {
         }}
         source={require("../assets/images/TRASHING.png")}
       />
+      <Text
+        style={{
+          fontSize: 20,
+          color: "white",
+          textAlign: "center",
+          paddingBottom: 15,
+        }}
+      >
+        What's your household waste?
+      </Text>
+      <Text
+        style={{
+          fontSize: 15,
+          color: "white",
+          textAlign: "center",
+          paddingBottom: 15,
+        }}
+      >
+        (choose that is suitable)
+      </Text>
       {categories.map((category, index) => {
         return (
           <View

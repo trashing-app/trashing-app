@@ -21,7 +21,7 @@ export default function LoadingMap({ customerLocation, orderId }) {
   const navigation = useNavigation();
   const baseUrl =
     "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
-  let text = "Waiting..";
+  let text = "Waiting...";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,13 +40,14 @@ export default function LoadingMap({ customerLocation, orderId }) {
             style={{ width: 40, height: 40 }}
           />
         </Marker>
-        <Text>{text}</Text>
+        <Text style={{ fontSize: 17 }}>{text}</Text>
       </MapView>
       <View
         style={{
           flex: 0.1,
           paddingVertical: "5%",
           justifyContent: "center",
+          backgroundColor: "#588157",
         }}
       >
         <View
@@ -65,6 +66,7 @@ export default function LoadingMap({ customerLocation, orderId }) {
               marginHorizontal: "5%",
               alignItems: "center",
               justifyContent: "center",
+              backgroundColor: "#DAD7CD",
             }}
             onPress={async () => {
               try {

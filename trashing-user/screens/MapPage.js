@@ -50,6 +50,9 @@ export default function MapPage({ route }) {
   };
 
   useEffect(() => {
+    // storage.remove({
+    //   key: "order",
+    // });
     return () => {
       setState({
         customerLocation: false,
