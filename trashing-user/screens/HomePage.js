@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -18,6 +19,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     fetch("https://8a32-111-94-86-182.ap.ngrok.io/categories")
       .then((res) => res.json())
       .then((data) => {

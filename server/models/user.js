@@ -72,6 +72,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'user',
       },
+      device_token: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

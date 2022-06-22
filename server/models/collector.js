@@ -64,6 +64,9 @@ module.exports = (sequelize, DataTypes) => {
       location: {
         type: DataTypes.GEOMETRY('POINT'),
       },
+      device_token: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

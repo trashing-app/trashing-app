@@ -57,6 +57,28 @@ class PublicUserController {
       next(err);
     }
   }
+
+  static async registerDevice(req, res, next){
+    try {
+      const { device_token, email } = req.body
+      if(!email) throw new Error('Email is required')
+      if(!device_token) throw new Error('Invalid token')
+      const [ updated ] = await User.update(
+        {
+        device_token
+        },
+        {
+          where: {
+            email
+          }
+        }
+      )
+      if(!updated) throw new Error('Not found')
+      res.status(200).json({message:"Device registered"})
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = PublicUserController;
