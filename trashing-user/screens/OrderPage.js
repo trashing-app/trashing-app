@@ -20,8 +20,7 @@ import * as Location from "expo-location";
 
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
-const baseUrl =
-  "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
+const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
 
 export default function OrderPage() {
   const [categories, setCategories] = useState([]);
@@ -71,7 +70,12 @@ export default function OrderPage() {
             {
               text: "Don't cancel",
               style: "cancel",
-              onPress: () => {},
+              onPress: () => {
+                navigation.navigate("MapPage", {
+                  id: ret.id,
+                  orderLocation: ret.orderLocation,
+                });
+              },
             },
             {
               text: "To current order",

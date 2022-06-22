@@ -139,21 +139,24 @@ function ListOrder() {
       }, 60000);
       return () => clearInterval(interval);
     }
-  });
+  }, [loggedUser.token]);
 
   // ini get current loc collector
   useEffect(() => {
     if (loggedUser.token) {
       const interval = setInterval(() => {
+        // console.log("dimana");
         (async () => {
           // console.log(localLocation, "ini locallocation");
           let { status } = await Location.requestForegroundPermissionsAsync();
+          // console.log(status);
           if (status !== "granted") {
             setErrorMsg("Permission to access location was denied");
             return;
           }
 
           let location = await Location.getCurrentPositionAsync({});
+          // console.log(location, "ini lho");
           setLocalLocation(location);
           updateLocationC(
             loggedUser.token,
@@ -177,7 +180,7 @@ function ListOrder() {
       }, 10000);
       return () => clearInterval(interval);
     }
-  });
+  }, [loggedUser.token]);
 
   //navigation guard
   useEffect(() => {

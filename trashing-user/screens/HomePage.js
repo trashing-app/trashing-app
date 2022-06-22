@@ -18,9 +18,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/categories"
-    )
+    fetch("https://8a32-111-94-86-182.ap.ngrok.io/categories")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);

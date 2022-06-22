@@ -111,7 +111,7 @@ export default function AcceptedMap({
               try {
                 const access_token = await AsyncStorage.getItem("access_token");
                 const { data } = await axios.get(
-                  `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${orderId}`,
+                  `https://8a32-111-94-86-182.ap.ngrok.io/orders/${orderId}`,
                   { headers: { access_token } }
                 );
                 navigation.navigate("Chat", { data });

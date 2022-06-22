@@ -19,6 +19,7 @@ import storage from "../storage";
 export default function LoadingMap({ customerLocation, orderId }) {
   const mapRef = useRef();
   const navigation = useNavigation();
+  
   const baseUrl =
     "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
   let text = "Waiting...";
