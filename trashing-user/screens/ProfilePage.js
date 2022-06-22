@@ -8,26 +8,29 @@ import {
   StyleSheet,
   Dimensions,
   ToastAndroid,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import storage from '../storage';
-import { useEffect, useState } from 'react';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import storage from "../storage";
+import { useEffect, useState } from "react";
 
-const winWidth = Dimensions.get('window').width;
+const winWidth = Dimensions.get("window").width;
 
 export default function ProfilePage() {
   const navigation = useNavigation();
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
   const [profile, setProfile] = useState({
-    username: '',
-    address: '',
-    phoneNumber: '',
+    username: "",
+    address: "",
+    phoneNumber: "",
   });
 
   useEffect(() => {
     if (id) {
-      fetch('https://d5b9-114-122-23-77.ap.ngrok.io/users/' + id)
+      fetch(
+        "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/users/" +
+          id
+      )
         .then((res) => res.json())
         .then((data) => {
           setProfile({
@@ -45,19 +48,19 @@ export default function ProfilePage() {
   useEffect(() => {
     storage
       .load({
-        key: 'loginState',
+        key: "loginState",
       })
       .then((ret) => {
         setId(ret.id);
-        navigation.navigate('tabnavigation');
+        navigation.navigate("tabnavigation");
       })
       .catch((err) => {
         switch (err.name) {
-          case 'NotFoundError':
-            navigation.navigate('LoginPage');
+          case "NotFoundError":
+            navigation.navigate("LoginPage");
             break;
-          case 'ExpiredError':
-            navigation.navigate('LoginPage');
+          case "ExpiredError":
+            navigation.navigate("LoginPage");
             break;
         }
       });
@@ -65,9 +68,9 @@ export default function ProfilePage() {
 
   function clickLogout() {
     storage.remove({
-      key: 'loginState',
+      key: "loginState",
     });
-    navigation.navigate('WelcomePage');
+    navigation.navigate("WelcomePage");
   }
 
   const onChangeHandler = (key, value) => {
@@ -79,21 +82,25 @@ export default function ProfilePage() {
 
   const onSubmitEdit = () => {
     console.log(id);
-    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/users/' + id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: profile.username,
-        address: profile.address,
-        phoneNumber: profile.phoneNumber,
-      }),
-    })
+    fetch(
+      "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/users/" +
+        id,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: profile.username,
+          address: profile.address,
+          phoneNumber: profile.phoneNumber,
+        }),
+      }
+    )
       .then((res) => res.json())
       .then(() => {
         ToastAndroid.showWithGravity(
-          'Edited successfully',
+          "Edited successfully",
           ToastAndroid.SHORT,
           ToastAndroid.CENTER
         );
@@ -107,12 +114,12 @@ export default function ProfilePage() {
         <Image
           style={{
             height: 170,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             width: winWidth,
             marginTop: 20,
           }}
-          source={require('../assets/images/TRASHING.png')}
+          source={require("../assets/images/TRASHING.png")}
         />
         <View style={styles.inputContainer}>
           <TextInput
@@ -120,7 +127,7 @@ export default function ProfilePage() {
             placeholder="Username"
             placeholderTextColor="#ffffff"
             value={profile.username}
-            onChangeText={(username) => onChangeHandler('username', username)}
+            onChangeText={(username) => onChangeHandler("username", username)}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -129,7 +136,7 @@ export default function ProfilePage() {
             placeholder="Address"
             placeholderTextColor="#ffffff"
             value={profile.address}
-            onChangeText={(address) => onChangeHandler('address', address)}
+            onChangeText={(address) => onChangeHandler("address", address)}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -138,40 +145,46 @@ export default function ProfilePage() {
             placeholder="Phone Number"
             placeholderTextColor="#ffffff"
             value={profile.phoneNumber}
-            onChangeText={(phoneNumber) => onChangeHandler('phoneNumber', phoneNumber)}
+            onChangeText={(phoneNumber) =>
+              onChangeHandler("phoneNumber", phoneNumber)
+            }
           />
         </View>
         <TouchableOpacity
           style={{
             width: 130,
             height: 50,
-            backgroundColor: '#344E41',
-            justifyContent: 'center',
+            backgroundColor: "#344E41",
+            justifyContent: "center",
             marginVertical: 15,
             borderRadius: 15,
-            marginHorizontal: '34%',
-            borderColor: '#DAD7CD',
+            marginHorizontal: "34%",
+            borderColor: "#DAD7CD",
             borderWidth: 3,
           }}
           onPress={() => onSubmitEdit(profile)}
         >
-          <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Save Edit</Text>
+          <Text style={{ textAlign: "center", fontSize: 20, color: "white" }}>
+            Save Edit
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
             width: 130,
             height: 50,
-            backgroundColor: '#DAD7CD',
-            justifyContent: 'center',
+            backgroundColor: "#DAD7CD",
+            justifyContent: "center",
             marginVertical: 5,
             borderRadius: 15,
-            marginHorizontal: '34%',
-            borderColor: '#344E41',
+            marginHorizontal: "34%",
+            borderColor: "#344E41",
             borderWidth: 3,
           }}
           onPress={clickLogout}
         >
-          <Text style={{ textAlign: 'center', fontSize: 20, color: '#344E41' }}>Logout</Text>
+          <Text style={{ textAlign: "center", fontSize: 20, color: "#344E41" }}>
+            Logout
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -181,27 +194,27 @@ export default function ProfilePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#588157',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#588157",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 1,
   },
   inputContainer: {
-    backgroundColor: '#344E41',
-    width: '90%',
+    backgroundColor: "#344E41",
+    width: "90%",
     height: 62,
-    marginHorizontal: '5%',
+    marginHorizontal: "5%",
     marginVertical: 10,
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 4,
-    borderColor: '#DAD7CD',
+    borderColor: "#DAD7CD",
   },
   inputField: {
     padding: 14,
     fontSize: 20,
-    width: '87%',
-    color: 'white',
+    width: "87%",
+    color: "white",
   },
 });
