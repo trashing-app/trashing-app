@@ -6,6 +6,7 @@ import {
   View,
   Image,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import storage from "../storage";
@@ -66,6 +67,12 @@ function DetailOrder({ route }) {
     commitOrder(loggedUser.token, order.id)
       .then((res) => {
         if (!res.ok) {
+          ToastAndroid.showWithGravity(
+            "Order is canceled",
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+          );
+          navigation.replace("TabNavigator");
           throw new Error("Error");
         }
         return res.json();

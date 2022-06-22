@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import storage from "../storage";
 
 export default function MapPage({ route }) {
-  const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
+  const baseUrl = "https://033b-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io";
   const { id, orderLocation } = route.params;
 
   const [state, setState] = useState({

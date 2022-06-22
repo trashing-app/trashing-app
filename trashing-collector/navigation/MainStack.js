@@ -39,7 +39,13 @@ function MainStack() {
           name="Chat"
           component={Chat}
         />
-        <Stack.Screen name="FormOrderItem" component={FormOrderItem} />
+        <Stack.Screen
+          name="FormOrderItem"
+          component={FormOrderItem}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

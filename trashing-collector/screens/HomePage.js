@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Platform,
-  Alert,
+  Image,
 } from "react-native";
 import MapView, { AnimatedRegion, Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -19,6 +19,7 @@ import { baseUrl } from "../constant/baseUrl";
 const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
 
 const screen = Dimensions.get("window");
+const height = Dimensions.get("window").height;
 const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -167,7 +168,19 @@ export default function HomePage({ route }) {
   if (!isLoading && localLocation) {
     return (
       <SafeAreaView>
-        <Text>Loading...</Text>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            height: height,
+            backgroundColor: "white",
+          }}
+        >
+          <Image
+            source={imagePath.loader}
+            style={{ width: "60%", height: "60%" }}
+          />
+        </View>
       </SafeAreaView>
     );
   }
@@ -197,13 +210,15 @@ export default function HomePage({ route }) {
           flex: 0.1,
           paddingVertical: "5%",
           justifyContent: "center",
+          backgroundColor: "#3A5A40",
         }}
       >
         <View
           style={{
             flexDirection: "row",
-            height: "70%",
+            height: "75%",
             justifyContent: "center",
+            // backgroundColor: "blue",
           }}
         >
           <TouchableOpacity
@@ -215,6 +230,7 @@ export default function HomePage({ route }) {
               marginHorizontal: "5%",
               alignItems: "center",
               justifyContent: "center",
+              backgroundColor: "#A3B18A",
             }}
             onPress={() => {
               navigation.navigate("FormOrderItem", {
@@ -233,6 +249,7 @@ export default function HomePage({ route }) {
               marginHorizontal: "5%",
               alignItems: "center",
               justifyContent: "center",
+              backgroundColor: "#A3B18A",
             }}
             onPress={onChat}
           >

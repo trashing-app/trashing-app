@@ -33,7 +33,7 @@ export default function RegisterPage({ navigation }) {
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch("https://8a32-111-94-86-182.ap.ngrok.io/pub/users/register", {
+    fetch("https://033b-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/register", {
       method: "POST",
       headers: {
         Accept: "application/json",

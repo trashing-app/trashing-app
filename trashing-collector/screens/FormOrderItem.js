@@ -6,9 +6,11 @@ import {
   View,
   ToastAndroid,
   Alert,
+  Dimensions,
 } from "react-native";
 import { useEffect, useState } from "react";
 import {
+  changeStatusPayment,
   getOrderItems,
   topUpBalanceUser,
   updateOrderItem,
@@ -17,6 +19,8 @@ import storage from "../storage";
 import { useNavigation } from "@react-navigation/native";
 import { completeOrder } from "../constant/collectorFunction";
 import { baseUrl } from "../constant/baseUrl";
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 
 function FormOrderItem({ route }) {
   // console.log(route);
@@ -119,6 +123,14 @@ function FormOrderItem({ route }) {
         return topUpBalanceUser(loggedUser.token, order.userId, sum);
       })
       .then((_) => {
+        return changeStatusPayment(loggedUser.token, order.id);
+      })
+      .then((_) => {
+        ToastAndroid.showWithGravity(
+          "Order completed",
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM
+        );
         navigation.navigate("ListOrder");
       })
       .catch((err) => {
@@ -130,14 +142,16 @@ function FormOrderItem({ route }) {
     <SafeAreaView>
       <View
         style={{
+          height: height,
           alignItems: "center",
-          // borderWidth: 2,
+
+          backgroundColor: "#588157",
         }}
       >
         <Text
           style={{
-            fontSize: 20,
-            marginBottom: "8%",
+            fontSize: 40,
+            marginVertical: "8%",
           }}
         >
           Order Items
@@ -146,72 +160,91 @@ function FormOrderItem({ route }) {
           style={{
             // borderWidth: 1,
             width: "80%",
+            borderRadius: 10,
+            backgroundColor: "#3A5A40",
           }}
         >
-          {orderItems.map((el, index) => {
-            return (
-              <View
-                key={el.id}
-                style={{
-                  marginBottom: 20,
-                }}
-              >
-                <Text style={{ fontSize: 20, marginLeft: 5 }}>
-                  {el.Category.name}
-                </Text>
-                <Text style={{ fontSize: 20, marginLeft: 5 }}>Weight :</Text>
-                <TextInput
-                  style={{
-                    backgroundColor: "#ffffff",
-                    borderRadius: 5,
-                    width: 100,
-                    fontSize: 20,
-                  }}
-                  onChangeText={(text) =>
-                    handlerOnChangeText(el.Category.id, text)
-                  }
-                  keyboardType={"number-pad"}
-                />
-
-                <Text style={{ fontSize: 20, marginLeft: 5 }}>
-                  Total Price :
-                </Text>
-                <Text style={{ fontSize: 20, marginLeft: 5 }}>
-                  {}
-                  {+input[`${el.Category.id}`] * +el.Category.basePrice
-                    ? +input[`${el.Category.id}`] * +el.Category.basePrice
-                    : 0}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            Alert.alert("Complete Order", "Choose option", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              { text: "OK", onPress: () => handleSubmit() },
-            ]);
-          }}
-          style={{
-            borderRadius: 15,
-            borderWidth: 1,
-            alignItems: "center",
-            width: "80%",
-          }}
-        >
-          <Text
+          <View
             style={{
-              fontSize: 20,
+              marginTop: "10%",
+              // backgroundColor: "red",
             }}
           >
-            Submit
-          </Text>
-        </TouchableOpacity>
+            {orderItems.map((el, index) => {
+              return (
+                <View
+                  key={el.id}
+                  style={{
+                    marginLeft: "8%",
+                    marginBottom: "7%",
+                  }}
+                >
+                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
+                    {el.Category.name}
+                  </Text>
+                  <Text style={{ fontSize: 20, marginLeft: 5 }}>Weight :</Text>
+                  <TextInput
+                    style={{
+                      backgroundColor: "#ffffff",
+                      borderRadius: 5,
+                      width: (50 / 100) * width,
+                      fontSize: 20,
+                    }}
+                    onChangeText={(text) =>
+                      handlerOnChangeText(el.Category.id, text)
+                    }
+                    keyboardType={"number-pad"}
+                  />
+
+                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
+                    Total Price :
+                  </Text>
+                  <Text style={{ fontSize: 20, marginLeft: 5 }}>
+                    {}
+                    {+input[`${el.Category.id}`] * +el.Category.basePrice
+                      ? +input[`${el.Category.id}`] * +el.Category.basePrice
+                      : 0}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginVertical: "8%",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                Alert.alert("Complete Order", "Choose option", [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  { text: "OK", onPress: () => handleSubmit() },
+                ]);
+              }}
+              style={{
+                borderRadius: 12,
+                borderWidth: 1,
+                alignItems: "center",
+                width: "80%",
+                backgroundColor: "#A3B18A",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 22,
+                  color: "#DAD7CD",
+                }}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
       {/* <TextInput
         placeholderTextColor="#ffffff"

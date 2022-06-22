@@ -4,4 +4,5 @@ export default {
   greenIndicator: require("../assets/images/greenIndicator.png"),
   icBike: require("../assets/images/bike.png"),
   logo: require("../assets/images/TRASHING.png"),
+  loader: require("../assets/images/9978-circle-load.gif"),
 };

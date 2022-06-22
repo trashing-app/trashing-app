@@ -79,7 +79,6 @@ function ListOrder() {
               return this.indexOf(el.id) != -1;
             }, orderId);
             setAllOrder(result);
-            // console.log(result);
           })
           .catch((err) => {
             console.log(err);
@@ -103,7 +102,6 @@ function ListOrder() {
           return res.json();
         })
         .then((data) => {
-          // console.log(data, "lalala");
           setOrders(data);
         })
         .catch((err) => {
@@ -116,7 +114,6 @@ function ListOrder() {
   useEffect(() => {
     if (loggedUser.token) {
       const interval = setInterval(() => {
-        // console.log(localLocation, "ini locallocation");
         getCurrLocationOrder(
           loggedUser.token,
           localLocation.coords.longitude,
@@ -129,9 +126,7 @@ function ListOrder() {
             return res.json();
           })
           .then((data) => {
-            // console.log(data);
             setOrders(data);
-            // console.log("5 dtk");
           })
           .catch((err) => {
             console.log(err);
@@ -145,9 +140,7 @@ function ListOrder() {
   useEffect(() => {
     if (loggedUser.token) {
       const interval = setInterval(() => {
-        // console.log("dimana");
         (async () => {
-          // console.log(localLocation, "ini locallocation");
           let { status } = await Location.requestForegroundPermissionsAsync();
           // console.log(status);
           if (status !== "granted") {
@@ -156,7 +149,6 @@ function ListOrder() {
           }
 
           let location = await Location.getCurrentPositionAsync({});
-          // console.log(location, "ini lho");
           setLocalLocation(location);
           updateLocationC(
             loggedUser.token,
@@ -170,9 +162,7 @@ function ListOrder() {
               }
               return res.json();
             })
-            .then((_) => {
-              // console.log("10 detik");
-            })
+            .then((_) => {})
             .catch((err) => {
               console.log(err, "<<<11");
             });
@@ -211,9 +201,21 @@ function ListOrder() {
 
   if (!loggedUser.token) {
     return (
-      <Text style={{ marginTop: "50%", paddingHorizontal: "50%" }}>
-        Loading...
-      </Text>
+      <SafeAreaView>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            height: height,
+            backgroundColor: "white",
+          }}
+        >
+          <Image
+            source={imagePath.loader}
+            style={{ width: "60%", height: "60%" }}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -229,7 +231,6 @@ function ListOrder() {
       <ScrollView
         style={{
           flex: 1,
-          // backgroundColor: "green",
         }}
       >
         <Image
@@ -253,12 +254,9 @@ function ListOrder() {
         </Text>
         <View
           style={{
-            // flexDirection: "row",
             flex: 1,
             justifyContent: "center",
-            // flexWrap: "wrap",
             alignItems: "center",
-            // backgroundColor: "red",
             height: "100%",
           }}
         >
@@ -310,7 +308,6 @@ function ListOrder() {
                       style={{
                         width: "50%",
                         height: "100%",
-                        // backgroundColor: "red",
                         justifyContent: "center",
                         alignItems: "center",
                       }}
