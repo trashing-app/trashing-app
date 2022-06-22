@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import storage from "../storage";
 import { Text, View } from "react-native";
+import { baseUrl } from "../baseUrl";
 
 export default function Chat({ route }) {
   const { order, access_token } = route.params;
@@ -31,7 +32,7 @@ export default function Chat({ route }) {
     let temp;
     axios
       .get(
-        `https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io/orders/${order.id}`,
+        `${baseUrl}/orders/${order.id}`,
         { headers: { access_token } }
       ) // <---- butuh order id
       .then((response) => {

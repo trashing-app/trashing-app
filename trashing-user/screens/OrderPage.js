@@ -15,6 +15,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import { baseUrl } from '../baseUrl';
 
 const winWidth = Dimensions.get('window').width;
 const winHeight = Dimensions.get('window').height;
@@ -30,7 +31,7 @@ export default function OrderPage() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/categories')
+    fetch(baseUrl+'/categories')
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
@@ -57,7 +58,7 @@ export default function OrderPage() {
       };
     });
 
-    fetch('https://33c2-125-165-31-194.ap.ngrok.io/orders', {
+    fetch(baseUrl+'/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +104,7 @@ export default function OrderPage() {
   }, []);
 
   useEffect(() => {
-    fetch('https://33c2-125-165-31-194.ap.ngrok.io/users/location/' + userData.id)
+    fetch(baseUrl+'/users/location/' + userData.id)
       .then((res) => res.json())
       .then((data) => {
         setLclLocation(data);

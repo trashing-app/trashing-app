@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import storage from '../storage';
 import { useEffect, useState } from 'react';
+import { baseUrl } from '../baseUrl';
 
 const winWidth = Dimensions.get('window').width;
 
@@ -27,7 +28,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (id) {
-      fetch('https://d5b9-114-122-23-77.ap.ngrok.io/users/' + id)
+      fetch(baseUrl+'/users/' + id)
         .then((res) => res.json())
         .then((data) => {
           setProfile({
@@ -79,7 +80,7 @@ export default function ProfilePage() {
 
   const onSubmitEdit = () => {
     console.log(id);
-    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/users/' + id, {
+    fetch(baseUrl+'/users/' + id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

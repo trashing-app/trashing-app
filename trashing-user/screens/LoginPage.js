@@ -15,6 +15,7 @@ import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibilit
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import storage from '../storage';
+import { baseUrl } from '../baseUrl';
 
 const winWidth = Dimensions.get('window').width;
 const winHeight = Dimensions.get('window').height;
@@ -47,7 +48,7 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(`https://d5b9-114-122-23-77.ap.ngrok.io/pub/users/login`, {
+      const { data } = await axios.post(baseUrl+`/pub/users/login`, {
         email,
         password,
       });

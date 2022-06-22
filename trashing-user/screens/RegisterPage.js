@@ -15,6 +15,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { baseUrl } from '../baseUrl';
 
 const winWidth = Dimensions.get('window').width;
 const winHeight = Dimensions.get('window').height;
@@ -32,7 +33,7 @@ export default function RegisterPage({ navigation }) {
 
   const doRegister = (e) => {
     e.preventDefault();
-    fetch('https://d5b9-114-122-23-77.ap.ngrok.io/pub/users/register', {
+    fetch(baseUrl+'/pub/users/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

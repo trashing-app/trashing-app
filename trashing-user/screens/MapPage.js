@@ -16,11 +16,10 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AcceptedMap from "./AcceptedMap";
 import { useNavigation } from "@react-navigation/native";
+import { baseUrl } from "../baseUrl";
 
 export default function MapPage({ route }) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyBEWG0xvmSUm3zyB-dZAzr_7cuJl_TgxTc";
-  const baseUrl =
-    "https://2235-2001-448a-4044-6908-754b-26cd-b980-5835.ap.ngrok.io";
   const { id, orderLocation } = route.params;
   // const mapRef = useRef();
   // const markerRef = useRef();
