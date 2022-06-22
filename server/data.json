@@ -2,31 +2,31 @@
   "categories": [
     {
       "name": "Plastik",
-      "basePrice": 10000,
-      "description": "Lorem ipsum dolor",
+      "basePrice": 5000,
+      "description": "Semua barang bekas atau tidak terpakai yang materialnya diproduksi dari bahan kimia tak terbarukan. Sebagian besar sampah plastik yang digunakan sehari-hari biasanya dipakai untuk pengemasan.",
       "imageUrl": "https://images.unsplash.com/photo-1629227071576-e91767cc3024?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2787&q=80"
     },
     {
       "name": "Sampah Kertas",
-      "basePrice": 5000,
-      "description": "Lorem ipsum dolor sit",
+      "basePrice": 2500,
+      "description": "Sampah anorganik yang sangat sulit diuraikan dan membutuhkan waktu yang lama untuk dapat terurai bahkan sampai puluhan tahun.",
       "imageUrl": "https://images.unsplash.com/photo-1580753402232-8635eb91a327?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80"
     },
     {
       "name": "Sampah Kain",
-      "basePrice": 7000,
-      "description": "Lorem ipsum dolor sit amet",
+      "basePrice": 2500,
+      "description": "Salah satu jenis anorganik yang sulit diolah karena tidak dapat terurai dan tidak dapat di kompos, dan apabila dibakar akan menimbulkan asap dan gas beracun yang berbahaya bagi lingkungan dan sekitar.",
       "imageUrl": "https://images.unsplash.com/photo-1545042746-ec9e5a59b359?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
     }
   ],
 
   "users": [
     {
-      "email": "test@mail.com",
+      "email": "mbakrita@gmail.com",
       "password": "qwerty",
       "phoneNumber": "08122233444",
       "address": "Kuningan",
-      "username": "test",
+      "username": "Mbak Rita",
       "location": null,
       "balance": 50000,
       "role": "user"
@@ -35,11 +35,11 @@
 
   "collectors": [
     {
-      "email": "collector@mail.com",
+      "email": "udinm@gmail.com",
       "password": "qwerty",
       "phoneNumber": "08122233444",
       "address": "Senopati",
-      "username": "collector",
+      "username": "Udin Marubozu",
       "location": null
     }
   ]

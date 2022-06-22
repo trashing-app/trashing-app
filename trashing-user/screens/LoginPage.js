@@ -18,6 +18,8 @@ import storage from "../storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { Form, FormItem } from "react-native-form-component";
+import { baseUrl } from "../baseUrl";
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
 Notifications.setNotificationHandler({
@@ -68,13 +70,10 @@ export default function LoginPage() {
         key: "loginState",
       })
       .then((ret) => {
-        return axios.patch(
-          `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/registerdevice`,
-          {
-            email: ret.email,
-            device_token: expoPushToken,
-          }
-        );
+        return axios.patch(`${baseUrl}/pub/users/registerdevice`, {
+          email: ret.email,
+          device_token: expoPushToken,
+        });
       })
       .then((_) => {
         navigation.navigate("tabnavigation");
@@ -93,13 +92,10 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(
-        `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const { data } = await axios.post(`${baseUrl}/pub/users/login`, {
+        email,
+        password,
+      });
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         storage.save({
@@ -125,13 +121,10 @@ export default function LoginPage() {
           ToastAndroid.CENTER
         );
 
-        await axios.patch(
-          `https://856e-2001-448a-10a8-3a9f-8ce7-e4ec-1320-8a66.ap.ngrok.io/pub/users/registerdevice`,
-          {
-            email: email,
-            device_token: expoPushToken,
-          }
-        );
+        await axios.patch(`${baseUrl}/pub/users/registerdevice`, {
+          email: email,
+          device_token: expoPushToken,
+        });
         setEmail("");
         setPassword("");
       } else {
@@ -160,56 +153,61 @@ export default function LoginPage() {
           }}
           source={require("../assets/images/TRASHING.png")}
         />
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholderTextColor="#DAD7CD"
+        <Form
+          buttonStyle={{
+            backgroundColor: "#3A5A40",
+            borderColor: "#DAD7CD",
+            borderWidth: 3,
+            width: winWidth * 0.3,
+            marginLeft: winWidth * 0.27,
+          }}
+          buttonTextStyle={{
+            color: "#DAD7CD",
+          }}
+          buttonText="Sign in"
+          onButtonPress={doLogin}
+        >
+          <FormItem
             style={styles.inputField}
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
+            labelStyle={{
+              color: "#A3B18A",
+              backgroundColor: "#3A5A40",
+              fontSize: 18,
+              paddingHorizontal: 10,
+              marginLeft: -5,
+              marginRight: -5,
+              borderRadius: 5,
+            }}
+            textInputStyle={{ color: "#DAD7CD", fontSize: 18 }}
+            floatingLabel
+            label="Email"
             keyboardType="email-address"
+            showErrorIcon={false}
+            onChangeText={setEmail}
+            value={email}
           />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholderTextColor="#DAD7CD"
+          <FormItem
             style={styles.inputField}
-            name="password"
-            placeholder="Password"
+            labelStyle={{
+              color: "#A3B18A",
+              backgroundColor: "#3A5A40",
+              fontSize: 18,
+              paddingHorizontal: 10,
+              marginLeft: -5,
+              marginRight: -5,
+              borderRadius: 3,
+            }}
+            textInputStyle={{ color: "#DAD7CD", fontSize: 18 }}
+            floatingLabel
             autoCapitalize="none"
-            autoCorrect={false}
-            textContentType="newPassword"
-            secureTextEntry={passwordVisibility}
+            label="Password"
+            secureTextEntry
+            isRequired
+            showErrorIcon={false}
             value={password}
-            enablesReturnKeyAutomatically
             onChangeText={(text) => setPassword(text)}
           />
-          <Pressable onPress={handlePasswordVisibility}>
-            <MaterialCommunityIcons
-              name={rightIcon}
-              size={22}
-              color="#DAD7CD"
-            />
-          </Pressable>
-        </View>
-        <TouchableOpacity
-          style={{
-            width: 130,
-            height: 50,
-            backgroundColor: "#3A5A40",
-            justifyContent: "center",
-            marginVertical: 15,
-            borderRadius: 15,
-            marginHorizontal: "34%",
-            borderColor: "#d7d7d7",
-            borderWidth: 3,
-          }}
-          onPress={doLogin}
-        >
-          <Text style={{ textAlign: "center", fontSize: 20, color: "white" }}>
-            Login
-          </Text>
-        </TouchableOpacity>
+        </Form>
       </View>
     </>
   );
@@ -224,21 +222,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1,
     height: winHeight,
   },
-  inputContainer: {
-    backgroundColor: "#3A5A40",
+  inputField: {
+    fontSize: 22,
     width: winWidth * 0.85,
-    marginHorizontal: "10%",
-    marginVertical: 15,
-    borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
+    backgroundColor: "#3A5A40",
     borderWidth: 4,
     borderColor: "#DAD7CD",
-  },
-  inputField: {
-    padding: 14,
-    fontSize: 22,
-    width: "87%",
+    borderRadius: 8,
+    height: 55,
     color: "#DAD7CD",
   },
 });
