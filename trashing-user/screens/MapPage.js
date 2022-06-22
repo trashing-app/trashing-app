@@ -50,9 +50,6 @@ export default function MapPage({ route }) {
   };
 
   useEffect(() => {
-    // storage.remove({
-    //   key: "order",
-    // });
     return () => {
       setState({
         customerLocation: false,
@@ -95,7 +92,6 @@ export default function MapPage({ route }) {
           data = order.data;
           setApprovalStatus(data.approvalStatus);
           if (approvalStatus === "Approved") {
-            // } else {
             if (data.orderStatus === "Completed") {
               storage.remove({
                 key: "order",
