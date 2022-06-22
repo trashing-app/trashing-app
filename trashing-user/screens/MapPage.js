@@ -49,6 +49,17 @@ export default function MapPage({ route }) {
     });
   };
 
+  useEffect(() => {
+    return () => {
+      setState({
+        customerLocation: false,
+        collectorLocation: false,
+        isLoading: false,
+      });
+      setApprovalStatus("Not Approved");
+    };
+  }, []);
+
   const getCollectorLocation = async (collectorId) => {
     const { data } = await axios.get(`${baseUrl}/collectors/${collectorId}`);
     const [longitude, latitude] = data.location.coordinates;
@@ -79,9 +90,9 @@ export default function MapPage({ route }) {
             headers: { access_token },
           });
           data = order.data;
-          if (approvalStatus === "Not Approved") {
-            setApprovalStatus(data.approvalStatus);
-          } else {
+          setApprovalStatus(data.approvalStatus);
+          if (approvalStatus === "Approved") {
+            // } else {
             if (data.orderStatus === "Completed") {
               storage.remove({
                 key: "order",

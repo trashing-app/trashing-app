@@ -10,9 +10,10 @@ class OrderItemController {
           orderId,
         },
       });
+      if(!orderItems.length) throw new Error("Not found")
       res.status(200).json(orderItems);
     } catch (err) {
-      console.log(err);
+      next(err)
     }
   }
 
@@ -20,13 +21,15 @@ class OrderItemController {
     try {
       const { orderId } = req.params;
       const { data } = req.body;
-      console.log(data);
+
       const orderItems = await OrderItem.findAll({
         include: ['Category'],
         where: {
           orderId,
         },
       });
+
+      if(!orderItems.length || !orderItems) throw new Error("Not found")
 
       for (const key in data) {
         orderItems.forEach((e) => {
@@ -41,13 +44,12 @@ class OrderItemController {
       const result = orderItems.map((el) => {
         return el.dataValues;
       });
-      console.log(result);
       const bulkOrderItem = await OrderItem.bulkCreate(result, {
         updateOnDuplicate: ['price', 'weight'],
       });
+      if(bulkOrderItem.length === 0 || !bulkOrderItem) throw new Error()
       res.status(200).json(bulkOrderItem);
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }

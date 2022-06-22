@@ -1,4 +1,4 @@
-const { Order, OrderItem, sequelize, User } = require("../models");
+const { Order, OrderItem, History, sequelize, User } = require("../models");
 const { Sequelize } = require("sequelize");
 class OrderController {
   static async getOrders(req, res, next) {
@@ -56,8 +56,7 @@ class OrderController {
       );
       res.status(200).json(result);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      next(error);
     }
   }
 
@@ -67,7 +66,7 @@ class OrderController {
 
       const location = Sequelize.fn(
         "ST_GeomFromText",
-        `POINT(${JSON.parse(latitude)} ${JSON.parse(longitude)})`
+        `POINT(${JSON.parse(longitude)} ${JSON.parse(latitude)})`
       );
 
       const userId = req.pass.id;
@@ -82,18 +81,35 @@ class OrderController {
         el.orderId = newOrder.id;
       });
 
-      await OrderItem.bulkCreate(orderItems);
-
+      const created = await OrderItem.bulkCreate(orderItems);
+      if (!created || !created.length) throw "error";
       res.status(201).json(newOrder);
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
 
   static async completeOrder(req, res, next) {
     try {
+      const transaction = await sequelize.transaction();
       const { id } = req.params;
+
+      const currentOrder = await Order.findOne(
+        {
+          where: {
+            id,
+          },
+          include: ["OrderItems"],
+        },
+        { transaction }
+      );
+
+      let total = 0;
+      const { userId, collectorId } = currentOrder;
+      currentOrder.OrderItems.forEach((el) => (total += el.price));
+
+      if (!currentOrder) throw new Error("Not found");
+
       const [completed] = await Order.update(
         {
           orderStatus: "Completed",
@@ -102,11 +118,26 @@ class OrderController {
           where: {
             id,
           },
-        }
+        },
+        { transaction }
       );
-      if(!completed) throw new Error('Not found')
-      res.status(200).json({message:"Order completed"});
+      if (!completed) throw new Error("Not found");
+
+      const writtenHistory = await History.create(
+        {
+          userId,
+          collectorId,
+          orderId: id,
+          description: `Rp${total.toLocaleString("id")},00 obtained`,
+        },
+        { transaction }
+      );
+      if (!writtenHistory) throw new Error("Error");
+      await transaction.commit();
+      res.status(200).json({ message: "Order completed" });
     } catch (err) {
+      const transaction = await sequelize.transaction();
+      await transaction.rollback();
       next(err);
     }
   }
@@ -117,7 +148,7 @@ class OrderController {
       // const { pickupDate } = req.body;
       const pickupDate = new Date();
       const collectorId = req.pass.id;
-      const [ approved ] = await Order.update(
+      const [approved] = await Order.update(
         {
           approvalStatus: "Approved",
           pickupDate,
@@ -130,8 +161,8 @@ class OrderController {
           },
         }
       );
-      if(!approved) throw new Error("Not found")
-      res.status(200).json({message:"Order approved"});
+      if (!approved) throw new Error("Not found");
+      res.status(200).json({ message: "Order approved" });
     } catch (err) {
       next(err);
     }
@@ -150,8 +181,8 @@ class OrderController {
           },
         }
       );
-      if(!paid) throw new Error("Not found")
-      res.status(200).json({message:"Order paid"});
+      if (!paid) throw new Error("Not found");
+      res.status(200).json({ message: "Order paid" });
     } catch (err) {
       next(err);
     }

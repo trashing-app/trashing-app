@@ -81,33 +81,36 @@ export default function LoadingMap({ customerLocation, orderId }) {
                       // If the user confirmed, then we dispatch the action we blocked earlier
                       // This will continue the action that had triggered the removal of the screen
                       onPress: async () => {
-                        // console.log(ret);
-                        const ret = await storage.load({ key: "order" });
-                        const access_token = await AsyncStorage.getItem(
-                          "access_token"
-                        );
-                        const status = await axios.get(
-                          `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
-                          { headers: { access_token } }
-                        );
-                        if (status.data.approvalStatus === "Approved") {
-                          Alert.alert(
-                            "We are sorry, but you have an active order right now"
+                        try {
+                          const ret = await storage.load({ key: "order" });
+                          const access_token = await AsyncStorage.getItem(
+                            "access_token"
                           );
-                        } else {
-                          const { data } = await axios.delete(
+                          const status = await axios.get(
                             `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
                             { headers: { access_token } }
                           );
-                          storage.remove({
-                            key: "order",
-                          });
-                          ToastAndroid.showWithGravity(
-                            "Order cancelled",
-                            ToastAndroid.LONG,
-                            ToastAndroid.CENTER
-                          );
-                          navigation.replace("tabnavigation");
+                          if (status.data.approvalStatus === "Approved") {
+                            Alert.alert(
+                              "We are sorry, but you have an active order right now"
+                            );
+                          } else {
+                            const { data } = await axios.delete(
+                              `https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io/orders/${ret.id}`,
+                              { headers: { access_token } }
+                            );
+                            storage.remove({
+                              key: "order",
+                            });
+                            ToastAndroid.showWithGravity(
+                              "Order cancelled",
+                              ToastAndroid.LONG,
+                              ToastAndroid.CENTER
+                            );
+                            navigation.replace("tabnavigation");
+                          }
+                        } catch (error) {
+                          console.log(error);
                         }
                       },
                     },
