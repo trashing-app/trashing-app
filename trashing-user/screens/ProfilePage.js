@@ -25,8 +25,7 @@ export default function ProfilePage() {
     address: "",
     phoneNumber: "",
   });
-  const baseUrl =
-    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
+  const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
 
   useEffect(() => {
     if (id) {

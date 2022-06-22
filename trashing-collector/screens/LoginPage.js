@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    // console.log(storage);
     storage
       .load({
         key: "loginState",
@@ -32,10 +33,10 @@ export default function LoginPage() {
       .catch((err) => {
         switch (err.name) {
           case "NotFoundError":
-            navigation.navigate("TabNavigator");
+            navigation.navigate("LoginPage");
             break;
           case "ExpiredError":
-            navigation.navigate("TabNavigator");
+            navigation.navigate("LoginPage");
             break;
         }
       });
