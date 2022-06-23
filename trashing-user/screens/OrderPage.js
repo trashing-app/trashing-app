@@ -16,10 +16,10 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
+import { baseUrl } from "../baseUrl";
 
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
-const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
 
 export default function OrderPage() {
   const [categories, setCategories] = useState([]);

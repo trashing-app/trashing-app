@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import storage from "../storage";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { baseUrl } from "../baseUrl";
 
 const winWidth = Dimensions.get("window").width;
 
@@ -27,8 +28,6 @@ export default function ProfilePage() {
   });
 
   const [balance, setBalance] = useState(0);
-  const baseUrl =
-    "https://be07-2001-448a-4044-6908-f12a-6787-ab9f-977b.ap.ngrok.io";
   const rupiahFormatter = (amount) => {
     let str = Number(amount)
       .toFixed(2)

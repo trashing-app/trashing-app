@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { baseUrl } from "../baseUrl";
 import AboutUs from "../components/AboutUs";
 
 const winWidth = Dimensions.get("window").width;
@@ -19,8 +20,11 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    fetch("https://8a32-111-94-86-182.ap.ngrok.io/categories")
+    fetch(baseUrl+"/categories", {
+      headers:{
+        "Content-type":"application/json"
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);

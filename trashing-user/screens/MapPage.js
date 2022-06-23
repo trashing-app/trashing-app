@@ -8,9 +8,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AcceptedMap from "./AcceptedMap";
 import { useNavigation } from "@react-navigation/native";
 import storage from "../storage";
+import { baseUrl } from "../baseUrl";
 
 export default function MapPage({ route }) {
-  const baseUrl = "https://8a32-111-94-86-182.ap.ngrok.io";
   const { id, orderLocation } = route.params;
 
   const [state, setState] = useState({

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Pressable,
   TextInput,
@@ -14,7 +14,46 @@ import axios from "axios";
 import storage from "../storage";
 import { baseUrl } from "../constant/baseUrl";
 
+//------------- notification
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+//--------------------------
+
+
+
 export default function LoginPage() {
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+  //======================= notif
+
+
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
@@ -28,6 +67,13 @@ export default function LoginPage() {
         key: "loginState",
       })
       .then((ret) => {
+        //registering device ====================== notif
+        return axios.patch(`${baseUrl}/pub/collectors/registerdevice`, {
+          email:ret.email,
+          device_token:expoPushToken
+        })
+      })
+      .then(()=>{
         navigation.replace("TabNavigator");
       })
       .catch((err) => {
@@ -40,7 +86,7 @@ export default function LoginPage() {
             break;
         }
       });
-  }, []);
+  }, [expoPushToken]);
 
   useEffect(() => {
     return () => {
@@ -55,6 +101,10 @@ export default function LoginPage() {
         email,
         password,
       });
+      await axios.patch(`${baseUrl}/pub/collectors/registerdevice`, {
+        email,
+        device_token:expoPushToken
+      })
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         console.log("login success");
@@ -72,7 +122,7 @@ export default function LoginPage() {
           },
           expires: null,
         });
-        navigation.navigate("ListOrder");
+        navigation.navigate("TabNavigator");
       } else {
         throw "login failed";
       }
@@ -165,3 +215,57 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
 });
+
+
+//================= notif === regis device
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
+//fungsi yang nanti dipanggil buat notify
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}

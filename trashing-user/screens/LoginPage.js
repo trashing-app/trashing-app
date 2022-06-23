@@ -15,6 +15,7 @@ import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibilit
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import storage from "../storage";
+import baseUrl from '../baseUrl'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const winWidth = Dimensions.get("window").width;
 const winHeight = Dimensions.get("window").height;
@@ -48,13 +49,17 @@ export default function LoginPage() {
 
   const doLogin = async () => {
     try {
-      const { data } = await axios.post(
-        `https://8a32-111-94-86-182.ap.ngrok.io/pub/users/login`,
-        {
+      const { data } = await axios({
+        method:"post",
+        url:baseUrl+"/pub/users/login",
+        headers:{
+          "Content-type":"application/json"
+        },
+        data:{
           email,
-          password,
+          password
         }
-      );
+      });
       if (data.access_token) {
         const { id, username, email, access_token } = data;
         storage.save({
@@ -84,6 +89,7 @@ export default function LoginPage() {
         throw "login failed";
       }
     } catch (err) {
+      console.log(err);
       ToastAndroid.showWithGravity(
         "Invalid email/password",
         ToastAndroid.LONG,
