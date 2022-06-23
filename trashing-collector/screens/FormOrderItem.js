@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -188,159 +189,160 @@ function FormOrderItem({ route }) {
   // console.log(input);
   return (
     <SafeAreaView>
-      <View
-        style={{
-          height: height,
-          alignItems: "center",
-
-          backgroundColor: "#588157",
-        }}
-      >
-        <Image
-          source={imagePath.logo}
-          style={{
-            width: width,
-            height: (20 / 100) * height,
-            marginBottom: -60,
-          }}
-        />
-        <Text
-          style={{
-            fontSize: 35,
-            marginVertical: "8%",
-            color: "#DAD7CD",
-          }}
-        >
-          Order Items
-        </Text>
+      <ScrollView>
         <View
           style={{
-            // borderWidth: 1,
-            width: "80%",
-            borderRadius: 10,
-            backgroundColor: "#3A5A40",
+            height: height,
+            alignItems: "center",
+
+            backgroundColor: "#588157",
           }}
         >
-          <View
+          <Image
+            source={imagePath.logo}
             style={{
-              marginTop: "10%",
-              // backgroundColor: "red",
+              width: width,
+              height: (20 / 100) * height,
+              marginBottom: -60,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 35,
+              marginVertical: "8%",
+              color: "#DAD7CD",
             }}
           >
-            {orderItems.map((el, index) => {
-              return (
-                <View
-                  key={el.id}
-                  style={{
-                    marginLeft: "8%",
-                    marginBottom: "7%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 25,
-                      marginLeft: 5,
-                      color: "#DAD7CD",
-                      marginBottom: "3%",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {el.Category.name}
-                  </Text>
+            Order Items
+          </Text>
+          <View
+            style={{
+              // borderWidth: 1,
+              width: "80%",
+              borderRadius: 10,
+              backgroundColor: "#3A5A40",
+            }}
+          >
+            <View
+              style={{
+                marginTop: "10%",
+                // backgroundColor: "red",
+              }}
+            >
+              {orderItems.map((el, index) => {
+                return (
                   <View
+                    key={el.id}
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      marginRight: "10%",
+                      marginLeft: "8%",
+                      marginBottom: "7%",
                     }}
                   >
+                    <Text
+                      style={{
+                        fontSize: 25,
+                        marginLeft: 5,
+                        color: "#DAD7CD",
+                        marginBottom: "3%",
+                        fontWeight: "700",
+                      }}
+                    >
+                      {el.Category.name}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        marginRight: "10%",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          marginLeft: 5,
+                          color: "#DAD7CD",
+                          marginBottom: "3%",
+                        }}
+                      >
+                        Weight :
+                      </Text>
+                      <TextInput
+                        style={{
+                          backgroundColor: "#ffffff",
+                          borderRadius: 5,
+                          width: 100,
+                          fontSize: 20,
+                          marginLeft: 5,
+                        }}
+                        onChangeText={(text) =>
+                          handlerOnChangeText(el.Category.id, text)
+                        }
+                        keyboardType={"number-pad"}
+                      />
+                    </View>
+
                     <Text
                       style={{
                         fontSize: 20,
                         marginLeft: 5,
                         color: "#DAD7CD",
-                        marginBottom: "3%",
+                        marginTop: "3%",
                       }}
                     >
-                      Weight :
+                      Total Price :{" "}
+                      {rupiahFormatter(
+                        +input[`${el.Category.id}`] * +el.Category.basePrice
+                          ? +input[`${el.Category.id}`] * +el.Category.basePrice
+                          : 0
+                      )}
                     </Text>
-                    <TextInput
-                      style={{
-                        backgroundColor: "#ffffff",
-                        borderRadius: 5,
-                        width: 100,
-                        fontSize: 20,
-                        marginLeft: 5,
-                      }}
-                      onChangeText={(text) =>
-                        handlerOnChangeText(el.Category.id, text)
-                      }
-                      keyboardType={"number-pad"}
-                    />
                   </View>
-
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      marginLeft: 5,
-                      color: "#DAD7CD",
-                      marginTop: "3%",
-                    }}
-                  >
-                    Total Price :{" "}
-                    {rupiahFormatter(
-                      +input[`${el.Category.id}`] * +el.Category.basePrice
-                        ? +input[`${el.Category.id}`] * +el.Category.basePrice
-                        : 0
-                    )}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginVertical: "8%",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                Alert.alert(
-                  "Complete Order",
-                  "Are you sure? By completing this order the balance will be transfered to user",
-                  [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel",
-                    },
-                    { text: "OK", onPress: () => handleSubmit() },
-                  ]
                 );
-              }}
+              })}
+            </View>
+            <View
               style={{
-                borderRadius: 12,
-                borderWidth: 1,
                 alignItems: "center",
-                width: "80%",
-                backgroundColor: "#A3B18A",
-            
+                marginVertical: "8%",
               }}
             >
-              <Text
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Complete Order",
+                    "Are you sure? By completing this order the balance will be transfered to user",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                      },
+                      { text: "OK", onPress: () => handleSubmit() },
+                    ]
+                  );
+                }}
                 style={{
-                  fontSize: 22,
-                  color: "#344E41",
-                  marginVertical: "3%",
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  alignItems: "center",
+                  width: "80%",
+                  backgroundColor: "#A3B18A",
                 }}
               >
-                Submit
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    color: "#344E41",
+                    marginVertical: "3%",
+                  }}
+                >
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
