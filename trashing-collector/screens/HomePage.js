@@ -223,6 +223,7 @@ export default function HomePage({ route }) {
           apikey={GOOGLE_MAPS_APIKEY}
           strokeWidth={4}
           optimizeWaypoints={true}
+          strokeColor="#FF69B4"
           onReady={(result) => {
             mapRef.current.fitToCoordinates(result.coordinates, {
               edgePadding: {},
